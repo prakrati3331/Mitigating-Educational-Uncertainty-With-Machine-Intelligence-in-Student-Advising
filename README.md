@@ -1,3 +1,6 @@
+# Mitigating-Educational-Uncertainty-With-Machine-Intelligence-in-Student-Advising
+
+
 An AI-powered student advising platform designed to help learners make informed academic and career decisions. This system blends machine intelligence, predictive analytics, and a hybrid AI–human mentorship model to support students—especially those in rural and semi-urban areas with limited access to professional counseling.
 
 🚀 Overview
