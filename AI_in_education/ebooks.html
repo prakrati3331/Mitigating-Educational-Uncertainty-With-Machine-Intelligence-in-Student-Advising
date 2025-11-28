@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📚 E-Books Library</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: #f8f9fa; 
+            color: #333;
+        }
+        .navbar-brand { 
+            font-weight: 700; 
+            color: #4361ee !important; 
+        }
+        .stream-section { 
+            margin: 2.5rem 0; 
+            padding: 1.8rem; 
+            background: white; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+        .stream-title { 
+            color: #4361ee; 
+            border-bottom: 2px solid #e9ecef; 
+            padding-bottom: 0.75rem; 
+            margin-bottom: 2rem;
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+        .ebook-card { 
+            border: 1px solid #e9ecef; 
+            border-radius: 10px; 
+            overflow: hidden; 
+            margin-bottom: 2rem; 
+            transition: all 0.3s ease;
+            height: 100%;
+            opacity: 0;
+            animation: fadeIn 0.5s ease-out forwards;
+            animation-delay: calc(0.1s * var(--animation-order, 0));
+        }
+        .ebook-card:hover { 
+            transform: translateY(-7px); 
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12); 
+        }
+        .ebook-cover { 
+            height: 240px; 
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            color: #adb5bd; 
+            font-size: 3.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .ebook-cover i {
+            z-index: 1;
+            text-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .ebook-details { 
+            padding: 1.5rem; 
+            display: flex;
+            flex-direction: column;
+            height: calc(100% - 240px);
+        }
+        .ebook-title { 
+            font-weight: 700; 
+            margin-bottom: 0.75rem;
+            font-size: 1.25rem;
+            color: #2c3e50;
+        }
+        .ebook-author { 
+            color: #6c757d; 
+            font-size: 0.95rem; 
+            margin-bottom: 0.75rem;
+            font-weight: 500;
+        }
+        .ebook-description {
+            color: #495057;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.25rem;
+            flex-grow: 1;
+        }
+        .btn-download { 
+            width: 100%; 
+            background: #4361ee; 
+            color: white; 
+            border: none;
+            padding: 0.7rem 1rem;
+            border-radius: 6px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+        }
+        .search-container {
+            margin-bottom: 2rem;
+            position: relative;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .search-box {
+            width: 100%;
+            padding: 12px 20px;
+            border: 2px solid #e9ecef;
+            border-radius: 30px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            padding-left: 45px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .search-box:focus {
+            outline: none;
+            border-color: #4361ee;
+            box-shadow: 0 2px 12px rgba(67, 97, 238, 0.2);
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+        }
+        
+        .no-results {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+            color: #6c757d;
+            font-style: italic;
+            grid-column: 1 / -1;
+        }
+        
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            padding: 1rem;
+            color: #4361ee;
+        }
+        
+        .spinner {
+            width: 30px;
+            height: 30px;
+            border: 3px solid rgba(67, 97, 238, 0.2);
+            border-radius: 50%;
+            border-top-color: #4361ee;
+            animation: spin 1s ease-in-out infinite;
+            display: inline-block;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .btn-download:hover { 
+            background: #3a56d4; 
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3);
+        }
+        .ebook-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: #6c757d;
+            margin-bottom: 1rem;
+            padding-top: 0.5rem;
+            border-top: 1px dashed #e9ecef;
+        }
+        .ebook-pages, .ebook-level {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .ebook-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #4361ee;
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            z-index: 2;
+        }
+        .search-container {
+            margin: 2rem 0;
+            max-width: 600px;
+        }
+        .search-box {
+            position: relative;
+        }
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+        }
+        .search-box input {
+            padding-left: 45px;
+            border-radius: 50px;
+            border: 2px solid #e9ecef;
+            height: 50px;
+            font-size: 1.05rem;
+        }
+        .search-box input:focus {
+            border-color: #4361ee;
+            box-shadow: 0 0 0 0.25rem rgba(67, 97, 238, 0.25);
+        }
+        .filter-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 1rem 0 2rem;
+        }
+        .filter-tag {
+            background: white;
+            border: 1px solid #dee2e6;
+            color: #495057;
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .filter-tag:hover, .filter-tag.active {
+            background: #4361ee;
+            color: white;
+            border-color: #4361ee;
+        }
+        .back-to-top {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            width: 50px;
+            height: 50px;
+            background: #4361ee;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        .back-to-top:hover {
+            background: #3a56d4;
+            transform: translateY(-3px);
+        }
+        /* Stream specific colors */
+        .science .stream-title, 
+        .science .ebook-badge,
+        .science .btn-download {
+            color: #e74c3c;
+        }
+        .science .btn-download {
+            background: #e74c3c;
+        }
+        .science .btn-download:hover {
+            background: #c0392b;
+            box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+        }
+        
+        .commerce .stream-title, 
+        .commerce .ebook-badge,
+        .commerce .btn-download {
+            color: #3498db;
+        }
+        .commerce .btn-download {
+            background: #3498db;
+        }
+        .commerce .btn-download:hover {
+            background: #2980b9;
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+        }
+        
+        .arts .stream-title, 
+        .arts .ebook-badge,
+        .arts .btn-download {
+            color: #9b59b6;
+        }
+        .arts .btn-download {
+            background: #9b59b6;
+        }
+        .arts .btn-download:hover {
+            background: #8e44ad;
+            box-shadow: 0 4px 12px rgba(155, 89, 182, 0.3);
+        }
+        
+        .vocational .stream-title, 
+        .vocational .ebook-badge,
+        .vocational .btn-download {
+            color: #2ecc71;
+        }
+        .vocational .btn-download {
+            background: #2ecc71;
+        }
+        .vocational .btn-download:hover {
+            background: #27ae60;
+            box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="recommendation_hub.html">
+                <i class="fas fa-arrow-left me-2"></i>Back to Home
+            </a>
+            <div class="ms-auto">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" class="form-control" placeholder="Search e-books...">
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="mb-0">📚 E-Books Library</h1>
+            <div class="filter-tags">
+                <span class="filter-tag active" data-filter="all">All</span>
+                <span class="filter-tag">Science</span>
+                <span class="filter-tag">Commerce</span>
+                <span class="filter-tag">Arts</span>
+                <span class="filter-tag">Vocational</span>
+                <span class="filter-tag">New Releases</span>
+                <span class="filter-tag">Popular</span>
+            </div>
+        </div>
+
+        <!-- Science Stream -->
+        <div class="stream-section science" id="science">
+            <div class="d-flex justify-content-between align-items-center flex-wrap mb-4">
+                <h2 class="stream-title mb-3 mb-md-0"><i class="fas fa-flask me-2"></i>Science Stream</h2>
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-box" placeholder="Search in Science..." data-stream="science">
+                </div>
+            </div>
+            <div class="loading-spinner" id="science-loading">
+                <div class="spinner"></div>
+                <span>Searching...</span>
+            </div>
+            <div class="no-results" id="science-no-results">
+                <i class="fas fa-book-open fa-2x mb-3"></i>
+                <p>No matching books found. Try different keywords.</p>
+            </div>
+            <div class="row">
+                <!-- Physics -->
+                <div class="col-md-4 col-lg-3">
+                    <div class="ebook-card">
+                        <div class="ebook-cover" style="background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);">
+                            <i class="fas fa-atom"></i>
+                            <span class="ebook-badge">Physics</span>
+                        </div>
+                        <div class="ebook-details">
+                            <h5 class="ebook-title">Fundamentals of Physics</h5>
+                            <div class="ebook-author">By Dr. Robert Johnson</div>
+                            <div class="ebook-meta">
+                                <span class="ebook-pages"><i class="far fa-file-alt"></i> 450 pages</span>
+                                <span class="ebook-level"><i class="fas fa-signal"></i> Advanced</span>
+                            </div>
+                            <p class="ebook-description">Comprehensive guide covering classical mechanics, thermodynamics, and modern physics with problem-solving techniques and practice questions.</p>
+                            <button class="btn btn-download"><i class="fas fa-download me-2"></i>Download</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chemistry -->
+                <div class="col-md-4 col-lg-3">
+                    <div class="ebook-card">
+                        <div class="ebook-cover" style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);">
+                            <i class="fas fa-vial"></i>
+                            <span class="ebook-badge">Chemistry</span>
+                        </div>
+                        <div class="ebook-details">
+                            <h5 class="ebook-title">Organic Chemistry Simplified</h5>
+                            <div class="ebook-author">By Dr. Emily Chen</div>
+                            <div class="ebook-meta">
+                                <span class="ebook-pages"><i class="far fa-file-alt"></i> 380 pages</span>
+                                <span class="ebook-level"><i class="fas fa-signal"></i> Intermediate</span>
+                            </div>
+                            <p class="ebook-description">Master organic chemistry with clear explanations, reaction mechanisms, and practice problems for better understanding.</p>
+                            <button class="btn btn-download"><i class="fas fa-download me-2"></i>Download</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Biology -->
+                <div class="col-md-4 col-lg-3">
+                    <div class="ebook-card">
+                        <div class="ebook-cover" style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);">
+                            <i class="fas fa-dna"></i>
+                            <span class="ebook-badge">Biology</span>
+                        </div>
+                        <div class="ebook-details">
+                            <h5 class="ebook-title">Cell Biology & Genetics</h5>
+                            <div class="ebook-author">By Dr. Sarah Williams</div>
+                            <div class="ebook-meta">
+                                <span class="ebook-pages"><i class="far fa-file-alt"></i> 520 pages</span>
+                                <span class="ebook-level"><i class="fas fa-signal"></i> Advanced</span>
+                            </div>
+                            <p class="ebook-description">In-depth exploration of cellular structures, functions, and genetic principles with detailed illustrations.</p>
+                            <button class="btn btn-download"><i class="fas fa-download me-2"></i>Download</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mathematics -->
+                <div class="col-md-4 col-lg-3">
+                    <div class="ebook-card">
+                        <div class="ebook-cover" style="background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);">
+                            <i class="fas fa-square-root-alt"></i>
+                            <span class="ebook-badge">Mathematics</span>
+                        </div>
+                        <div class="ebook-details">
+                            <h5 class="ebook-title">Calculus & Linear Algebra</h5>
+                            <div class="ebook-author">By Prof. Michael Brown</div>
+                            <div class="ebook-meta">
+                                <span class="ebook-pages"><i class="far fa-file-alt"></i> 600 pages</span>
+                                <span class="ebook-level"><i class="fas fa-signal"></i> Advanced</span>
+                            </div>
+                            <p class="ebook-description">Comprehensive guide to calculus and linear algebra with practical applications and problem-solving techniques.</p>
+                            <button class="btn btn-download"><i class="fas fa-download me-2"></i>Download</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Commerce Stream -->
+        <div class="stream-section commerce" id="commerce">
+            <div class="d-flex justify-content-between align-items-center flex-wrap mb-4">
+                <h2 class="stream-title mb-3 mb-md-0"><i class="fas fa-calculator me-2"></i>Commerce Stream</h2>
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-box" placeholder="Search in Commerce..." data-stream="commerce">
+                </div>
+            </div>
+            <div class="loading-spinner" id="commerce-loading">
+                <div class="spinner"></div>
+                <span>Searching...</span>
+            </div>
+            <div class="no-results" id="commerce-no-results">
+                <i class="fas fa-book-open fa-2x mb-3"></i>
+                <p>No matching books found. Try different keywords.</p>
+            </div>
+            <div class="row">
+                <!-- Accountancy -->
+                <div class="col-md-4 col-lg-3">
+                    <div class="ebook-card">
+                        <div class="ebook-cover" style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);">
+                            <i class="fas fa-book"></i>
+                            <span class="ebook-badge">Accountancy</span>
+                        </div>
+                        <div class="ebook-details">
+                            <h5 class="ebook-title">Financial Accounting</h5>
+                            <div class="ebook-author">By Lisa Thompson</div>
+                            <div class="ebook-meta">
+                                <span class="ebook-pages"><i class="far fa-file-alt"></i> 480 pages</span>
+                                <span class="ebook-level"><i class="fas fa-signal"></i> Intermediate</span>
+                            </div>
+                            <p class="ebook-description">Master financial accounting principles, from basic concepts to advanced financial statement analysis.</p>
+                            <button class="btn btn-download"><i class="fas fa-download me-2"></i>Download</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Business Studies -->
+                <div class="col-md-4 col-lg-3">
+                    <div class="ebook-card">
+                        <div class="ebook-cover" style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);">
+                            <i class="fas fa-chart-line"></i>
+                            <span class="ebook-badge">Business</span>
+                        </div>
+                        <div class="ebook-details">
+                            <h5 class="ebook-title">Business Studies Guide</h5>
+                            <div class="ebook-author">By James Wilson</div>
+                            <div class="ebook-meta">
+                                <span class="ebook-pages"><i class="far fa-file-alt"></i> 420 pages</span>
+                                <span class="ebook-level"><i class="fas fa-signal"></i> Beginner</span>
+                            </div>
+                            <p class="ebook-description">Comprehensive coverage of business principles, management, and organizational behavior.</p>
+                            <button class="btn btn-download"><i class="fas fa-download me-2"></i>Download</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Economics -->
+                <div class="col-md-4 col-lg-3">
+                    <div class="ebook-card">
+                        <div class="ebook-cover" style="background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);">
+                            <i class="fas fa-chart-pie"></i>
+                            <span class="ebook-badge">Economics</span>
+                        </div>
+                        <div class="ebook-details">
+                            <h5 class="ebook-title">Principles of Economics</h5>
+                            <div class="ebook-author">By David Miller</div>
+                            <div class="ebook-meta">
+                                <span class="ebook-pages"><i class="far fa-file-alt"></i> 550 pages</span>
+                                <span class="ebook-level"><i class="fas fa-signal"></i> Intermediate</span>
+                            </div>
+                            <p class="ebook-description">Understand micro and macroeconomic principles with real-world applications and case studies.</p>
+                            <button class="btn btn-download"><i class="fas fa-download me-2"></i>Download</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mathematics -->
+                <div class="col-md-4 col-lg-3">
+                    <div class="ebook-card">
+                        <div class="ebook-cover" style="background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);">
+                            <i class="fas fa-calculator"></i>
+                            <span class="ebook-badge">Mathematics</span>
+                        </div>
+                        <div class="ebook-details">
+                            <h5 class="ebook-title">Business Mathematics</h5>
+                            <div class="ebook-author">By Prof. Alan Smith</div>
+                            <div class="ebook-meta">
+                                <span class="ebook-pages"><i class="far fa-file-alt"></i> 380 pages</span>
+                                <span class="ebook-level"><i class="fas fa-signal"></i> Beginner</span>
+                            </div>
+                            <p class="ebook-description">Essential mathematical tools for business and economics students with practical applications.</p>
+                            <button class="btn btn-download"><i class="fas fa-download me-2"></i>Download</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Arts Stream -->
+        <div class="stream-section arts" id="arts">
+            <div class="d-flex justify-content-between align-items-center flex-wrap mb-4">
+                <h2 class="stream-title mb-3 mb-md-0"><i class="fas fa-palette me-2"></i>Arts Stream</h2>
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-box" placeholder="Search in Arts..." data-stream="arts">
+                </div>
+            </div>
+            <div class="loading-spinner" id="arts-loading">
+                <div class="spinner"></div>
+                <span>Searching...</span>
+            </div>
+            <div class="no-results" id="arts-no-results">
+                <i class="fas fa-book-open fa-2x mb-3"></i>
+                <p>No matching books found. Try different keywords.</p>
+            </div>
+            <div class="row">
+                <!-- Literature -->
+                <div class="col-md-4 col-lg-3">
+                    <div class="ebook-card">
+                        <div class="ebook-cover" style="background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);">
+                            <i class="fas fa-book-open"></i>
+                            <span class="ebook-badge">Literature</span>
+                        </div>
+                        <div class="ebook-details">
+                            <h5 class="ebook-title">World Literature</h5>
+                            <div class="ebook-author">By Emily Parker</div>
+                            <div class="ebook-meta">
+                                <span class="ebook-pages"><i class="far fa-file-alt"></i> 620 pages</span>
+                                <span class="ebook-level"><i class="fas fa-signal"></i> Advanced</span>
+                            </div>
+                            <p class="ebook-description">Explore literary masterpieces from around the world with critical analysis and historical context.</p>
+                            <button class="btn btn-download"><i class="fas fa-download me-2"></i>Download</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Psychology -->
+                <div class="col-md-4 col-lg-3">
+                    <div class="ebook-card">
+                        <div class="ebook-cover" style="background: linear-gradient(135deg, #e8eaf6 0%, #c5cae9 100%);">
+                            <i class="fas fa-brain"></i>
+                            <span class="ebook-badge">Psychology</span>
+                        </div>
+                        <div class="ebook-details">
+                            <h5 class="ebook-title">Introduction to Psychology</h5>
+                            <div class="ebook-author">By Dr. Richard Kim</div>
+                            <div class="ebook-meta">
+                                <span class="ebook-pages"><i class="far fa-file-alt"></i> 580 pages</span>
+                                <span class="ebook-level"><i class="fas fa-signal"></i> Intermediate</span>
+                            </div>
+                            <p class="ebook-description">Comprehensive introduction to psychological concepts, theories, and research methods.</p>
+                            <button class="btn btn-download"><i class="fas fa-download me-2"></i>Download</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- History -->
+                <div class="col-md-4 col-lg-3">
+                    <div class="ebook-card">
+                        <div class="ebook-cover" style="background: linear-gradient(135deg, #fce4ec 0%, #f8bbd0 100%);">
+                            <i class="fas fa-landmark"></i>
+                            <span class="ebook-badge">History</span>
+                        </div>
+                        <div class="ebook-details">
+                            <h5 class="ebook-title">World History</h5>
+                            <div class="ebook-author">By Prof. John Davis</div>
+                            <div class="ebook-meta">
+                                <span class="ebook-pages"><i class="far fa-file-alt"></i> 720 pages</span>
+                                <span class="ebook-level"><i class="fas fa-signal"></i> Advanced</span>
+                            </div>
+                            <p class="ebook-description">Comprehensive survey of world history from ancient civilizations to modern times.</p>
+                            <button class="btn btn-download"><i class="fas fa-download me-2"></i>Download</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Political Science -->
+                <div class="col-md-4 col-lg-3">
+                    <div class="ebook-card">
+                        <div class="ebook-cover" style="background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);">
+                            <i class="fas fa-landmark"></i>
+                            <span class="ebook-badge">Political Science</span>
+                        </div>
+                        <div class="ebook-details">
+                            <h5 class="ebook-title">Political Theory</h5>
+                            <div class="ebook-author">By Dr. Susan Lee</div>
+                            <div class="ebook-meta">
+                                <span class="ebook-pages"><i class="far fa-file-alt"></i> 490 pages</span>
+                                <span class="ebook-level"><i class="fas fa-signal"></i> Intermediate</span>
+                            </div>
+                            <p class="ebook-description">Explore major political theories and ideologies that have shaped modern governance.</p>
+                            <button class="btn btn-download"><i class="fas fa-download me-2"></i>Download</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Vocational Stream -->
+        <div class="stream-section vocational" id="vocational">
+            <div class="d-flex justify-content-between align-items-center flex-wrap mb-4">
+                <h2 class="stream-title mb-3 mb-md-0"><i class="fas fa-tools me-2"></i>Vocational Stream</h2>
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-box" placeholder="Search in Vocational..." data-stream="vocational">
+                </div>
+            </div>
+            <div class="loading-spinner" id="vocational-loading">
+                <div class="spinner"></div>
+                <span>Searching...</span>
+            </div>
+            <div class="no-results" id="vocational-no-results">
+                <i class="fas fa-book-open fa-2x mb-3"></i>
+                <p>No matching books found. Try different keywords.</p>
+            </div>
+            <div class="row">
+                <!-- IT & Computer Science -->
+                <div class="col-md-4 col-lg-3">
+                    <div class="ebook-card">
+                        <div class="ebook-cover" style="background: linear-gradient(135deg, #e0f2f1 0%, #b2dfdb 100%);">
+                            <i class="fas fa-laptop-code"></i>
+                            <span class="ebook-badge">IT & CS</span>
+                        </div>
+                        <div class="ebook-details">
+                            <h5 class="ebook-title">Web Development</h5>
+                            <div class="ebook-author">By Alex Johnson</div>
+                            <div class="ebook-meta">
+                                <span class="ebook-pages"><i class="far fa-file-alt"></i> 380 pages</span>
+                                <span class="ebook-level"><i class="fas fa-signal"></i> Beginner</span>
+                            </div>
+                            <p class="ebook-description">Learn HTML, CSS, and JavaScript to build modern, responsive websites from scratch.</p>
+                            <button class="btn btn-download"><i class="fas fa-download me-2"></i>Download</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Healthcare -->
+                <div class="col-md-4 col-lg-3">
+                    <div class="ebook-card">
+                        <div class="ebook-cover" style="background: linear-gradient(135deg, #fce4ec 0%, #f8bbd0 100%);">
+                            <i class="fas fa-heartbeat"></i>
+                            <span class="ebook-badge">Healthcare</span>
+                        </div>
+                        <div class="ebook-details">
+                            <h5 class="ebook-title">Basic Healthcare</h5>
+                            <div class="ebook-author">By Dr. Maria Garcia</div>
+                            <div class="ebook-meta">
+                                <span class="ebook-pages"><i class="far fa-file-alt"></i> 420 pages</span>
+                                <span class="ebook-level"><i class="fas fa-signal"></i> Beginner</span>
+                            </div>
+                            <p class="ebook-description">Essential healthcare knowledge and skills for aspiring healthcare professionals.</p>
+                            <button class="btn btn-download"><i class="fas fa-download me-2"></i>Download</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hospitality -->
+                <div class="col-md-4 col-lg-3">
+                    <div class="ebook-card">
+                        <div class="ebook-cover" style="background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);">
+                            <i class="fas fa-utensils"></i>
+                            <span class="ebook-badge">Hospitality</span>
+                        </div>
+                        <div class="ebook-details">
+                            <h5 class="ebook-title">Hotel Management</h5>
+                            <div class="ebook-author">By Robert Wilson</div>
+                            <div class="ebook-meta">
+                                <span class="ebook-pages"><i class="far fa-file-alt"></i> 350 pages</span>
+                                <span class="ebook-level"><i class="fas fa-signal"></i> Beginner</span>
+                            </div>
+                            <p class="ebook-description">Fundamentals of hotel operations, guest services, and hospitality management.</p>
+                            <button class="btn btn-download"><i class="fas fa-download me-2"></i>Download</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Automotive -->
+                <div class="col-md-4 col-lg-3">
+                    <div class="ebook-card">
+                        <div class="ebook-cover" style="background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);">
+                            <i class="fas fa-car"></i>
+                            <span class="ebook-badge">Automotive</span>
+                        </div>
+                        <div class="ebook-details">
+                            <h5 class="ebook-title">Auto Mechanics</h5>
+                            <div class="ebook-author">By Mike Johnson</div>
+                            <div class="ebook-meta">
+                                <span class="ebook-pages"><i class="far fa-file-alt"></i> 480 pages</span>
+                                <span class="ebook-level"><i class="fas fa-signal"></i> Intermediate</span>
+                            </div>
+                            <p class="ebook-description">Comprehensive guide to automotive systems, maintenance, and repair.</p>
+                            <button class="btn btn-download"><i class="fas fa-download me-2"></i>Download</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Back to Top Button -->
+    <div class="back-to-top" id="backToTop">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Initialize animation order for each ebook card
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.ebook-card');
+            cards.forEach((card, index) => {
+                card.style.setProperty('--animation-order', index);
+            });
+            
+            // Add event listeners to all search boxes
+            document.querySelectorAll('.search-box').forEach(searchBox => {
+                let searchTimeout;
+                const streamId = searchBox.dataset.stream;
+                const loadingElement = document.getElementById(`${streamId}-loading`);
+                const noResultsElement = document.getElementById(`${streamId}-no-results`);
+                
+                searchBox.addEventListener('input', function() {
+                    clearTimeout(searchTimeout);
+                    const searchTerm = this.value.toLowerCase().trim();
+                    
+                    if (searchTerm.length === 0) {
+                        resetSearch(streamId);
+                        return;
+                    }
+                    
+                    // Show loading spinner
+                    loadingElement.style.display = 'block';
+                    noResultsElement.style.display = 'none';
+                    
+                    // Simulate network delay
+                    searchTimeout = setTimeout(() => {
+                        performSearch(streamId, searchTerm);
+                        loadingElement.style.display = 'none';
+                    }, 500);
+                });
+            });
+            
+            // Filter tags functionality
+            document.querySelectorAll('.filter-tag').forEach(tag => {
+                tag.addEventListener('click', function() {
+                    const filter = this.dataset.filter;
+                    document.querySelectorAll('.filter-tag').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    if (filter === 'all') {
+                        document.querySelectorAll('.stream-section').forEach(section => {
+                            section.style.display = 'block';
+                        });
+                    } else {
+                        document.querySelectorAll('.stream-section').forEach(section => {
+                            section.style.display = 'none';
+                        });
+                        document.getElementById(filter).style.display = 'block';
+                    }
+                    
+                    // Scroll to the first visible section
+                    const firstVisible = document.querySelector('.stream-section[style*="display: block"]');
+                    if (firstVisible) {
+                        firstVisible.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            });
+        });
+        
+        function performSearch(streamId, searchTerm) {
+            const streamSection = document.getElementById(streamId);
+            const books = streamSection.querySelectorAll('.ebook-card');
+            let hasResults = false;
+            
+            books.forEach(book => {
+                const title = book.querySelector('.ebook-title').textContent.toLowerCase();
+                const description = book.querySelector('.ebook-description').textContent.toLowerCase();
+                const author = book.querySelector('.ebook-author').textContent.toLowerCase();
+                
+                if (title.includes(searchTerm) || 
+                    description.includes(searchTerm) || 
+                    author.includes(searchTerm)) {
+                    book.style.display = 'block';
+                    book.style.animation = 'pulse 0.5s ease-out';
+                    hasResults = true;
+                    
+                    // Remove animation after it completes
+                    setTimeout(() => {
+                        book.style.animation = '';
+                    }, 500);
+                } else {
+                    book.style.display = 'none';
+                }
+            });
+            
+            // Show/hide no results message
+            const noResultsElement = document.getElementById(`${streamId}-no-results`);
+            if (!hasResults) {
+                noResultsElement.style.display = 'block';
+                noResultsElement.style.animation = 'fadeIn 0.5s ease-out';
+            } else {
+                noResultsElement.style.display = 'none';
+            }
+        }
+        
+        function resetSearch(streamId) {
+            const streamSection = document.getElementById(streamId);
+            const books = streamSection.querySelectorAll('.ebook-card');
+            const noResultsElement = document.getElementById(`${streamId}-no-results`);
+            
+            books.forEach(book => {
+                book.style.display = 'block';
+                book.style.animation = 'fadeIn 0.5s ease-out';
+            });
+            
+            noResultsElement.style.display = 'none';
+            document.getElementById(`${streamId}-loading`).style.display = 'none';
+        }
+        
+        // Add animation to all stream sections on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animation = 'slideInDown 0.6s ease-out forwards';
+                }
+            });
+        }, observerOptions);
+        
+        document.querySelectorAll('.stream-section').forEach(section => {
+            observer.observe(section);
+        });
+        // Back to Top Button
+        const backToTop = document.getElementById('backToTop');
+        
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+        });
+        
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Filter functionality
+        const filterTags = document.querySelectorAll('.filter-tag');
+        
+        filterTags.forEach(tag => {
+            tag.addEventListener('click', () => {
+                // Remove active class from all tags
+                filterTags.forEach(t => t.classList.remove('active'));
+                // Add active class to clicked tag
+                tag.classList.add('active');
+                
+                // Implement filter logic here
+                const filter = tag.textContent.trim();
+                console.log(`Filter by: ${filter}`);
+                // You would implement the actual filtering of ebooks here
+            });
+        });
+
+        // Search functionality
+        const searchInput = document.querySelector('.search-box input');
+        const searchButton = document.querySelector('.search-box i');
+        
+        const performSearch = () => {
+            const searchTerm = searchInput.value.trim().toLowerCase();
+            console.log(`Searching for: ${searchTerm}`);
+            // You would implement the actual search functionality here
+        };
+        
+        searchButton.addEventListener('click', performSearch);
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+    </script>
+</body>
+</html>

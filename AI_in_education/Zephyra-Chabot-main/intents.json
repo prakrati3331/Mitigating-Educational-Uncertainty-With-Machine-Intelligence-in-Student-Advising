@@ -1,0 +1,949 @@
+{
+    "intents": [
+        {
+            "tag": "acknowledge_popular_reactions",
+            "patterns": [
+                "Can you tell me which products are the most popular?",
+                "What are the top-selling products right now?",
+                "Which items do people love the most?",
+                "What are the current favorite products?",
+                "Can you list the most in-demand products?",
+                "What are the most popular products?"
+            ],
+            "responses": [
+                "Sure! Let me share the most popular products with you.",
+                "Here are some customer favorites that might interest you!",
+                "The following items are trending right now. Check them out!",
+                "I’ve got the top products for you! Let me list them.",
+                "Absolutely! These products are currently the most loved by our customers."
+            ],
+            "context": [
+                ""
+            ],
+            "sentiment": "positive"
+        },
+        {
+            "tag": "add_comment",
+            "patterns": [
+                "I want to add a comment.",
+                "Add this to my comments.",
+                "I'd like to provide a remark.",
+                "Here’s a comment I want to add.",
+                "Let me leave a note."
+            ],
+            "responses": [
+                "Thank you! Your comment has been successfully saved.",
+                "Got it! Your comment is now saved.",
+                "Thanks! Your comment has been saved.",
+                "Appreciate it! Your comment has been stored."
+            ],
+            "context": [
+                ""
+            ],
+            "sentiment": "neutral"
+        },
+        {
+            "tag": "add_item_to_wishlist",
+            "patterns": [
+                "Can you add this to my wishlist?",
+                "Please save this item to my wishlist.",
+                "Add this product to my wishlist.",
+                "I'd like to include this in my wishlist.",
+                "Put this item on my wishlist.",
+                "Save this for me in my wishlist.",
+                "Mark this item for my wishlist."
+            ],
+            "responses": [
+                "Got it! The item has been added to your wishlist.",
+                "The product is now in your wishlist!",
+                "Done! I've added this to your wishlist.",
+                "The $Product_Name are now on the wishlist.",
+                "Added the $Product_Name to your wishlist.",
+                "The $Product_Name are now in your wishlist."
+            ],
+            "context": [
+                ""
+            ],
+            "sentiment": "positive"
+        },
+        {
+            "tag": "add_reaction",
+            "patterns": [
+                "Mark the Gaming Console as interesting.",
+                "React with a thumbs-up to the Coffee Maker.",
+                "Can I add a like to the T-shirt?",
+                "React to the Headphones with a star.",
+                "Give a heart emoji to the Laptop.",
+                "Mark the smartphone as interesting.",
+                "React with a thumbs-up to the Bluetooth speaker.",
+                "Add a heart reaction to the leather jacket."
+            ],
+            "responses": [
+                "Your reaction has been added to the $product_name!",
+                "Heart emoji added to the $product_name.",
+                "Thumbs-up reaction recorded for the $product_name.",
+                "Marked as 'interested' for the $product_name.",
+                "Your reaction for $product_name has been saved."
+            ],
+            "context": [
+                ""
+            ],
+            "sentiment": "positive"
+        },
+        {
+            "tag": "add_to_shared_cart",
+            "patterns": [
+                "Add a backpack to the shared cart.",
+                "Include sneakers in the shared cart.",
+                "Add headphones to the cart.",
+                "Can you put a laptop in our group cart?",
+                "Add a smartphone to the shared cart.",
+                "Include a Bluetooth speaker in the cart.",
+                "Add a leather jacket to the shared cart."
+            ],
+            "responses": [
+                "I\u2019ve added a $product_name to the shared cart.",
+                "Done! $product_name has been added to the shared cart.",
+                "$product_name is now in the shared cart. Anything else to add?"
+            ],
+            "context": [
+                ""
+            ],
+            "sentiment": "positive"
+        },
+        {
+            "tag": "Create_Group_Coordination",
+            "patterns": [
+                "I want to form a group named Guitar Enthusiasts.",
+                "Create a new group with the name Fitness Freaks.",
+                "Let's form a group called Tech Geeks.",
+                "Start a group and name it Pet Lovers.",
+                "Can you create a group called Movie Fans?",
+                "I want to create a group called Travel Buddies.",
+                "Create a group named Book Club.",
+                "I want to create a group by the name Pet Lovers."
+            ],
+            "responses": [
+                "Got it! I've created a group called $group_name. What would you like to do next?",
+                "Your group $group_name is ready! Should I invite anyone to join?",
+                "The group $group_name has been set up successfully. Let me know if you'd like to send a message to the members.",
+                "$group_name group is created! Let me know if there's anything else you'd like to set up.",
+                "All set! The group $group_name is now active."
+            ],
+            "context": [
+                ""
+            ],
+            "sentiment": "neutral"
+        },
+        {
+            "tag": "Customize_Invite",
+            "patterns": [
+                "Let's make the invite message more fun.",
+                "How do I change the invitation details?",
+                "Help me add custom text to the invite.",
+                "Modify the default invite text for me.",
+                "I want to make the invite more personal.",
+                "Can I edit the invitation message?"
+            ],
+            "responses": [
+                "Got it! Here\u2019s the current invite: '[template message].' What would you like to update?",
+                "Sure, tell me the details or style you want, and I\u2019ll modify the invitation for you.",
+                "I\u2019ll adjust the message now. Let me know if there\u2019s anything specific you\u2019d like added.",
+                "The invitation message has been updated. Ready to share it?"
+            ],
+            "context": [
+                ""
+            ],
+            "sentiment": "neutral"
+        },
+        {
+            "tag": "Default Fallback Intent",
+            "patterns": [
+                "Can you help me with something else?",
+                "Not sure what you're referring to.",
+                "I'm lost.",
+                "What else can I do?",
+                "I don't know what you're asking for.",
+                "Huh?",
+                "Could you clarify?",
+                "I'm confused.",
+                "What do you mean?",
+                "Sorry, I didn't get it.",
+                "Can you say that again?",
+                "I didn't understand that."
+            ],
+            "responses": [
+                "Oops, I didn\u2019t quite catch that. Can you please rephrase your request?",
+                "Sorry, I\u2019m having trouble understanding. Could you try asking that in a different way?",
+                "Hmm, I\u2019m not sure what you're asking for. I can help with inviting friends, exploring products, or checking the wishlist. What would you like to do?",
+                "It seems I didn\u2019t follow you there. Want to talk about something else or need help with something specific?",
+                "I\u2019m not sure how to respond to that. Let me know if you\u2019d like to invite friends, get shopping suggestions, or check out product details!",
+                "I didn\u2019t quite get that. I can help you with shopping or coordinating with your friends. Just let me know what you need!",
+                "Looks like I missed something. What would you like to do next? You can check out the wishlist, invite friends, or browse through some categories!"
+            ],
+            "context": [
+                ""
+            ],
+            "sentiment": "neutral"
+        },
+        {
+            "tag": "Default Welcome Intent",
+            "patterns": [
+                "Shop with me!",
+                "Let's go shopping as a team!",
+                "Join me for some shopping!",
+                "Let's browse and buy together!",
+                "Come shop with me!",
+                "Let's shop together",
+                "Start your shopping spree!",
+                "Begin your shopping adventure!",
+                "Time to shop!",
+                "Kick off your shopping session!",
+                "Let's begin shopping!",
+                "Start a session",
+                "Hey Zephyra",
+                "What can you do?",
+                "just going to say hi",
+                "heya",
+                "hello hi",
+                "howdy",
+                "hey there",
+                "hi there",
+                "greetings",
+                "a good day"
+            ],
+            "responses": [
+                "Hi there! Welcome to Zephyra, your personal shopping assistant. \ud83d\ude0a Let\u2019s make group shopping fun and easy!",
+                "Hello! Ready to explore exciting products and shop with friends? Let\u2019s get started!",
+                "Welcome back! Invite your friends or start exploring categories today. \ud83c\udf89",
+                "Hello! Welcome to Zephyra, your friendly shopping companion. \ud83d\ude0a Ready to make group shopping a breeze?",
+                "Hi! Zephyra here, your personal assistant for all things shopping. \ud83d\ude0a Let\u2019s make shopping with friends fun and simple!",
+                "Hey there! Welcome to Zephyra. \ud83d\ude0a I\u2019m here to help you shop and coordinate with your friends effortlessly!",
+                "Hi there! Ready to discover amazing products and shop together with friends? Let\u2019s dive in!",
+                "Hello! Excited to browse great finds and enjoy group shopping? Let\u2019s begin!",
+                "Hey! Ready to explore fantastic products and make shopping with friends fun? Let\u2019s get started!"
+            ],
+            "context": [
+                ""
+            ],
+            "sentiment": "positive"
+        },
+        {
+            "tag": "display_voting_results",
+            "patterns": [
+                "Give me the vote count.",
+                "Can you tell me how everyone voted?",
+                "Who voted thumbs up or down?",
+                "Show me the voting results!",
+                "What's the result of the vote?",
+                "How did everyone vote?"
+            ],
+            "responses": [
+                "Here\u2019s the vote result: $Thumbs_Up_count thumbs up, $Thumbs_Down_count thumbs down.",
+                "The vote is in! $Thumbs_Up_count liked it, $Thumbs_Down_count didn\u2019t.",
+                "Voting complete! $Thumbs_Up_count approved it, and $Thumbs_Down_count didn\u2019t.",
+                "The result: $Thumbs_Up_count thumbs up, $Thumbs_Down_count thumbs down."
+            ],
+            "context": [
+                ""
+            ],
+            "sentiment": "neutral"
+        },
+        {
+            "tag": "end_voting_session",
+            "patterns": [
+                "Finish the voting.",
+                "Voting session complete.",
+                "Let's end the vote now.",
+                "Stop the voting.",
+                "End voting."
+            ],
+            "responses": [
+                "The vote has ended. We\u2019ll move on to the next item!",
+                "Voting is now closed! Thanks for sharing your thoughts!",
+                "That\u2019s the end of this voting session. Let\u2019s proceed!"
+            ],
+            "context": [
+                ""
+            ],
+            "sentiment": "neutral"
+        },
+        {
+            "tag": "explore_shared_interests_with_categories",
+            "patterns": [
+                "I noticed you're all into outdoor activities. Want to explore popular travel accessories together?",
+                "I noticed you're all into electronics. Want to explore trending tech gadgets together?",
+                "I noticed you're all into health and fitness. Want to explore trending fitness equipment together?",
+                "I noticed you're all into Outdoor and Travel. Want to explore trending travel gear together?",
+                "I noticed you're all into Home appliances. Want to explore trending home essentials together?",
+                "I noticed you're all into Fashion. Want to explore trending fashion items together?"
+            ],
+            "responses": [
+                "Great choice! Based on your interest in $Category_Name, here are some trending tech products you might love.",
+                "Awesome! Since you're into $Category_Name, here are some of the latest stylish collections to check out.",
+                "Nice! We\u2019ve got some popular home essentials trending right now. Have a look!",
+                "Great pick! Explore these trending $Category_Name products that everyone\u2019s loving.",
+                "Awesome choice! These $Category_Name products are trending right now\u2014perfect for staying active."
+            ],
+            "context": [
+                ""
+            ],
+            "sentiment": "positive"
+        },
+        {
+            "tag": "follow_someone_journey",
+            "patterns": [
+                "I wish to follow Rohan in the Electronics.",
+                "I'm interested in following Rohan in the Fashion.",
+                "I want to start following Rohan in the House Appliances.",
+                "I'd like to follow Rohan in the Fashion.",
+                "Would you like to follow Jane's picks in Electronics?",
+                "Would you like to join Sarah and explore the latest in Fashion?",
+                "Do you want to follow Anna to check out the latest in Health & Fitness?",
+                "How about following Tom as he explores Home Appliances?",
+                "Do you want to explore the store like Rachel, starting with Outdoor & Travel?",
+                "Do you want to follow John's shopping journey to Fashion?",
+                "Would you like to follow Sarah to Home & Kitchen?"
+            ],
+            "responses": [
+                "Sure! Follow $user_name\u2019s journey through $category_name and see what she\u2019s exploring.",
+                "Awesome! Let\u2019s follow $user_name as she picks out her favorite $category_name products.",
+                "Perfect! Let\u2019s follow $user_name and see what exciting tech gadgets he\u2019s looking at in $category_name.",
+                "Sounds fun! You can follow $user_name through her $category_name journey.",
+                "Cool! Follow $user_name as she explores $category_name products.",
+                "Sure thing! Follow $user_name as she checks out the newest products in $category_name."
+            ],
+            "context": [
+                ""
+            ],
+            "sentiment": "positive"
+        },
+        {
+            "tag": "gift_wrap_option",
+            "patterns": [
+                "Can you include gift wrapping for the purchase?",
+                "I'd like to add gift wrapping for this item.",
+                "Wrap it as a gift, please.",
+                "I want this to be gift-wrapped.",
+                "Can you gift wrap this item?"
+            ],
+            "responses": [
+                "Sure! I\u2019ll add gift wrapping to this item.",
+                "Gift wrapping has been added. Let me know if there\u2019s anything else!",
+                "I\u2019ll arrange for the item to be gift-wrapped. Anything else you\u2019d like to add?",
+                "Got it! Your item will be beautifully wrapped as a gift.",
+                "Gift wrapping is confirmed! Do you need anything else?"
+            ],
+            "context": [
+                ""
+            ],
+            "sentiment": "positive"
+        },
+        {
+            "tag": "Group_Shopping_Suggestions",
+            "patterns": [
+                "What Health & Fitness items would suit our group?",
+                "Are there any group deals in Electronics?",
+                "Suggest trending products in Fashion for our group.",
+                "What are the top Health & Fitness items for our group?",
+                "Do you have any recommendations in Outdoor & Travel?",
+                "Suggest products for our shopping group in Beauty & Skincare.",
+                "What are the best group deals for us in Home Appliances?",
+                "Show us some trending deals in Electronics.",
+                "Find items our group would love in Fashion.",
+                "Can you suggest deals for our group in Health & Fitness?",
+                "What popular items might we like in Outdoor & Travel?",
+                "Any suggestions for our group shopping in Beauty & Skincare?",
+                "Show deals in Home Appliances based on our shopping patterns.",
+                "Recommend some products for our group in Electronics.",
+                "What items does our group like in Fashion?"
+            ],
+            "responses": [
+                "I\u2019ve found some popular items in $Category_Name that your group might love\u2014check them out!",
+                "I\u2019ve curated a selection of $Category_Name for your group\u2014have a look!",
+                "These $Category_Name products are popular for groups like yours\u2014explore them!",
+                "Here are the top $Category_Name items trending for your group."
+            ],
+            "context": [
+                ""
+            ],
+            "sentiment": "positive"
+        },
+        {
+            "tag": "highlight_item",
+            "patterns": [
+                "Promote the Smartwatch based on its popularity.",
+                "Feature the Skincare Set prominently.",
+                "Add the Camera to the trending section.",
+                "Highlight the Gaming Console for others to see.",
+                "Yes, add the Sneakers to the highlighted list.",
+                "Promote the Laptop based on reactions.",
+                "Make the Bluetooth speaker stand out.",
+                "Showcase the Watch.",
+                "Yes, highlight the leather jacket."
+            ],
+            "responses": [
+                "Great! The $product_name has been highlighted for others to see.",
+                "The $product_name is now showcased in the popular list.",
+                "I've added the $product_name to the featured items section.",
+                "The $product_name is now highlighted based on its popularity.",
+                "Done! The $product_name is now marked as trending."
+            ],
+            "context": [
+                ""
+            ],
+            "sentiment": "positive"
+        },
+        {
+            "tag": "highlight_popular_choice",
+            "patterns": [
+                "High votes for Backpack! Everyone loves it.",
+                "Your group's popular pick\u2014Watch stands out!",
+                "Jeans has been voted as the top choice by your group.",
+                "Lots of love for T-shirt\u2014it's a hit with your group!",
+                "A crowd favorite! Your group seems to love Sneakers.",
+                "Headphones is trending with high votes in your group.",
+                "Everyone agrees\u2014Laptop is a favorite item!",
+                "It seems smartphone is a popular choice among your group.",
+                "Bluetooth speaker has received a lot of positive reactions.",
+                "Looks like everyone loves leather jacket!"
+            ],
+            "responses": [
+                "It looks like $product_name is the popular choice among your group! \ud83c\udf89",
+                "Everyone loves the $product_name! It's the top pick in your group. \ud83d\ude0d",
+                "$product_name has received the most votes\u2014your group\u2019s favorite! \ud83c\udfc6",
+                "Great choice! The $product_name is trending and loved by everyone in your group. \ud83c\udf1f",
+                "Looks like $product_name is the group\u2019s number one pick! \ud83d\udc4f"
+            ],
+            "context": [
+                ""
+            ],
+            "sentiment": "positive"
+        },
+        {
+            "tag": "Invite_Friends",
+            "patterns": [
+                "I want to invite James in Bookworm Group",
+                "Let's invite James to join the Bookworm Group.",
+                "I want to send James an invite to the Bookworm Group.",
+                "Please include James in the Bookworm Group.",
+                "I'd like to add James to the Bookworm Group.",
+                "Can I invite James to the Bookworm Group?",
+                "Can you invite Ethan and Olivia to join?",
+                "Please send an invite to Ryan and Grace.",
+                "Invite Ava and James to join the shopping fun.",
+                "I need your help inviting Ethan.",
+                "Send an invite to Sophia, please.",
+                "Can you invite Noah for me?",
+                "Help me get Mia into the shopping session.",
+                "Can you help me invite Alex?",
+                "Help me invite Emma",
+                "Send an invite to my friends"
+            ],
+            "responses": [
+                "Sure! I\u2019ve sent an invite to $friend_name to join the $group_name.",
+                "Great! $friend_name has been invited to join the $group_name.",
+                "Done! $friend_name is now invited to the $group_name.",
+                "Got it! $friend_name has been added to the $group_name.",
+                "All set! $friend_name is now part of the $group_name."
+            ],
+            "context": [
+                ""
+            ],
+            "sentiment": "positive"
+        },
+        {
+            "tag": "Notify_Friend_Browsing_Section",
+            "patterns": [
+                "Ethan is checking out the Deals section.",
+                "Sophia is looking at Home & Kitchen products.",
+                "Alex is exploring the Electronics category.",
+                "Emma is browsing in the Fashion section."
+            ],
+            "responses": [
+                "$friend_name is currently exploring the $section_name. Check it out and join them!",
+                "$friend_name is browsing the $section_name right now. Take a look and join the fun!",
+                "$friend_name is checking out the $section_name. Want to see what they\u2019re looking at?",
+                "$friend_name is exploring the $section_name. You can explore it with them!"
+            ],
+            "context": [
+                ""
+            ],
+            "sentiment": "neutral"
+        },
+        {
+            "tag": "Notify_Friend_Joined",
+            "patterns": [
+                "Sophia is here now. Let's get started!",
+                "Ethan just joined. Ready to shop together?",
+                "Your friend Emma has joined the session.",
+                "Alex just joined the shopping session!"
+            ],
+            "responses": [
+                "$user_name just joined the shopping session!",
+                "Your friend $user_name has joined. Let's say hi!",
+                "$user_name is now part of the session. Time to start shopping!",
+                "$user_name joined the session. Invite more friends if you'd like!"
+            ],
+            "context": [
+                ""
+            ],
+            "sentiment": "neutral"
+        },
+        {
+            "tag": "Notify_Friend_Left",
+            "patterns": [
+                "Ethan left the group. Let's continue shopping.",
+                "Sophia isn't shopping with us anymore.",
+                "Alex has exited the session.",
+                "Emma just left the shopping session."
+            ],
+            "responses": [
+                "It looks like $user_name had to leave. Do you want to proceed with shopping?",
+                "Your friend $user_name just exited the session. Need help inviting them back?",
+                "Looks like $user_name isn\u2019t shopping with us anymore. Let me know if you need anything.",
+                "$user_name has left the shopping group. Let me know if you'd like to update the session.",
+                "Oops, $user_name is no longer in the session. Want me to assist you further?",
+                "Hey, $user_name just logged out. Do you want to continue the session?"
+            ],
+            "context": [
+                ""
+            ],
+            "sentiment": "neutral"
+        },
+        {
+            "tag": "Product_Color_Inquiry",
+            "patterns": [
+                "Can I get the smartphone in this color?",
+                "Does the laptop have color options?",
+                "What colors does the T-shirt come in?",
+                "Is the Bluetooth speaker available in this color?",
+                "What colors are available for the leather jacket?"
+            ],
+            "responses": [
+                "The $product_name is available in the following colors: [list colors].",
+                "Yes, the $product_name is available in [color].",
+                "Currently, we offer these color options for the $product_name: [list colors]."
+            ],
+            "context": [
+                ""
+            ],
+            "sentiment": "neutral"
+        },
+        {
+            "tag": "Product_Size_Inquiry",
+            "patterns": [
+                "Is the leather jacket available in different sizes?",
+                "What size options do you have for the leather jacket?",
+                "Which sizes are available for the leather jacket?",
+                "Can you tell me the available sizes for the leather jacket?",
+                "What sizes does the leather jacket come in?",
+                "What sizes are available for the leather jacket?"
+            ],
+            "responses": [
+                "The $product_name is available in the following sizes: [list sizes].",
+                "Yes, we have the $product_name in these sizes.",
+                "Currently, the available sizes for the $product_name are [list sizes]."
+            ],
+            "context": [
+                ""
+            ],
+            "sentiment": "neutral"
+        },
+        {
+            "tag": "Product_Stock_Availability",
+            "patterns": [
+                "Can I still buy the smartwatch right now?",
+                "Is the smartwatch currently available?",
+                "Do you still have the smartwatch in stock?",
+                "Do you have the jeans available in the stock?",
+                "Is the smartwatch still in stock?",
+                "Can I buy the laptop right now?",
+                "Do you have the Bluetooth speaker available?",
+                "Is the leather jacket in stock?"
+            ],
+            "responses": [
+                "Yes, the $product_name is in stock.",
+                "Yes, we currently have the $product_name in stock.",
+                "The $product_name is available for purchase right now.",
+                "Yes, the $product_name is ready and in stock.",
+                "Absolutely, the $product_name is available in our inventory."
+            ],
+            "context": [
+                ""
+            ],
+            "sentiment": "neutral"
+        },
+        {
+            "tag": "prompt_for_voting",
+            "patterns": [
+                "Shall we start the voting for Water Bottle?",
+                "It's time to cast votes on Air Purifier!",
+                "Let's begin voting on Tablet!",
+                "Shall we vote on Shampoo now?",
+                "Time to vote on Sunglasses! What do you think?",
+                "It's voting time\u2014what's your take on Sunglasses?",
+                "Thumbs up or down for Gaming Console?",
+                "What do you think of Shampoo? Thumbs up or down!",
+                "Thumbs up or down for Skincare Set?",
+                "How about Watch? Thumbs up or down!",
+                "Ready to cast your vote on Bluetooth speaker?",
+                "What's your opinion on Laptop? Let's vote!",
+                "Let's vote on Sneakers! Thumbs up or thumbs down?",
+                "Is Headphones a good choice? Thumbs up or down!",
+                "Thumbs up or down for Laptop?",
+                "Would you give smartphone a thumbs up or down?"
+            ],
+            "responses": [
+                "What do you think about $Product_Name? Thumbs up or down!",
+                "Give it a thumbs up if you like $Product_Name, or thumbs down if you don\u2019t!",
+                "Thumbs up if you think $Product_Name is a great pick, or thumbs down if not!",
+                "Let\u2019s vote! Thumbs up for yes, thumbs down for no \u2013 what about $Product_Name?"
+            ],
+            "context": [
+                ""
+            ],
+            "sentiment": "neutral"
+        },
+        {
+            "tag": "react_with_emojis_group",
+            "patterns": [
+                "Post a star emoji in Health & Fitness Buffs.",
+                "Send a shocked emoji in Toy Collectors.",
+                "React to the last message in Gamer's Paradise with a thumbs up.",
+                "Post a heart emoji in Sports Gear Seekers.",
+                "Send a laughing emoji to Eco-Friendly Shoppers.",
+                "React with a smiley face emoji in Luxury Lovers."
+            ],
+            "responses": [
+                "Your emoji has been posted in $Group_Name.",
+                "Reaction added successfully in $Group_Name.",
+                "Emoji sent to $Group_Name members."
+            ],
+            "context": [
+                ""
+            ],
+            "sentiment": "neutral"
+        },
+        {
+            "tag": "remove_from_shared_cart",
+            "patterns": [
+                "Remove the T-shirt from the group cart.",
+                "Remove the headphones from the shared cart.",
+                "Take out the smartphone from the shared cart.",
+                "Delete the Bluetooth speaker from our cart.",
+                "Remove the leather jacket from the shared cart."
+            ],
+            "responses": [
+                "$product_name has been removed from the shared cart.",
+                "I\u2019ve taken $product_name out of the shared cart.",
+                "$product_name is no longer in the shared cart. Let me know if you want to remove anything else."
+            ],
+            "context": [
+                ""
+            ],
+            "sentiment": "neutral"
+        },
+        {
+            "tag": "respond_thanks",
+            "patterns": [
+                "Much appreciated",
+                "Thanks for the help",
+                "You're awesome, thanks!",
+                "Thank you so much",
+                "Thanks so much",
+                "I appreciate it",
+                "Thanks a lot",
+                "Thank you",
+                "Thanks"
+            ],
+            "responses": [
+                "You're welcome! I'm here to help. Let me know if you need anything else.",
+                "Glad I could assist! Happy shopping!",
+                "Anytime! Enjoy your shopping experience!",
+                "You're very welcome! Feel free to ask if you need help with anything else."
+            ],
+            "context": [
+                ""
+            ],
+            "sentiment": "neutral"
+        },
+        {
+            "tag": "respond_yes_for_welcome",
+            "patterns": [
+                "Start the session",
+                "I'm ready",
+                "Let's go",
+                "Go ahead",
+                "Yeah",
+                "Okay",
+                "Sure",
+                "Yes"
+            ],
+            "responses": [
+                "Great! Welcome to the shopping session! Let's get started.",
+                "Awesome! We are all set to begin your shopping journey. What would you like to explore first?"
+            ],
+            "context": [
+                ""
+            ],
+            "sentiment": "neutral"
+        },
+        {
+            "tag": "Send_Invite_Email",
+            "patterns": [
+                "Can you send an invite to Ethan via email?",
+                "Please email Sophia an invite to join the shopping session.",
+                "Send an email invite to Alex for the session.",
+                "Invite Emma to join the group via email.",
+                "Email an invite to Mia, please.",
+                "Can you send an invitation to Noah's email?",
+                "Send the shopping session invite to Olivia through email.",
+                "Can you notify Ryan with an email invite?"
+            ],
+            "responses": [
+                "The invite has been sent to $User_Name's email. Let me know if you need anything else.",
+                "An email invitation has been sent to $User_Name. Let\u2019s wait for their response.",
+                "The shopping session invite for $User_Name has been emailed successfully.",
+                "Invite email sent to $User_Name. Anything else you\u2019d like to do?"
+            ],
+            "context": [
+                ""
+            ],
+            "sentiment": "neutral"
+        },
+        {
+            "tag": "Send_Invite_Social_Media",
+            "patterns": [
+                "Send my invite through WhatsApp.",
+                "Post the invite on Twitter.",
+                "Can you share the invite on Instagram?",
+                "Send a link to Facebook.",
+                "Send the invite via social media."
+            ],
+            "responses": [
+                "I\u2019m sending your invite now. Would you like to include any additional details or just go with the message as it is?",
+                "I\u2019m all set to send the invite. Let me know if you want to make any changes, or I can send it as is!",
+                "Your invite is on its way! Would you like to add anything else or send another invite?",
+                "I\u2019m ready to send your invite. Feel free to customize the message, or should I send it as is?",
+                "Got it! I\u2019ll send your invite now. Would you like to add a personal message before I send it?"
+            ],
+            "context": [
+                ""
+            ],
+            "sentiment": "neutral"
+        },
+        {
+            "tag": "Send_Invite_Email",
+            "patterns": [
+                "Can you notify Ryan with an email invite?",
+                "Send the shopping session invite to Olivia through email.",
+                "Can you send an invitation to Noah's email?",
+                "Email an invite to Mia, please.",
+                "Invite Emma to join the group via email.",
+                "Send an email invite to Alex for the session.",
+                "Please email Sophia an invite to join the shopping session.",
+                "Can you send an invite to Ethan via email?"
+            ],
+            "responses": [
+                "The invite has been sent to $User_Name's email. Let me know if you need anything else.",
+                "An email invitation has been sent to $User_Name. Let\u2019s wait for their response.",
+                "The shopping session invite for $User_Name has been emailed successfully.",
+                "Invite email sent to $User_Name. Anything else you\u2019d like to do?"
+            ],
+            "context": [
+                ""
+            ],
+            "sentiment": "neutral"
+        },
+        {
+            "tag": "session_start_reminder",
+            "patterns": [
+                "Send me a reminder for the session start.",
+                "What time does the shopping session start?",
+                "Reminder for the session, please.",
+                "Tell me when it's time to shop.",
+                "Let me know when the session is about to begin.",
+                "When does the session start?",
+                "Remind me when the shopping session begins.",
+                "Is the session starting soon?"
+            ],
+            "responses": [
+                "The session is starting in 15 minutes! Get ready to shop!",
+                "Your shopping session is about to start! Join in soon to not miss out.",
+                "Just a reminder, the session will start shortly! Let me know if you need anything before then.",
+                "The shopping session is starting soon! Are you ready to shop with your friends?",
+                "Reminder: Your shopping session is about to start. It's time to join and start browsing!"
+            ],
+            "context": [
+                ""
+            ],
+            "sentiment": "neutral"
+        },
+        {
+            "tag": "share_links_group",
+            "patterns": [
+                "Send this to Foodies Group.",
+                "Post this URL in Art & Craft Lovers.",
+                "Share the link with Sneakerheads.",
+                "Send this website to Home Decor Fans.",
+                "Post the product URL in Pet Lovers.",
+                "Share this link in Beauty Addicts."
+            ],
+            "responses": [
+                "The link has been shared with $Group_Name.",
+                "Posted the link successfully in $Group_Name.",
+                "Link sent to $Group_Name members."
+            ],
+            "context": [
+                ""
+            ],
+            "sentiment": "neutral"
+        },
+        {
+            "tag": "split_payment_option",
+            "patterns": [
+                "I want to distribute the expenses among the group members.",
+                "Can we arrange to split the cost across the group?",
+                "Let's divide the total amount among the group.",
+                "I'd like to split the expenses with everyone.",
+                "Can we share the cost within the group?",
+                "Set up split payments for the cart.",
+                "Can we distribute the total cost among members?",
+                "Help us arrange a split payment.",
+                "Let's share the payment equally.",
+                "How do we split the bill?",
+                "I want to divide the cost among the group.",
+                "Can we split the payment?"
+            ],
+            "responses": [
+                "Sure! Let\u2019s arrange a split payment. Should I divide it equally or based on specific items?",
+                "I can set up a split payment. How would you like to divide the total?",
+                "Okay, let\u2019s share the payment. How should we divide the total amount?"
+            ],
+            "context": [
+                ""
+            ],
+            "sentiment": "neutral"
+        },
+        {
+            "tag": "suggest_add_to_cart",
+            "patterns": [
+                "Would you like to add Backpack to your group cart?",
+                "Shall I add Watch, as everyone's popular choice, to your cart?",
+                "Should I go ahead and add Jeans to the cart?",
+                "Would you like to include T-shirt, the favorite item, in the cart?",
+                "Do you think Sneakers belongs in your cart?",
+                "Everyone loves Headphones\u2014should I add it to your cart?",
+                "Would you like me to add Laptop to your shared cart?",
+                "With such great reactions, should I add smartphone to the cart?",
+                "Shall I add Bluetooth speaker, the high-voted item, to your cart?",
+                "Do you want to add leather jacket to your shared cart?"
+            ],
+            "responses": [
+                "I\u2019ve added $Product_Name to your shared cart!",
+                "Great choice! $Product_Name is now in your cart.",
+                "The group\u2019s favorite, $Product_Name, has been added to the cart!",
+                "Done! $Product_Name is now in your shared cart.",
+                "I\u2019ve included $Product_Name, the crowd favorite, in your cart."
+            ],
+            "context": [
+                ""
+            ],
+            "sentiment": "neutral"
+        },
+        {
+            "tag": "thumbs_down_vote",
+            "patterns": [
+                "I don't think it's a good choice.",
+                "This isn't for me.",
+                "Thumbs down for this item.",
+                "I wouldn't buy this.",
+                "No, I don't like it.",
+                "Thumbs down."
+            ],
+            "responses": [
+                "You gave a thumbs down. Maybe we\u2019ll find something better!",
+                "A thumbs down! Looks like this one didn\u2019t make the cut.",
+                "Not a fan? Thumbs down it is!",
+                "Thumbs down! Let\u2019s look for something else."
+            ],
+            "context": [
+                ""
+            ],
+            "sentiment": "neutral"
+        },
+        {
+            "tag": "thumbs_up_vote",
+            "patterns": [
+                "\ud83d\udc4d",
+                "This looks great!",
+                "I would buy this!",
+                "Thumbs up for this item!",
+                "Good choice!",
+                "Yes, I like it!",
+                "I approve!",
+                "Thumbs up!"
+            ],
+            "responses": [
+                "You gave a thumbs up! This item is a hit!",
+                "Thanks for the thumbs up! Looks like this one's a winner!",
+                "Great choice! You\u2019ve approved this item with a thumbs up!",
+                "A thumbs up for this item \u2013 it\u2019s popular!"
+            ],
+            "context": [
+                ""
+            ],
+            "sentiment": "neutral"
+        },
+        {
+            "tag": "view_shared_cart",
+            "patterns": [
+                "List all items in the shared cart.",
+                "I want to see the items in our cart.",
+                "Can you display the shared cart?",
+                "Show me the group cart.",
+                "What's in the shared cart?"
+            ],
+            "responses": [
+                "Here\u2019s what\u2019s currently in the shared cart: {cart_items}.",
+                "Your shared cart contains the following items:\n{cart_items}",
+                "These are the items in the shared cart so far:\n{cart_items}. Let me know if you\u2019d like to make any changes."
+            ],
+            "context": [
+                ""
+            ],
+            "sentiment": "neutral"
+        },
+        {
+            "tag": "view_wishlist",
+            "patterns": [
+                "Take me to the wishlist.",
+                "Please display my wishlist.",
+                "I'd like to check out the wishlist.",
+                "Show me the wishlist.",
+                "Can I see the wishlist?",
+                "What's added to our wishlist so far, like the yoga mats and dumbbells?",
+                "I want to view the wishlist items, especially the running shoes and sleeping bags.",
+                "Can I see the shared wishlist? I want to check if we added the refrigerator.",
+                "Please show me the wishlist with hiking shoes and smartwatches.",
+                "Let's check out the wishlist together. Are the lipsticks and shampoos on there?"
+            ],
+            "responses": [
+                "Here\u2019s your wishlist with the $Product_Name. Ready to check out?",
+                "In your shared wishlist, you have the $Product_Name. Let me know if you want to add more.",
+                "Your wishlist currently has $Product_Name. Want to add or remove anything?",
+                "You\u2019ve got the $Product_Name in your wishlist. Want to view more?",
+                "Here\u2019s your shared wishlist. You\u2019ve got the $Product_Name added already!",
+                "Here's your wishlist. Take a look!",
+                "Sure, let me show you your wishlist.",
+                "Displaying your wishlist now.",
+                "Here\u2019s what you have in your wishlist."
+            ],
+            "context": [
+                ""
+            ],
+            "sentiment": "neutral"
+        }
+    ]
+}

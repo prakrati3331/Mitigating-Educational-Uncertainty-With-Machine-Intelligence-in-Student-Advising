@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>🧪 PCB Course & Career Recommendation</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+    :root {
+      --primary: #27ae60;
+      --secondary: #1e8449;
+      --light: #f8f9fa;
+      --dark: #2c3e50;
+      --core-bg: #e3f2fd;
+      --elective-bg: #e8f5e9;
+      --aptitude-bg: #fff3e0;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #eef7f1, #d7f0e1);
+      min-height: 100vh;
+      padding: 20px;
+      color: var(--dark);
+    }
+
+    .container {
+      max-width: 950px;
+      margin: auto;
+      background: #fff;
+      padding: 35px;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+      animation: fadeIn 0.8s ease;
+    }
+
+    h1 {
+      text-align: center;
+      color: var(--primary);
+      font-weight: 700;
+      margin-bottom: 25px;
+      animation: fadeInDown 0.8s ease;
+    }
+
+    h3 {
+      margin-bottom: 20px;
+      color: var(--secondary);
+      font-weight: 600;
+    }
+
+    .slider-group {
+      margin: 18px 0;
+      animation: fadeIn 0.8s ease;
+    }
+
+    .slider-group label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 6px;
+      color: #495057;
+    }
+
+    .form-range {
+      accent-color: var(--primary);
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      border: none;
+      padding: 12px 25px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      border-radius: 10px;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--secondary);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(39,174,96,0.3);
+    }
+
+    .results {
+      margin-top: 30px;
+      animation: fadeIn 0.8s ease;
+    }
+
+    .course-card {
+      background: #eafbea;
+      padding: 18px;
+      border-radius: 12px;
+      margin-bottom: 18px;
+      border-left: 4px solid var(--primary);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .course-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    }
+
+    .progress {
+      height: 10px;
+      border-radius: 5px;
+      margin-bottom: 25px;
+      background-color: #e9ecef;
+    }
+
+    .progress-bar {
+      background-color: var(--primary);
+      transition: width 0.6s ease;
+    }
+
+    .card {
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      margin-bottom: 25px;
+      transition: all 0.3s ease;
+      overflow: hidden;
+      border-left: 4px solid var(--primary);
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+
+    .card.core {
+      border-left-color: #2196f3;
+      background-color: var(--core-bg);
+    }
+
+    .card.elective {
+      border-left-color: #4caf50;
+      background-color: var(--elective-bg);
+    }
+
+    .card.aptitude {
+      border-left-color: #ff9800;
+      background-color: var(--aptitude-bg);
+    }
+
+    .card-header {
+      background: transparent;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+      padding: 1.25rem 1.5rem;
+    }
+
+    .subject-item {
+      background: white;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      transition: all 0.3s ease;
+      border-left: 3px solid transparent;
+    }
+
+    .subject-item:hover {
+      transform: translateX(5px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      border-left-color: var(--primary);
+    }
+
+    .subject-description {
+      font-size: 0.85rem;
+      color: #666;
+      margin-top: 5px;
+      font-style: italic;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container" data-total-subjects="{{ categories|tojson|safe }}">
+    <h1>🧪 PCB Course & Career Recommendation</h1>
+    <p class="text-center mb-4">Rate your interest and proficiency in each subject to get personalized career recommendations</p>
+    
+    <div class="alert alert-info mb-4">
+      <i class="fas fa-info-circle me-2"></i>
+      Rate your interest and proficiency in each subject area to get personalized course and career recommendations.
+    </div>
+    
+    <!-- Progress Bar -->
+    <div class="progress mb-4">
+      <div id="progressBar" class="progress-bar" role="progressbar" style="width: 0%" 
+           aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+        <span class="visually-hidden">0% Complete</span>
+      </div>
+    </div>
+    
+    <form id="recommendationForm">
+      <!-- Core Subjects Section -->
+      <div class="card mb-4 core">
+        <div class="card-header">
+          <h3 class="mb-1">
+            <i class="fas fa-atom me-2"></i>Core Subjects
+          </h3>
+          <p class="mb-0 text-muted">Select your core subjects and rate your interest</p>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-bold">Select Core Subject</label>
+              <select class="form-select mb-2" id="coreSubjectSelect" onchange="addSubject('core')">
+                <option value="" selected disabled>Select a core subject</option>
+                {% for subject in categories.core.subjects %}
+                <option value="{{ subject }}">{{ subject }}</option>
+                {% endfor %}
+              </select>
+              <div id="coreSubjectsContainer"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Elective Subjects Section -->
+      <div class="card mb-4 elective">
+        <div class="card-header">
+          <h3 class="mb-1">
+            <i class="fas fa-flask me-2"></i>Elective Subjects
+          </h3>
+          <p class="mb-0 text-muted">Select your elective subjects and rate your interest</p>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-bold">Select Elective Subject</label>
+              <select class="form-select mb-2" id="electiveSubjectSelect" onchange="addSubject('elective')">
+                <option value="" selected disabled>Select an elective subject</option>
+                {% for subject in categories.elective.subjects %}
+                <option value="{{ subject }}">{{ subject }}</option>
+                {% endfor %}
+              </select>
+              <div id="electiveSubjectsContainer"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Aptitude Section -->
+      <div class="card mb-4 aptitude">
+        <div class="card-header">
+          <h3 class="mb-1">
+            <i class="fas fa-brain me-2"></i>Aptitudes & Skills
+          </h3>
+          <p class="mb-0 text-muted">Select and rate your aptitudes</p>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-bold">Select Aptitude/Skill</label>
+              <select class="form-select mb-2" id="aptitudeSubjectSelect" onchange="addSubject('aptitude')">
+                <option value="" selected disabled>Select an aptitude/skill</option>
+                {% for subject in categories.aptitude.subjects %}
+                <option value="{{ subject }}">{{ subject }}</option>
+                {% endfor %}
+              </select>
+              <div id="aptitudeSubjectsContainer"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="text-center my-4">
+        <button type="submit" class="btn btn-primary btn-lg px-5">
+          <i class="fas fa-search me-2"></i>Get Recommendations
+        </button>
+        <button type="button" class="btn btn-outline-secondary btn-lg ms-3" onclick="resetForm()">
+          <i class="fas fa-redo me-2"></i>Reset
+        </button>
+      </div>
+    </form>
+    
+    <div id="loading" class="text-center my-5" style="display: none;">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p class="mt-2">Analyzing your preferences...</p>
+    </div>
+    
+    <div id="results" class="mt-5"></div>
+    <div class="chart-container" style="position: relative; height:300px;">
+      <canvas id="chart"></canvas>
+    </div>
+  </div>
+
+  <script>
+    // Track added subjects to prevent duplicates
+    const addedSubjects = new Set();
+    
+    // Function to add a subject to the container
+    function addSubject(type) {
+      const containerId = `${type}SubjectsContainer`;
+      const selectId = `${type}SubjectSelect`;
+      const select = document.getElementById(selectId);
+      const subject = select.value;
+      
+      if (!subject || addedSubjects.has(subject)) {
+        select.value = '';
+        return;
+      }
+      
+      const subjectId = subject.replace(/\s+/g, '_');
+      const container = document.getElementById(containerId);
+      
+      const subjectHtml = `
+        <div class="subject-item" id="${subjectId}_container">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <label class="form-label fw-bold mb-0">${subject}</label>
+            <button type="button" class="btn-close" onclick="removeSubject('${subjectId}')" aria-label="Remove"></button>
+          </div>
+          <input type="range" class="form-range" id="${subjectId}" 
+                 min="0" max="100" value="50" 
+                 oninput="document.getElementById('${subjectId}_val').textContent = this.value">
+          <div class="d-flex justify-content-between text-muted small">
+            <span>0%</span>
+            <span>25%</span>
+            <span>50%</span>
+            <span>75%</span>
+            <span>100%</span>
+          </div>
+          <div class="text-end small">
+            Score: <span id="${subjectId}_val" class="text-primary">50</span>%
+          </div>
+          <div class="subject-description">
+            ${getSubjectDescription(subject)}
+          </div>
+        </div>
+      `;
+      
+      container.insertAdjacentHTML('beforeend', subjectHtml);
+      addedSubjects.add(subject);
+      select.value = '';
+      updateProgress();
+    }
+    
+    // Function to remove a subject
+    function removeSubject(subjectId) {
+      const container = document.getElementById(`${subjectId}_container`);
+      if (container) {
+        const subject = subjectId.replace(/_/g, ' ');
+        addedSubjects.delete(subject);
+        container.remove();
+        updateProgress();
+      }
+    }
+    
+    // Function to get subject description
+    function getSubjectDescription(subject) {
+      const descriptions = {
+        'Physics': 'Study of matter, energy, and their interactions. Essential for engineering and research careers.',
+        'Chemistry': 'Understanding of matter and its transformations. Crucial for medicine and chemical industries.',
+        'Biology': 'Study of living organisms. Foundation for medical and life sciences careers.',
+        'Mathematics': 'Develops analytical and problem-solving skills. Essential for all scientific fields.',
+        'English': 'Improves communication skills, critical for all professional fields.',
+        'Hindi': 'Enhances cultural understanding and communication in regional contexts.',
+        'Psychology': 'Study of human behavior, useful in healthcare and social sciences.',
+        'Computer Science': 'Develops computational thinking and programming skills.',
+        'Research Skills': 'Essential for academic and scientific research careers.'
+      };
+      return descriptions[subject] || 'Important skill for personal and professional development.';
+    }
+    
+    // Update progress bar
+    function updateProgress() {
+      const progressBar = document.getElementById('progressBar');
+      const container = document.querySelector('.container');
+      const categoriesData = JSON.parse(container.getAttribute('data-total-subjects'));
+      const totalSubjects = Object.values(categoriesData).reduce((acc, cat) => acc + cat.subjects.length, 0);
+      const progress = totalSubjects > 0 ? (addedSubjects.size / totalSubjects) * 100 : 0;
+      progressBar.style.width = `${progress}%`;
+      progressBar.setAttribute('aria-valuenow', progress);
+    }
+    
+    // Function to collect form data and send to server
+    function getRecommendations() {
+      // Show loading state
+      const resultsDiv = document.getElementById('results');
+      resultsDiv.innerHTML = '<div class="text-center"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div><p class="mt-2">Analyzing your preferences...</p></div>';
+      
+      // Collect all slider values from added subjects
+      const formData = {};
+      document.querySelectorAll('.subject-item input[type="range"]').forEach(slider => {
+        formData[slider.id] = parseInt(slider.value);
+      });
+      
+      // Check if at least one subject is selected
+      if (Object.keys(formData).length === 0) {
+        alert('Please add at least one subject before getting recommendations.');
+        return;
+      }
+      
+      // Send data to server
+      fetch('/get_recommendations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ scores: formData })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === 'success') {
+          displayRecommendations(data.recommendations);
+        } else {
+          throw new Error(data.message || 'Failed to get recommendations');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        resultsDiv.innerHTML = `
+          <div class="alert alert-danger">
+            <i class="fas fa-exclamation-triangle"></i> Error: ${error.message || 'Failed to get recommendations. Please try again.'}
+          </div>`;
+      });
+    }
+    
+    // Display recommendations from server
+    function displayRecommendations(recommendations) {
+      const resultsDiv = document.getElementById('results');
+      
+      if (!recommendations || recommendations.length === 0) {
+        resultsDiv.innerHTML = `
+          <div class="alert alert-warning">
+            <i class="fas fa-exclamation-triangle"></i> No recommendations found. Please adjust your preferences and try again.
+          </div>`;
+        return;
+      }
+      
+      // Clear previous results
+      resultsDiv.innerHTML = '<h3>📌 Recommended PCB Courses & Careers</h3>';
+      
+      // Add each recommendation
+      recommendations.forEach(rec => {
+        const card = document.createElement('div');
+        card.className = 'course-card';
+        const matchPercent = Math.round(rec.similarity * 100);
+        
+        card.innerHTML = `
+          <h5>${rec.course} <small class="text-muted">${matchPercent}% Match</small></h5>
+          <p><b>Career Options:</b> ${rec.career_options.join(', ')}</p>
+          <p><b>Top Skills:</b> ${rec.top_skills.join(', ')}</p>
+          <div class="progress mt-2">
+            <div class="progress-bar" role="progressbar" style="width: ${matchPercent}%" 
+                 aria-valuenow="${matchPercent}" aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
+        `;
+        resultsDiv.appendChild(card);
+      });
+      
+      // Update chart if it exists
+      updateChart(recommendations);
+    }
+    
+    // Update chart with new data
+    function updateChart(recommendations) {
+      const ctx = document.getElementById('chart').getContext('2d');
+      
+      // Destroy existing chart if it exists
+      if (window.recommendationChart) {
+        window.recommendationChart.destroy();
+      }
+      
+      // Prepare data for chart
+      const labels = recommendations.map(r => r.course);
+      const data = recommendations.map(r => Math.round(r.similarity * 100));
+      
+      // Create new chart
+      window.recommendationChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Match Score %',
+            data: data,
+            backgroundColor: 'rgba(39, 174, 96, 0.7)',
+            borderColor: 'rgba(39, 174, 96, 1)',
+            borderWidth: 1,
+            borderRadius: 4
+          }]
+        },
+        options: {
+          indexAxis: 'y',
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            x: {
+              beginAtZero: true,
+              max: 100,
+              ticks: {
+                callback: function(value) { return value + '%'; }
+              }
+            }
+          },
+          plugins: {
+            legend: {
+              display: false
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return `Match: ${context.raw}%`;
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // Initialize event listeners
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize any existing sliders (for backward compatibility)
+      document.querySelectorAll('input[type="range"]').forEach(slider => {
+        const valueDisplay = document.getElementById(`${slider.id}_val`);
+        if (valueDisplay) {
+          valueDisplay.textContent = slider.value;
+        }
+      });
+      // Initialize all sliders with default values
+      document.querySelectorAll('input[type="range"]').forEach(slider => {
+        const valueDisplay = document.getElementById(`${slider.id}_val`);
+        if (valueDisplay) {
+          valueDisplay.textContent = slider.value;
+        }
+        
+        // Update value display when slider changes
+        slider.addEventListener('input', function() {
+          if (valueDisplay) {
+            valueDisplay.textContent = this.value;
+          }
+        });
+      });
+      
+      // Set up form submission
+      const form = document.querySelector('form');
+      if (form) {
+        form.addEventListener('submit', function(e) {
+          e.preventDefault();
+          getRecommendations();
+        });
+      }
+    });
+  </script>
+</body>
+</html>

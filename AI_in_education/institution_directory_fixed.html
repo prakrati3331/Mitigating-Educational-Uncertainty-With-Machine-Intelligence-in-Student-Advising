@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Educational Institutions Directory</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --light: #f8f9fa;
+            --dark: #212529;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(-20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes scaleIn {
+            from { transform: scale(0.95); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            position: relative;
+            overflow-x: hidden;
+            padding: 20px;
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+        
+        .search-container {
+            max-width: 800px;
+            margin: 0 auto 30px;
+            animation: slideIn 0.5s ease-out 0.2s both;
+            transform-origin: center top;
+        }
+        
+        .search-box {
+            border-radius: 25px;
+            padding: 12px 20px;
+            border: 2px solid #e9ecef;
+            width: 100%;
+            font-size: 16px;
+        }
+        
+        .institution-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin-bottom: 30px;
+            height: 100%;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+        
+        .institution-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .institution-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(67, 97, 238, 0.15);
+            z-index: 10;
+        }
+        
+        .institution-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .institution-body {
+            padding: 20px;
+        }
+        
+        .institution-title {
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+        
+        .institution-location {
+            color: #6c757d;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .institution-location i {
+            margin-right: 8px;
+        }
+        
+        .institution-rating {
+            color: #ffc107;
+            margin-bottom: 10px;
+        }
+        
+        .institution-programs {
+            margin-bottom: 15px;
+        }
+        
+        .badge {
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+        
+        .btn-view-details {
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .filter-container {
+            margin-bottom: 20px;
+        }
+        
+        .filter-btn {
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .program-filter {
+            margin-bottom: 20px;
+        }
+        /* Add some additional animations */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        /* Loading spinner for modal */
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+        }
+        
+        /* Smooth transitions for all interactive elements */
+        button, .btn, .form-control, .card {
+            transition: all 0.3s ease;
+        }
+        
+        /* Animate filter buttons */
+        .filter-buttons button {
+            transition: all 0.2s ease;
+        }
+        
+        .filter-buttons button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        /* Back button animation */
+        .btn-outline-secondary:hover {
+            transform: translateX(-5px);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .modal.show {
+            display: block;
+            opacity: 1;
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        .modal-content {
+            transform: translateY(-50px);
+            transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+            opacity: 0;
+        }
+        
+        .modal.show .modal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Back Button -->
+    <a href="recommendation_hub.html" class="btn btn-outline-secondary mb-4">
+        <i class="fas fa-arrow-left me-2"></i>Back to Recommendation Hub
+    </a>
+
+    <div class="container">
+        <h1 class="mb-4">College Directory</h1>
+        
+        <div class="search-container">
+            <div class="input-group mb-3">
+                <span class="input-group-text"><i class="fas fa-search"></i></span>
+                <input type="text" id="searchInput" class="form-control search-box" placeholder="Search colleges, programs, or locations...">
+            </div>
+            
+            <div class="program-filter">
+                <select id="programFilter" class="form-select">
+                    <option value="">All Programs</option>
+                    <option value="B.A.">B.A.</option>
+                    <option value="B.Sc.">B.Sc.</option>
+                    <option value="B.Com">B.Com</option>
+                    <option value="M.A.">M.A.</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="row" id="institutions-container">
+            <!-- Colleges will be loaded here dynamically -->
+        </div>
+    </div>
+
+    <!-- College Details Modal -->
+    <div class="modal fade" id="collegeModal" tabindex="-1" aria-labelledby="collegeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="collegeModalLabel">College Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="collegeModalBody">
+                    <!-- Content will be loaded dynamically -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // College data directly in the file
+        const collegeData = {
+            "colleges": [
+                {
+                    "id": 1,
+                    "name": "Government College for Women, M.A. Road, Srinagar",
+                    "type": "Government",
+                    "established": 1942,
+                    "naac_grade": "A+",
+                    "location": {
+                        "address": "M.A. Road, Srinagar, Jammu and Kashmir 190001",
+                        "district": "Srinagar",
+                        "coordinates": {
+                            "lat": 34.0837,
+                            "lng": 74.7973
+                        }
+                    },
+                    "programs": [
+                        {
+                            "level": "Undergraduate",
+                            "name": "B.A.",
+                            "duration": "3 years",
+                            "specializations": ["History", "Political Science", "Economics", "English"],
+                            "eligibility": "10+2 in any stream with minimum 45% marks",
+                            "cutoff_2023": {
+                                "general": 85,
+                                "obc": 80,
+                                "sc": 75,
+                                "st": 70
+                            },
+                            "total_seats": 120,
+                            "fees_per_year": 5000
+                        },
+                        {
+                            "level": "Postgraduate",
+                            "name": "M.A.",
+                            "duration": "2 years",
+                            "specializations": ["English", "Urdu", "Kashmiri"],
+                            "eligibility": "Bachelor's degree in relevant subject with minimum 50% marks",
+                            "total_seats": 60,
+                            "fees_per_year": 8000
+                        }
+                    ],
+                    "facilities": ["Library", "Computer Lab", "Sports", "Hostel", "Cafeteria", "Auditorium", "Medical"],
+                    "admission_process": [
+                        "Online application through JKBOPEE portal",
+                        "Merit-based selection",
+                        "Document verification",
+                        "Fee payment"
+                    ],
+                    "contact": {
+                        "phone": "0194-2450001",
+                        "email": "gcwsrinagar@jkeducation.gov.in",
+                        "website": "http://www.gcwsrinagar.edu.in"
+                    },
+                    "scholarships": ["PMSSS", "Merit Scholarship", "Minority Scholarship"],
+                    "rating": 4.2,
+                    "reviews": 45,
+                    "image_url": "https://via.placeholder.com/400x300?text=GCW+Srinagar"
+                },
+                {
+                    "id": 2,
+                    "name": "Government Degree College, Anantnag",
+                    "type": "Government",
+                    "established": 1956,
+                    "naac_grade": "A",
+                    "location": {
+                        "address": "Khanabal Road, Anantnag, Jammu and Kashmir 192101",
+                        "district": "Anantnag",
+                        "coordinates": {
+                            "lat": 33.7311,
+                            "lng": 75.1486
+                        }
+                    },
+                    "programs": [
+                        {
+                            "level": "Undergraduate",
+                            "name": "B.Sc.",
+                            "duration": "3 years",
+                            "specializations": ["Physics", "Chemistry", "Mathematics", "Botany", "Zoology"],
+                            "eligibility": "10+2 with Science stream and minimum 50% marks",
+                            "cutoff_2023": {
+                                "general": 82,
+                                "obc": 78,
+                                "sc": 72,
+                                "st": 68
+                            },
+                            "total_seats": 180,
+                            "fees_per_year": 4500
+                        },
+                        {
+                            "level": "Undergraduate",
+                            "name": "B.Com",
+                            "duration": "3 years",
+                            "specializations": ["General", "Computers", "Taxation"],
+                            "eligibility": "10+2 in any stream with minimum 45% marks",
+                            "total_seats": 120,
+                            "fees_per_year": 4000
+                        }
+                    ],
+                    "facilities": ["Library", "Laboratories", "Sports", "Hostel", "Cafeteria", "Auditorium"],
+                    "admission_process": [
+                        "Direct admission based on 10+2 marks",
+                        "Document verification",
+                        "Fee payment"
+                    ],
+                    "contact": {
+                        "phone": "01932-222123",
+                        "email": "gdc.anantnag@jkeducation.gov.in",
+                        "website": "http://www.gdcanantnag.ac.in"
+                    },
+                    "scholarships": ["PMSSS", "Merit Scholarship", "Post-Matric Scholarship"],
+                    "rating": 4.0,
+                    "reviews": 32,
+                    "image_url": "https://via.placeholder.com/400x300?text=GDC+Anantnag"
+                }
+            ]
+        };
+
+        // Initialize the application when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('searchInput');
+            const programFilter = document.getElementById('programFilter');
+            const container = document.getElementById('institutions-container');
+            
+            // Initialize with all colleges
+            let colleges = collegeData.colleges || [];
+
+            // Render colleges function with staggered animations
+            function renderColleges(filteredColleges) {
+                container.innerHTML = '';
+                filteredColleges.forEach((college, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'col-md-6 col-lg-4 mb-4';
+                    card.innerHTML = `
+                        <div class="institution-card">
+                            <img src="${college.image_url || 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgZmlsbD0iI2Y1ZjVmNSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGRvbWluYW50LWJhc2VsaW5lPSJtaWRkbGUiIGZpbGw9IiMyMTk2RjMiPkNvbGxlZ2UgSW1hZ2U8L3RleHQ+PC9zdmc+'}" 
+                                 alt="${college.name}" class="institution-img">
+                            <div class="institution-body">
+                                <h3 class="institution-title">${college.name}</h3>
+                                <div class="institution-location">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    ${college.location.address}
+                                </div>
+                                <div class="institution-rating">
+                                    ${'<i class="fas fa-star"></i>'.repeat(Math.floor(college.rating))}
+                                    ${college.rating % 1 >= 0.5 ? '<i class="fas fa-star-half-alt"></i>' : ''}
+                                    <span class="ms-2 text-dark">${college.rating} (${college.reviews} reviews)</span>
+                                </div>
+                                <div class="institution-programs">
+                                    <strong>Programs:</strong> 
+                                    ${[...new Set(college.programs.map(p => p.name))].join(', ')}
+                                </div>
+                                <div class="institution-facilities mb-3">
+                                    ${college.facilities.slice(0, 4).map(f => 
+                                        `<span class="badge bg-light text-dark">${f}</span>`
+                                    ).join(' ')}
+                                    ${college.facilities.length > 4 ? 
+                                        `<span class="badge bg-light text-dark">+${college.facilities.length - 4} more</span>` : ''}
+                                </div>
+                                <button class="btn btn-primary btn-view-details" data-college-id="${college.id}">
+                                    View Details
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+                
+                // Add event listeners to view details buttons
+                document.querySelectorAll('.btn-view-details').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const college = colleges.find(c => c.id === parseInt(this.dataset.collegeId));
+                        if (college) showCollegeDetails(college);
+                    });
+                });
+            }
+
+            // Filter colleges function
+            function filterColleges() {
+                const searchTerm = searchInput.value.toLowerCase();
+                const selectedProgram = programFilter.value;
+                
+                const filtered = collegeData.colleges.filter(college => {
+                    const matchesSearch = college.name.toLowerCase().includes(searchTerm) ||
+                                        college.location.address.toLowerCase().includes(searchTerm) ||
+                                        college.programs.some(p => p.name.toLowerCase().includes(searchTerm));
+                    
+                    const matchesProgram = !selectedProgram || 
+                                         college.programs.some(p => p.name === selectedProgram);
+                    
+                    return matchesSearch && matchesProgram;
+                });
+                
+                renderColleges(filtered);
+            }
+
+            // Show college details in modal with animation
+            function showCollegeDetails(college) {
+                const modal = document.getElementById('collegeModal');
+                const modalBody = document.getElementById('collegeModalBody');
+                
+                // Add loading animation
+                modalBody.innerHTML = `
+                    <div class="text-center py-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>`;
+                
+                // Show modal with fade in
+                modal.style.display = 'block';
+                setTimeout(() => modal.classList.add('show'), 10);
+                
+                // Update modal content with fade in
+                setTimeout(() => {
+                    modalBody.innerHTML = `
+                        <div class="row">
+                            <div class="col-md-6">
+                                <img src="${college.image_url || 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgZmlsbD0iI2Y1ZjVmNSIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTYiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGRvbWluYW50LWJhc2VsaW5lPSJtaWRkbGUiIGZpbGw9IiMyMTk2RjMiPkNvbGxlZ2UgSW1hZ2U8L3RleHQ+PC9zdmc+'}" 
+                                     alt="${college.name}" class="img-fluid rounded mb-3">
+                                <h4>${college.name}</h4>
+                                <p class="text-muted">
+                                    <i class="fas fa-map-marker-alt me-2"></i>${college.location.address}
+                                </p>
+                                <div class="mb-3">
+                                    <strong>Established:</strong> ${college.established}<br>
+                                    <strong>NAAC Grade:</strong> ${college.naac_grade}<br>
+                                    <strong>Type:</strong> ${college.type}
+                                </div>
+                                <div class="mb-3">
+                                    <h5>Contact Information</h5>
+                                    <p class="mb-1">
+                                        <i class="fas fa-phone me-2"></i> ${college.contact.phone}
+                                    </p>
+                                    <p class="mb-1">
+                                        <i class="fas fa-envelope me-2"></i> 
+                                        <a href="mailto:${college.contact.email}">${college.contact.email}</a>
+                                    </p>
+                                    <p class="mb-0">
+                                        <i class="fas fa-globe me-2"></i> 
+                                        <a href="${college.contact.website}" target="_blank">${college.contact.website}</a>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <h5>Programs Offered</h5>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Program</th>
+                                                <th>Duration</th>
+                                                <th>Eligibility</th>
+                                                <th>Seats</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            ${college.programs.map(program => `
+                                                <tr>
+                                                    <td>
+                                                        <strong>${program.name}</strong><br>
+                                                        <small class="text-muted">${program.specializations?.join(', ')}</small>
+                                                    </td>
+                                                    <td>${program.duration}</td>
+                                                    <td>${program.eligibility}</td>
+                                                    <td>${program.total_seats || 'N/A'}</td>
+                                                </tr>
+                                            `).join('')}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+                                <h5 class="mt-4">Admission Process</h5>
+                                <ol>
+                                    ${college.admission_process.map(step => `<li>${step}</li>`).join('')}
+                                </ol>
+                                
+                                <h5 class="mt-4">Facilities</h5>
+                                <div class="d-flex flex-wrap">
+                                    ${college.facilities.map(facility => 
+                                        `<span class="badge bg-light text-dark me-2 mb-2">${facility}</span>`
+                                    ).join('')}
+                                </div>
+                                
+                                ${college.scholarships?.length ? `
+                                    <h5 class="mt-4">Scholarships</h5>
+                                    <div class="d-flex flex-wrap">
+                                        ${college.scholarships.map(scholarship => 
+                                            `<span class="badge bg-info text-dark me-2 mb-2">${scholarship}</span>`
+                                        ).join('')}
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    `;
+                    
+                    // Trigger reflow to enable animation
+                    modalBody.offsetHeight;
+                    modalBody.style.opacity = '1';
+                }, 500);
+            }
+
+            // Initialize event listeners
+            searchInput.addEventListener('input', filterColleges);
+            programFilter.addEventListener('change', filterColleges);
+            
+            // Initial render with slight delay for better animation
+            setTimeout(() => {
+                renderColleges(colleges);
+            }, 300);
+        });
+    </script>
+</body>
+</html>

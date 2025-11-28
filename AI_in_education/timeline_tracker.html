@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📅 Timeline Tracker - Career Guidance</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: var(--dark);
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .back-button:hover {
+            transform: translateX(-3px);
+            background: var(--light);
+        }
+        
+        .timeline-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 20px;
+            box-shadow: 0 15px 50px rgba(67, 97, 238, 0.1);
+        }
+        
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .page-header h1 {
+            color: var(--primary);
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+        
+        .timeline:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 2px;
+            background: #e9ecef;
+            transform: translateX(-50%);
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 40px;
+            width: 100%;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .timeline-item.animate {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .timeline-item:nth-child(odd) .timeline-content {
+            margin-left: auto;
+            margin-right: 50%;
+            padding-right: 30px;
+            text-align: right;
+        }
+        
+        .timeline-item:nth-child(even) .timeline-content {
+            margin-left: 50%;
+            padding-left: 30px;
+        }
+        
+        .timeline-content {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            position: relative;
+            max-width: 400px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: scale(0.98);
+        }
+        
+        .timeline-content:hover {
+            transform: scale(1.02) translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+        
+        .timeline-content:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .timeline-date {
+            font-size: 0.9rem;
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .timeline-date i {
+            margin-right: 8px;
+        }
+        
+        .timeline-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+        
+        .timeline-desc {
+            color: #6c757d;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+        }
+        
+        .timeline-badge {
+            position: absolute;
+            top: 20px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary);
+            border: 3px solid white;
+            box-shadow: 0 0 0 2px var(--primary);
+            z-index: 1;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: scale(0);
+        }
+        
+        .timeline-item.animate .timeline-badge {
+            transform: scale(1);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(67, 97, 238, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(67, 97, 238, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(67, 97, 238, 0); }
+        }
+        
+        .timeline-item:nth-child(odd) .timeline-badge {
+            right: -10px;
+        }
+        
+        .timeline-item:nth-child(even) .timeline-badge {
+            left: -10px;
+        }
+        
+        .timeline-tag { 
+            display: inline-block; 
+            padding: 4px 12px; 
+            border-radius: 20px; 
+            font-size: 0.75rem; 
+            font-weight: 500; 
+            margin-right: 8px; 
+            margin-bottom: 8px; 
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.4s ease;
+            transition-delay: calc(0.1s * var(--i));
+        }
+        
+        .timeline-item.animate .timeline-tag {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .tag-admission { background-color: #e3f2fd; color: #1976d2; }
+        .tag-scholarship { background-color: #e8f5e9; color: #2e7d32; }
+        .tag-exam { background-color: #fff3e0; color: #ef6c00; }
+        .tag-counseling { background-color: #f3e5f5; color: #7b1fa2; }
+        
+        .timeline-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .btn-remind {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .btn-remind:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+        }
+        
+        .btn-details {
+            background: white;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-details:hover {
+            background: var(--light);
+            transform: translateY(-2px);
+        }
+        
+        .filters {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            opacity: 0;
+            transform: translateY(-20px);
+            animation: slideDown 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        
+        @keyframes slideDown {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .filter-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+        
+        .filter-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-label {
+            font-weight: 500;
+            color: #495057;
+            margin-bottom: 8px;
+            display: block;
+            font-size: 0.9rem;
+        }
+        
+        .form-select, .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+        
+        .btn-apply {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .btn-apply:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+        }
+        
+        .no-events {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6c757d;
+        }
+        
+        @media (max-width: 992px) {
+            body {
+                padding: 70px 15px 20px;
+            }
+            
+            .timeline:before {
+                left: 20px;
+            }
+            
+            .timeline-item:nth-child(odd) .timeline-content,
+            .timeline-item:nth-child(even) .timeline-content {
+                margin-left: 40px;
+                margin-right: 0;
+                padding-right: 20px;
+                padding-left: 30px;
+                text-align: left;
+                max-width: 100%;
+            }
+            
+            .timeline-item:nth-child(odd) .timeline-badge,
+            .timeline-item:nth-child(even) .timeline-badge {
+                left: 10px;
+                right: auto;
+            }
+            
+            .timeline-container {
+                padding: 20px;
+            }
+            
+            .back-button {
+                top: 15px;
+                left: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="recommendation_hub.html" class="back-button">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+    
+    <div class="timeline-container">
+        <div class="page-header">
+            <h1>📅 Timeline Tracker</h1>
+            <p class="text-muted">Never miss important academic dates and deadlines</p>
+        </div>
+        
+        <div class="filters">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="filter-group">
+                        <label class="form-label">Category</label>
+                        <select class="form-select" id="categoryFilter">
+                            <option value="">All Categories</option>
+                            <option value="admission">Admissions</option>
+                            <option value="scholarship">Scholarships</option>
+                            <option value="exam">Entrance Exams</option>
+                            <option value="counseling">Counseling</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="filter-group">
+                        <label class="form-label">Timeframe</label>
+                        <select class="form-select" id="timeframeFilter">
+                            <option value="upcoming">Upcoming</option>
+                            <option value="this-month">This Month</option>
+                            <option value="next-3-months">Next 3 Months</option>
+                            <option value="past">Past Events</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="filter-group">
+                        <label class="form-label">Search</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Search events...">
+                            <button class="btn btn-apply" style="border-radius: 0 6px 6px 0;">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="timeline" id="timeline">
+            <!-- Event 1 -->
+            <div class="timeline-item">
+                <div class="timeline-badge"></div>
+                <div class="timeline-content">
+                    <div class="timeline-date"><i class="far fa-calendar-alt"></i> September 15-30, 2023</div>
+                    <h3 class="timeline-title">JEE Main 2024 Registration</h3>
+                    <div>
+                        <span class="timeline-tag tag-exam">Entrance Exam</span>
+                        <span class="timeline-tag tag-admission">Engineering</span>
+                    </div>
+                    <p class="timeline-desc">Registration window for JEE Main 2024 January session. National Testing Agency (NTA) will conduct the exam in January 2024.</p>
+                    <div class="timeline-actions">
+                        <button class="btn-remind"><i class="far fa-bell"></i> Set Reminder</button>
+                        <button class="btn-details">View Details</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Event 2 -->
+            <div class="timeline-item">
+                <div class="timeline-badge"></div>
+                <div class="timeline-content">
+                    <div class="timeline-date"><i class="far fa-calendar-alt"></i> October 1-15, 2023</div>
+                    <h3 class="timeline-title">National Scholarship Portal Opens</h3>
+                    <div>
+                        <span class="timeline-tag tag-scholarship">Scholarship</span>
+                        <span class="timeline-tag" style="background-color: #e8eaf6; color: #3949ab;">All Streams</span>
+                    </div>
+                    <p class="timeline-desc">Central Sector Scholarship for college and university students. Various scholarships available for different categories.</p>
+                    <div class="timeline-actions">
+                        <button class="btn-remind"><i class="far fa-bell"></i> Set Reminder</button>
+                        <button class="btn-details">Apply Now</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Event 3 -->
+            <div class="timeline-item">
+                <div class="timeline-badge"></div>
+                <div class="timeline-content">
+                    <div class="timeline-date"><i class="far fa-calendar-alt"></i> November 5-20, 2023</div>
+                    <h3 class="timeline-title">NEET UG 2024 Registration</h3>
+                    <div>
+                        <span class="timeline-tag tag-exam">Medical Entrance</span>
+                        <span class="timeline-tag tag-admission">MBBS/BDS</span>
+                    </div>
+                    <p class="timeline-desc">National Eligibility cum Entrance Test for undergraduate medical courses. Conducted by NTA for admission to MBBS/BDS courses.</p>
+                    <div class="timeline-actions">
+                        <button class="btn-remind"><i class="far fa-bell"></i> Set Reminder</button>
+                        <button class="btn-details">View Details</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Event 4 -->
+            <div class="timeline-item">
+                <div class="timeline-badge"></div>
+                <div class="timeline-content">
+                    <div class="timeline-date"><i class="far fa-calendar-alt"></i> December 1-15, 2023</div>
+                    <h3 class="timeline-title">CLAT 2024 Application Deadline</h3>
+                    <div>
+                        <span class="timeline-tag tag-exam">Law Entrance</span>
+                        <span class="timeline-tag tag-admission">Law</span>
+                    </div>
+                    <p class="timeline-desc">Common Law Admission Test for admission to National Law Universities. Last date to submit applications for CLAT 2024.</p>
+                    <div class="timeline-actions">
+                        <button class="btn-remind"><i class="far fa-bell"></i> Set Reminder</button>
+                        <button class="btn-details">Apply Now</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Event 5 -->
+            <div class="timeline-item">
+                <div class="timeline-badge"></div>
+                <div class="timeline-content">
+                    <div class="timeline-date"><i class="far fa-calendar-alt"></i> January 10-25, 2024</div>
+                    <h3 class="timeline-title">IIT JEE Advanced Registration</h3>
+                    <div>
+                        <span class="timeline-tag tag-exam">Engineering</span>
+                        <span class="timeline-tag tag-admission">IITs</span>
+                    </div>
+                    <p class="timeline-desc">Registration for JEE Advanced 2024 for admission to IITs. Only candidates who clear JEE Main are eligible to apply.</p>
+                    <div class="timeline-actions">
+                        <button class="btn-remind"><i class="far fa-bell"></i> Set Reminder</button>
+                        <button class="btn-details">View Details</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Intersection Observer for scroll animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate');
+                    
+                    // Add staggered animation for tags
+                    const tags = entry.target.querySelectorAll('.timeline-tag');
+                    tags.forEach((tag, index) => {
+                        tag.style.setProperty('--i', index);
+                        // Trigger reflow to restart animation
+                        void tag.offsetWidth;
+                    });
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+
+        // Observe all timeline items
+        document.querySelectorAll('.timeline-item').forEach(item => {
+            observer.observe(item);
+        });
+        
+        // Animate filters on load
+        document.addEventListener('DOMContentLoaded', () => {
+            const filters = document.querySelector('.filters');
+            if (filters) {
+                setTimeout(() => {
+                    filters.style.animation = 'slideDown 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards';
+                }, 300);
+            }
+        });
+        
+        // Sample JavaScript for the timeline functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Filter functionality
+            const categoryFilter = document.getElementById('categoryFilter');
+            const timeframeFilter = document.getElementById('timeframeFilter');
+            const timelineItems = document.querySelectorAll('.timeline-item');
+            
+            function filterTimeline() {
+                const category = categoryFilter.value;
+                const timeframe = timeframeFilter.value;
+                
+                timelineItems.forEach(item => {
+                    const tags = item.querySelectorAll('.timeline-tag');
+                    let showItem = true;
+                    
+                    // Filter by category
+                    if (category) {
+                        const hasMatchingTag = Array.from(tags).some(tag => {
+                            return tag.classList.contains(`tag-${category}`);
+                        });
+                        showItem = hasMatchingTag;
+                    }
+                    
+                    // Filter by timeframe (simplified example)
+                    if (timeframe === 'past') {
+                        // In a real app, you would compare dates here
+                        showItem = false; // Just for demo
+                    }
+                    // Add more timeframe conditions as needed
+                    
+                    item.style.display = showItem ? 'block' : 'none';
+                });
+                
+                // Check if any items are visible
+                const visibleItems = document.querySelectorAll('.timeline-item[style*="display: block"]');
+                const noEvents = document.createElement('div');
+                noEvents.className = 'no-events';
+                noEvents.textContent = 'No events match your filters.';
+                
+                const existingNoEvents = document.querySelector('.no-events');
+                if (visibleItems.length === 0 && !existingNoEvents) {
+                    document.getElementById('timeline').appendChild(noEvents);
+                } else if (existingNoEvents && visibleItems.length > 0) {
+                    existingNoEvents.remove();
+                }
+            }
+            
+            // Add event listeners
+            categoryFilter.addEventListener('change', filterTimeline);
+            timeframeFilter.addEventListener('change', filterTimeline);
+            
+            // Set reminder functionality
+            document.querySelectorAll('.btn-remind').forEach(button => {
+                button.addEventListener('click', function() {
+                    const eventTitle = this.closest('.timeline-content').querySelector('.timeline-title').textContent;
+                    alert(`Reminder set for: ${eventTitle}`);
+                    this.innerHTML = '<i class="fas fa-bell"></i> Reminder Set';
+                    this.disabled = true;
+                });
+            });
+        });
+    </script>
+</body>
+</html>

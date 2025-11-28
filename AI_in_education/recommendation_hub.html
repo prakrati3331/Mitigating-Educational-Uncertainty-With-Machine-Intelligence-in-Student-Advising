@@ -1,0 +1,1390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-t="page_title">🎓 Recommendation Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #28a745;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            min-height: 100vh;
+            padding: 40px 20px 40px 260px; /* Added left padding for sidebar */
+            color: var(--dark);
+            position: relative;
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        /* Animated Background Elements */
+        .bg-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0;
+            filter: blur(40px);
+            animation: float 20s infinite ease-in-out, fadeIn 1s forwards;
+            transform-origin: center center;
+        }
+        
+        .shape:nth-child(1) { animation-delay: 0.2s; }
+        .shape:nth-child(2) { animation-delay: 0.4s; }
+        .shape:nth-child(3) { animation-delay: 0.6s; }
+        .shape:nth-child(4) { animation-delay: 0.8s; }
+        .shape:nth-child(5) { animation-delay: 1s; }
+        
+        @keyframes float {
+            0%, 100% { 
+                transform: translate(0, 0) rotate(0deg) scale(1);
+                opacity: 0.08;
+            }
+            25% { 
+                transform: translate(15px, 15px) rotate(3deg) scale(1.05);
+                opacity: 0.12;
+            }
+            50% { 
+                transform: translate(0, 30px) rotate(0deg) scale(1.1);
+                opacity: 0.15;
+            }
+            75% { 
+                transform: translate(-15px, 15px) rotate(-3deg) scale(1.05);
+                opacity: 0.12;
+            }
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 260px;
+            height: 100vh;
+            background: #fff;
+            box-shadow: 2px 0 15px rgba(0,0,0,0.08);
+            z-index: 1000;
+            padding: 20px 0;
+            overflow-y: auto;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-section {
+            margin: 15px 0;
+            padding: 0 10px;
+        }
+        
+        .sidebar-section-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: #6c757d;
+            font-weight: 600;
+            margin: 15px 0 10px 15px;
+            letter-spacing: 0.5px;
+        }
+        
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 15px;
+        }
+        
+        .sidebar-header h5 {
+            color: var(--primary);
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .sidebar-content {
+            padding: 0 15px;
+        }
+        
+        .sidebar-btn {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 10px 15px;
+            margin-bottom: 5px;
+            border: none;
+            background: transparent;
+            border-radius: 6px;
+            color: #4a5568;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .sidebar-btn::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 3px;
+            background: var(--primary);
+            transform: scaleY(0);
+            transition: transform 0.2s ease;
+        }
+        
+        .sidebar-btn:hover::before,
+        .sidebar-btn.active::before {
+            transform: scaleY(1);
+        }
+        
+        .sidebar-btn i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+            color: var(--primary);
+        }
+        
+        .sidebar-btn:hover {
+            background: rgba(67, 97, 238, 0.05);
+            color: var(--primary);
+            transform: translateX(5px);
+        }
+        
+        .sidebar-btn:hover i,
+        .sidebar-btn.active i {
+            color: var(--primary);
+        }
+        
+        .sidebar-btn.active {
+            background: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .recommendation-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            max-width: 900px;
+            width: 100%;
+            margin: 0;
+            box-shadow: 0 15px 50px rgba(67, 97, 238, 0.15);
+            position: relative;
+            z-index: 1;
+            margin: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            animation: fadeIn 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+            transition: all 0.4s ease;
+            border-top: 2px solid rgba(67, 97, 238, 0.1);
+            border-left: 2px solid rgba(67, 97, 238, 0.05);
+        }
+        
+        .recommendation-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 60px rgba(67, 97, 238, 0.2);
+        }
+        
+        @keyframes fadeIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(30px) scale(0.98);
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        .recommendation-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: var(--primary);
+            animation: bounce 2s infinite, colorShift 8s infinite alternate;
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+        
+        @keyframes colorShift {
+            0% { color: var(--primary); }
+            25% { color: #3f37c9; }
+            50% { color: #4cc9f0; }
+            75% { color: #7209b6; }
+            100% { color: #f72585; }
+        }
+        
+        .recommendation-title {
+            color: var(--primary);
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        
+        .recommendation-text {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            color: #495057;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            transform: translateZ(0);
+            backface-visibility: hidden;
+            -webkit-font-smoothing: subpixel-antialiased;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px) translateZ(0);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .btn:active {
+            transform: translateY(1px) translateZ(0);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+        }
+        
+        .btn-outline-primary {
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            background: transparent;
+        }
+        
+        .btn-outline-primary:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-college {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white !important;
+            border: none;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            width: 100%;
+            padding: 12px;
+            margin-top: auto;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 500;
+        }
+        
+        .btn-college::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #2575fc 0%, #6a11cb 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+        
+        .btn-college:hover::before {
+            opacity: 1;
+        }
+        
+        .btn-top-college {
+            background: linear-gradient(135deg, #f46b45 0%, #eea849 100%);
+            color: white !important;
+            border: none;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            width: 100%;
+            padding: 12px;
+            margin-top: auto;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 500;
+        }
+        
+
+        .btn-top-college::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #eea849 0%, #f46b45 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+        
+        .btn-top-college:hover::before {
+            opacity: 1;
+        }
+        
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .back-button:hover {
+            background: #e9ecef;
+            transform: translateX(-3px);
+        }
+        
+        .directory-buttons {
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(0,0,0,0.1);
+        }
+        
+        .class-options {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 24px;
+            margin: 40px 0;
+            max-width: 800px;
+            width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        @media (max-width: 992px) {
+            .class-options {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .class-options {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .class-option {
+            background: white;
+            border-radius: 15px;
+            padding: 30px 25px;
+            width: 100%;
+            max-width: 600px;
+            box-shadow: 0 10px 30px rgba(67, 97, 238, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border-left: 4px solid var(--primary);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            min-height: 220px;
+            animation: cardAppear 0.6s ease-out forwards;
+            opacity: 0;
+            transform: translateY(20px);
+            box-sizing: border-box;
+            margin: 0 auto 20px;
+            text-align: left;
+            overflow: hidden;
+        }
+        
+        .card-content {
+            display: flex;
+            align-items: flex-start;
+            flex: 1;
+            margin-bottom: 15px;
+        }
+        
+        .card-text {
+            flex: 1;
+        }
+        
+        .class-option h3 {
+            margin: 0 0 10px 0;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2b2d42;
+            transition: color 0.3s ease;
+        }
+        
+        .class-option p {
+            color: #6c757d;
+            margin: 0;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+        
+        .class-option:nth-child(1) { animation-delay: 0.1s; }
+        .class-option:nth-child(2) { animation-delay: 0.2s; }
+        .class-option:nth-child(3) { animation-delay: 0.3s; }
+        .class-option:nth-child(4) { animation-delay: 0.4s; }
+        .class-option:nth-child(3) { animation-delay: 0.3s; }
+        
+        @keyframes cardAppear {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .class-option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        .class-option:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(67, 97, 238, 0.2);
+            z-index: 2;
+        }
+        
+        .class-option:hover .card-icon {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .class-option .card-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px;
+            color: white;
+            font-size: 24px;
+            flex-shrink: 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .class-option .card-footer {
+            display: flex;
+            align-items: center;
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 15px;
+            margin-top: auto;
+            padding-top: 15px;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .class-option:hover .card-footer {
+            transform: translateX(5px);
+        }
+        
+        .class-option .card-footer i {
+            margin-left: 8px;
+            transition: transform 0.3s ease;
+        }
+        
+        .class-option:hover .card-footer i {
+            transform: translateX(5px);
+        }
+        
+        .class-option h4 {
+            color: var(--primary);
+            margin: 0 0 15px 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .class-option p {
+            color: #666;
+            margin: 0 0 20px 0;
+            margin: 0 0 24px 0;
+            flex-grow: 1;
+            line-height: 1.5;
+        }
+        
+        /* Course Recommendation Card */
+        .class-option.course-rec {
+            border-left: 5px solid #4361ee;
+        }
+        
+        .class-option.course-rec h4 {
+            color: #4361ee;
+        }
+        
+        .class-option.course-rec .btn {
+            background: #4361ee;
+            border: none;
+            color: white;
+        }
+        
+        /* Dropout Risk Card */
+        .class-option.dropout-risk {
+            border-left: 5px solid #ff6b6b;
+        }
+        
+        .class-option.dropout-risk h4 {
+            color: #ff6b6b;
+        }
+        
+        .class-option.dropout-risk .btn {
+            background: #ff6b6b;
+            border: none;
+            color: white;
+        }
+        
+        .class-10 {
+            border-left-color: #4caf50;
+        }
+        
+        .class-top-college {
+            border-left: 4px solid #f46b45;
+        }
+        
+        .class-10 h4 {
+            color: #4caf50;
+        }
+        
+        .class-top-college {
+            border-left-color: #f46b45;
+        }
+        
+        .class-top-college h4 {
+            color: #f46b45;
+        }
+        
+        .class-courses {
+            border-left: 4px solid #6a11cb;
+        }
+        
+        .class-courses h4 {
+            color: #6a11cb;
+        }
+        
+        .btn-success, .btn-warning {
+            margin-top: auto;
+            width: 100%;
+            padding: 12px 16px;
+            font-weight: 500;
+            font-size: 0.95rem;
+            border: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #4caf50 0%, #43a047 100%);
+            color: white;
+        }
+        
+        .btn-warning {
+            background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+            color: white;
+        }
+        
+        .btn-success:hover, .btn-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        
+        .class-12 {
+            border-left-color: #ff9800;
+        }
+        
+        .class-12 h4 {
+            color: #ff9800;
+        }
+        
+        @media (max-width: 992px) {
+            body {
+                padding-left: 20px;
+            }
+            
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .recommendation-container {
+                padding: 30px 20px;
+            }
+            
+            .class-options {
+                grid-template-columns: 1fr;
+            }
+            
+            .class-option {
+                max-width: 100%;
+            }
+        }
+        /* Language Switcher Styling */
+        .language-switcher {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            background: #f8f9fa;
+            padding: 5px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .user-profile:hover {
+            background: #e9ecef;
+        }
+        
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            margin-right: 8px;
+            border: 2px solid #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .user-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #4a5568;
+            margin: 0;
+        }
+
+        
+        .language-switcher select {
+            background-color: white;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 5px 10px;
+            font-size: 14px;
+        }
+        
+        [dir="rtl"] .language-switcher {
+            right: auto;
+            left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <!-- Language Switcher -->
+    <div class="language-switcher">
+        <select id="langSwitcher" class="form-select form-select-sm" onchange="setLang(this.value)">
+            <option value="en">English</option>
+            <option value="hi">हिंदी</option>
+            <option value="ur">اردو</option>
+            <option value="ks">کٲشُر</option>
+        </select>
+        <div class="user-profile">
+            <img src="https://ui-avatars.com/api/?name=User&background=4361ee&color=fff" alt="User" class="user-avatar">
+            <span class="user-name" data-t="student">Student</span>
+        </div>
+    </div>
+    
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h5 data-t="main_menu">Main Menu</h5>
+        </div>
+        <div class="sidebar-content">
+            <a href="dashboard.html" class="sidebar-btn" style="text-decoration: none;">
+                <i class="fas fa-tachometer-alt"></i>
+                <span data-t="dashboard">Dashboard</span>
+            </a>
+            
+            <div class="sidebar-section">
+                <h6 class="sidebar-section-title" data-t="recommendations">Recommendations</h6>
+                <button class="sidebar-btn active" onclick="backToHome()">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span data-t="career_recommendations">Career Recommendations</span>
+                </button>
+                <button class="sidebar-btn" onclick="navigateToTopColleges()">
+                    <i class="fas fa-trophy"></i>
+                    <span data-t="top_colleges">Top Colleges</span>
+                </button>
+                <button class="sidebar-btn" onclick="navigateToCourses()">
+                    <i class="fas fa-book-reader"></i>
+                    <span data-t="recommended_courses">Recommended Courses</span>
+                </button>
+            </div>
+            
+            <div class="sidebar-section">
+                <h6 class="sidebar-section-title" data-t="resources">Resources</h6>
+                <button class="sidebar-btn" onclick="navigateToCollegeDirectory()">
+                    <i class="fas fa-university"></i>
+                    <span data-t="college_directory">College Directory</span>
+                </button>
+                <button class="sidebar-btn" onclick="navigateToSchoolDirectory()">
+                    <i class="fas fa-school"></i>
+                    <span data-t="school_directory">School Directory</span>
+                </button>
+                <a href="ebooks.html" class="sidebar-btn" style="text-decoration: none;">
+                    <i class="fas fa-book"></i>
+                    <span data-t="ebooks_library">E-Books Library</span>
+                </a>
+            </div>
+            
+            <div class="sidebar-section">
+                <h6 class="sidebar-section-title" data-t="tools">Tools</h6>
+                <button class="sidebar-btn" onclick="navigateToTimelineTracker()">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span data-t="timeline_tracker">Timeline Tracker</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Animated Background Shapes -->
+    <div class="bg-shapes" id="bgShapes"></div>
+    
+    <div class="recommendation-container" id="classSelection">
+        <div class="back-button d-none" id="backButton" onclick="backToHome()">
+            <i class="fas fa-arrow-left"></i>
+            <span data-t="back">Back</span>
+        </div>
+        <div class="recommendation-icon">
+            <i class="fas fa-graduation-cap"></i>
+        </div>
+        <h1 class="recommendation-title" data-t="welcome">Welcome to Your Career Journey!</h1>
+        <p class="recommendation-text" data-t="select_academic_level">
+            Please select your current academic level to get started with personalized recommendations.
+        </p>
+        
+        <div class="class-options">
+            <div class="class-option class-10" onclick="selectClass('10')">
+                <h4 data-t="class_10">Class 10 Student</h4>
+                <p data-t="class_10_desc">I'm currently in Class 10 or equivalent</p>
+                <button class="btn btn-success">
+                    <i class="fas fa-arrow-right"></i> <span data-t="select_class_10">Select Class 10</span>
+                </button>
+            </div>
+            
+            <div class="class-option class-12" onclick="selectClass('12')">
+                <h4 data-t="class_12">Class 12 Student</h4>
+                <p data-t="class_12_desc">I'm currently in Class 12 or equivalent</p>
+                <button class="btn btn-warning">
+                    <i class="fas fa-graduation-cap"></i> <span data-t="select_class_12">Select Class 12</span>
+                </button>
+            </div>
+        </div>
+        
+        <div class="mt-5">
+            <p class="text-muted mb-3" data-t="not_sure">Not sure which option to choose?</p>
+            <button class="btn btn-outline-primary" onclick="showHelp()">
+                <i class="fas fa-question-circle"></i> <span data-t="need_help">Need Help Deciding?</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Font Awesome for icons -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    
+    <script>
+        // Create background shapes
+        function createBackgroundShapes() {
+            const container = document.getElementById('bgShapes');
+            const colors = ['#4361ee', '#3f37c9', '#4cc9f0', '#7209b6', '#f72585'];
+            
+            for (let i = 0; i < 8; i++) {
+                const shape = document.createElement('div');
+                const size = Math.random() * 400 + 200;
+                const posX = Math.random() * 100;
+                const posY = Math.random() * 100;
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const delay = Math.random() * 5;
+                const duration = 15 + Math.random() * 20;
+                
+                shape.className = 'shape';
+                shape.style.width = `${size}px`;
+                shape.style.height = `${size}px`;
+                shape.style.background = color;
+                shape.style.left = `${posX}%`;
+                shape.style.top = `${posY}%`;
+                shape.style.animationDelay = `${delay}s`;
+                shape.style.animationDuration = `${duration}s`;
+                
+                container.appendChild(shape);
+            }
+        }
+        
+        // Initialize background shapes when page loads
+        window.addEventListener('load', createBackgroundShapes);
+        
+        // Navigation functions
+        function navigateToTopColleges() {
+            window.location.href = 'institution_directory.html?type=top';
+        }
+        
+        function navigateToCourses() {
+            window.location.href = 'institution_directory.html';
+        }
+        
+        function navigateToCollegeDirectory() {
+            window.location.href = '/institution_directory.html';
+        }
+        
+        function navigateToSchoolDirectory() {
+            window.location.href = 'school_directory.html';
+        }
+        
+        function navigateToTimelineTracker() {
+            window.location.href = 'timeline_tracker.html';
+        }
+        
+        function navigateToDropoutRisk() {
+            window.location.href = '/dropout-risk';
+        }
+
+        function navigateToCareerAssessment() {
+            window.location.href = '/career/assessment';
+        }
+        
+        // Get user's class from URL parameters or localStorage
+        const urlParams = new URLSearchParams(window.location.search);
+        const userClass = urlParams.get('class') || localStorage.getItem('userClass');
+        
+        // Function to handle class selection
+        function selectClass(selectedClass) {
+            localStorage.setItem('userClass', selectedClass);
+            if (selectedClass === '10') {
+                showQuizzes();
+            } else if (selectedClass === '12') {
+                showCourseRecommendation();
+            }
+        }
+        
+        // Show appropriate content if user class is already set
+        if (userClass) {
+            document.addEventListener('DOMContentLoaded', function() {
+                if (userClass === '10') {
+                    showQuizzes();
+                } else if (userClass === '12') {
+                    showCourseRecommendation();
+                }
+            });
+        }
+        
+        function backToHome() {
+            // Reset to the initial view
+            document.getElementById('backButton').classList.add('d-none');
+            document.querySelector('.recommendation-title').setAttribute('data-t', 'welcome');
+            document.querySelector('.recommendation-text').setAttribute('data-t', 'select_academic_level');
+            document.querySelector('.class-options').innerHTML = `
+                <div class="class-option class-10" onclick="selectClass('10')">
+                    <h4 data-t="class_10">Class 10 Student</h4>
+                    <p data-t="class_10_desc">I'm currently in Class 10 or equivalent</p>
+                    <button class="btn btn-success">
+                        <i class="fas fa-arrow-right"></i> <span data-t="select_class_10">Select Class 10</span>
+                    </button>
+                </div>
+                
+                <div class="class-option class-12" onclick="selectClass('12')">
+                    <h4 data-t="class_12">Class 12 Student</h4>
+                    <p data-t="class_12_desc">I'm currently in Class 12 or equivalent</p>
+                    <button class="btn btn-warning">
+                        <i class="fas fa-graduation-cap"></i> <span data-t="select_class_12">Select Class 12</span>
+                    </button>
+                </div>
+            `;
+            document.querySelector('.mt-5 .text-muted').setAttribute('data-t', 'not_sure');
+            document.querySelector('.mt-5 .btn-outline-primary span').setAttribute('data-t', 'need_help');
+            
+            // Update translations for the new elements
+            setLang(document.documentElement.lang || 'en');
+        }
+
+
+        function showQuizzes() {
+            document.getElementById('backButton').classList.remove('d-none');
+            document.querySelector('.recommendation-title').setAttribute('data-t', 'quizzes_title');
+            document.querySelector('.recommendation-text').setAttribute('data-t', 'quizzes_desc');
+            document.querySelector('.class-options').innerHTML = `
+                <div class="class-option" style="animation-delay: 0.1s;">
+                    <div class="card-content">
+                        <div class="card-icon" style="background: linear-gradient(135deg, #4361ee 0%, #3f37c9 100%);">
+                            <i class="fas fa-tasks"></i>
+                        </div>
+                        <div class="card-text">
+                            <h4 data-t="explore_quizzes">Explore All Quizzes</h4>
+                            <p data-t="explore_quizzes_desc">Access our comprehensive collection of subject and aptitude quizzes to assess your knowledge and skills.</p>
+                        </div>
+                    </div>
+                    <a href="/interest-quizzes" class="btn" style="background: linear-gradient(135deg, #4361ee 0%, #3f37c9 100%); color: white;">
+                        <i class="fas fa-arrow-right"></i> <span data-t="start_quizzes">Start Quizzes</span>
+                    </a>
+                </div>
+
+
+                <div class="class-option skip-option" style="animation-delay: 0.3s;">
+                    <div class="card-content">
+                        <div class="card-icon" style="background: linear-gradient(135deg, #f72585 0%, #b5179e 100%);">
+                            <i class="fas fa-forward"></i>
+                        </div>
+                        <div class="card-text">
+                            <h4 data-t="confident_skip">I'm Confident</h4>
+                            <p data-t="confident_skip_desc">I already know my strengths in subjects and aptitude. Take me directly to stream recommendation.</p>
+                        </div>
+                    </div>
+                    <button class="btn btn-outline-primary" onclick="navigateToStreamRecommendation()">
+                        <i class="fas fa-forward"></i> <span data-t="skip_to_stream">Skip to Stream Recommendation</span>
+                    </button>
+                </div>
+
+                <div class="class-option" style="animation-delay: 0.4s; border-left: 4px solid #8e2de2;">
+                    <div class="card-content">
+                        <div class="card-icon" style="background: linear-gradient(135deg, #8e2de2 0%, #4a00e0 100%);">
+                            <i class="fas fa-sitemap"></i>
+                        </div>
+                        <div class="card-text">
+                            <h4 data-t="career_exploration_title">Career Exploration</h4>
+                            <p data-t="career_exploration_desc">Discover your career interests and explore different career paths. Our assessment will help you understand which careers align with your interests and skills.</p>
+                        </div>
+                    </div>
+                    <button class="btn" style="background: linear-gradient(135deg, #8e2de2 0%, #4a00e0 100%); color: white;" onclick="navigateToCareerAssessment()">
+                        <i class="fas fa-arrow-right"></i> <span data-t="explore_careers">Explore Career Paths</span>
+                    </button>
+                </div>`;
+            setLang(document.documentElement.lang || 'en');
+        }
+
+        function showStreamRecommendation() {
+            document.getElementById('backButton').classList.remove('d-none');
+            document.querySelector('.recommendation-title').setAttribute('data-t', 'stream_rec_title');
+            document.querySelector('.recommendation-text').setAttribute('data-t', 'stream_rec_desc');
+            document.querySelector('.class-options').innerHTML = `
+                <div class="class-option class-10">
+                    <h4 data-t="stream_recommendation">Stream Recommendation</h4>
+                    <p data-t="stream_assessment_desc">Take our assessment to discover which stream (Science, Commerce, or Arts) aligns best with your skills and interests.</p>
+                    <button class="btn btn-success" onclick="navigateToStreamRecommendation()">
+                        <i class="fas fa-arrow-right"></i> <span data-t="stream_assessment">Start Stream Assessment</span>
+                    </button>
+                </div>
+            `;
+            
+            // Update translations for the new elements
+            setLang(document.documentElement.lang || 'en');
+        }
+        
+        function showCourseRecommendation() {
+            document.getElementById('backButton').classList.remove('d-none');
+            document.querySelector('.recommendation-title').setAttribute('data-t', 'course_rec_title');
+            document.querySelector('.recommendation-text').setAttribute('data-t', 'course_rec_desc');
+            document.querySelector('.class-options').innerHTML = `
+                <div class="class-option course-rec" style="animation-delay: 0.1s;">
+                    <h4 data-t="course_recommendation">Course Recommendation</h4>
+                    <p data-t="course_assessment_desc">Discover the best courses and career paths based on your stream, interests, and academic performance. Our comprehensive assessment will guide you towards the right path for your future studies and career.</p>
+                    <button class="btn btn-primary" onclick="navigateToCourseRecommendation()">
+                        <i class="fas fa-graduation-cap"></i> <span data-t="Course Recommenation">Get Started</span>
+                    </button>
+                </div>
+
+                <!-- Dropout Risk Assessment Card -->
+                <div class="class-option dropout-risk" style="animation-delay: 0.2s;">
+                    <h4 data-t="dropout_risk_title">Dropout Risk Assessment</h4>
+                    <p data-t="dropout_risk_desc">Identify potential risk factors that might affect your academic journey. Our assessment helps you understand and mitigate risks of dropping out, ensuring you stay on track to achieve your educational goals.</p>
+                    <button class="btn btn-danger" onclick="navigateToDropoutRisk()">
+                        <i class="fas fa-exclamation-triangle"></i> <span data-t="assess_now">Assess Now</span>
+                    </button>
+                </div>
+            `;
+            
+            // Update translations for the new elements
+            setLang(document.documentElement.lang || 'en');
+        }
+        
+        function navigateToStreamRecommendation() {
+            // Save user's class in localStorage for future reference
+            localStorage.setItem('userClass', '10');
+            // Hide the back button when navigating away
+            document.getElementById('backButton').classList.add('d-none');
+            // Redirect to training/templates/index.html
+            window.location.href = 'training/templates/index.html';
+        }
+        
+        function navigateToCourseRecommendation() {
+            // Save user's class in localStorage for future reference
+            localStorage.setItem('userClass', '12');
+            // Hide the back button when navigating away
+            document.getElementById('backButton').classList.add('d-none');
+            // Redirect to stream selection page for course recommendation
+            window.location.href = 'stream_selection.html';
+        }
+        
+        function showHelp() {
+            const lang = document.documentElement.lang || 'en';
+            alert(t[lang].help_text || t['en'].help_text);
+        }
+    </script>
+    
+    <!-- Multilingual Support -->
+    <script>
+        // Translation dictionary
+        const t = {
+            en: {
+                // Navigation
+                page_title: "Recommendation Hub",
+                main_menu: "Main Menu",
+                dashboard: "Dashboard",
+                recommendations: "Recommendations",
+                career_recommendations: "Career Recommendations",
+                top_colleges: "Top Colleges",
+                recommended_courses: "Recommended Courses",
+                resources: "Resources",
+                college_directory: "College Directory",
+                school_directory: "School Directory",
+                ebooks_library: "E-Books Library",
+                tools: "Tools",
+                timeline_tracker: "Timeline Tracker",
+                student: "Student",
+                
+                // Class selection
+                welcome: "Welcome to Your Career Journey!",
+                select_academic_level: "Please select your current academic level to get started with personalized recommendations.",
+                class_10: "Class 10 Student",
+                class_10_desc: "I'm currently in Class 10 or equivalent",
+                class_12: "Class 12 Student",
+                class_12_desc: "I'm currently in Class 12 or equivalent",
+                select_class_10: "Select Class 10",
+                select_class_12: "Select Class 12",
+                
+                // Buttons and actions
+                not_sure: "Not sure which option to choose?",
+                need_help: "Need Help Deciding?",
+                back: "Back",
+                next: "Next",
+                help: "Help",
+                
+                // Stream Recommendation
+                stream_rec_title: "Stream Recommendation for Class 10 Students",
+                stream_rec_desc: "Based on your current class (10), we recommend exploring different streams to help you make an informed decision for your higher secondary education. Our stream recommendation tool will assess your interests, strengths, and career aspirations to suggest the most suitable stream for you.",
+                stream_assessment: "Start Stream Assessment",
+                stream_recommendation: "Stream Recommendation",
+                stream_assessment_desc: "Take our assessment to discover which stream (Science, Commerce, or Arts) aligns best with your skills and interests.",
+                
+                // Course Recommendation
+                course_rec_title: "Course Recommendation",
+                course_rec_desc: "As a Class 12 student, you're at a crucial stage of your academic journey. Our course recommendation tool will help you explore various undergraduate programs and career paths that match your stream, interests, and career goals.",
+                explore_courses: "Explore Recommended Courses",
+                course_recommendation: "Course Recommendation",
+                course_assessment_desc: "Discover the best courses and career paths based on your stream, interests, and academic performance. Our comprehensive assessment will guide you towards the right path for your future studies and career.",
+                dropout_risk_title: "Dropout Risk Assessment",
+                dropout_risk_desc: "Identify potential risk factors that might affect your academic journey. Our assessment helps you understand and mitigate risks of dropping out, ensuring you stay on track to achieve your educational goals.",
+                assess_now: "Assess Now",
+                
+                // Quiz Options
+                quizzes_title: "Assessment Center",
+                quizzes_desc: "Explore our comprehensive collection of quizzes to assess your knowledge and skills across various subjects and aptitude areas.",
+                explore_quizzes: "Explore All Quizzes",
+                explore_quizzes_desc: "Access our comprehensive collection of subject and aptitude quizzes to assess your knowledge and skills.",
+                start_quizzes: "Start Quizzes",
+                career_exploration_title: "Career Exploration",
+                career_exploration_desc: "Discover your career interests and explore different career paths. Our assessment will help you understand which careers align with your interests and skills.",
+                explore_careers: "Explore Career Paths",
+                confident_skip: "I'm Confident",
+                confident_skip_desc: "I already know my strengths in subjects and aptitude. Take me directly to stream recommendation.",
+                skip_to_stream: "Skip to Stream Recommendation",
+            },
+            hi: {
+                // Navigation
+                page_title: "सिफारिश केंद्र",
+                main_menu: "मुख्य मेनू",
+                dashboard: "डैशबोर्ड",
+                recommendations: "सिफारिशें",
+                career_recommendations: "करियर सिफारिशें",
+                top_colleges: "शीर्ष कॉलेज",
+                recommended_courses: "अनुशंसित पाठ्यक्रम",
+                resources: "संसाधन",
+                college_directory: "कॉलेज निर्देशिका",
+                school_directory: "स्कूल निर्देशिका",
+                ebooks_library: "ई-पुस्तकालय",
+                tools: "उपकरण",
+                timeline_tracker: "समयरेखा ट्रैकर",
+                student: "छात्र",
+                
+                // Class selection
+                welcome: "अपने करियर यात्रा में आपका स्वागत है!",
+                select_academic_level: "व्यक्तिगत सिफारिशों के साथ शुरुआत करने के लिए कृपया अपना वर्तमान शैक्षणिक स्तर चुनें।",
+                class_10: "कक्षा 10 छात्र",
+                class_10_desc: "मैं वर्तमान में कक्षा 10 या समकक्ष में हूं",
+                class_12: "कक्षा 12 छात्र",
+                class_12_desc: "मैं वर्तमान में कक्षा 12 या समकक्ष में हूं",
+                select_class_10: "कक्षा 10 चुनें",
+                select_class_12: "कक्षा 12 चुनें",
+                
+                // Buttons and actions
+                not_sure: "यह तय नहीं कर पा रहे कि क्या चुनें?",
+                need_help: "निर्णय लेने में सहायता चाहिए?",
+                back: "पीछे जाएं",
+                next: "अगला",
+                help: "सहायता",
+                
+                // Stream Recommendation
+                stream_rec_title: "कक्षा 10 छात्रों के लिए स्ट्रीम सिफारिश",
+                stream_rec_desc: "आपकी वर्तमान कक्षा (10) के आधार पर, हम आपको आपके उच्च माध्यमिक शिक्षा के लिए सूचित निर्णय लेने में मदद करने के लिए विभिन्न स्ट्रीम्स का पता लगाने की सलाह देते हैं।",
+                stream_assessment: "स्ट्रीम मूल्यांकन शुरू करें",
+                stream_recommendation: "स्ट्रीम सिफारिश",
+                stream_assessment_desc: "हमारे मूल्यांकन में भाग लें और जानें कि कौन सी स्ट्रीम (विज्ञान, वाणिज्य या कला) आपकी क्षमताओं और रुचियों के अनुकूल है।",
+                
+                // Course Recommendation
+                course_rec_title: "कक्षा 12 छात्रों के लिए पाठ्यक्रम सिफारिश",
+                course_rec_desc: "एक कक्षा 12 के छात्र के रूप में, आप अपनी शैक्षणिक यात्रा के एक महत्वपूर्ण चरण में हैं। हमारा पाठ्यक्रम सिफारिश उपकरण आपको विभिन्न स्नातक कार्यक्रमों और करियर मार्गों का पता लगाने में मदद करेगा।",
+                explore_courses: "अनुशंसित पाठ्यक्रम देखें",
+                course_recommendation: "पाठ्यक्रम सिफारिश",
+                course_assessment_desc: "अपनी स्ट्रीम, रुचियों और शैक्षणिक प्रदर्शन के आधार पर सर्वोत्तम पाठ्यक्रम और करियर मार्गों की खोज करें। हमारा व्यापक मूल्यांकन आपको भविष्य की पढ़ाई और करियर के लिए सही मार्गदर्शन प्रदान करेगा।",
+                dropout_risk_title: "ड्रॉपआउट जोखिम मूल्यांकन",
+                dropout_risk_desc: "संभावित जोखिम कारकों की पहचान करें जो आकादमिक यात्रा को प्रभावित कर सकते हैं। हमारा मूल्यांकन आपको ड्रॉपआउट के जोखिमों को समझने और कम करने में मदद करेगा, यह सुनिश्चित करते हुए कि आप अपने शैक्षणिक लक्ष्यों को प्राप्त करने के रास्ते पर बने रहें।",
+                assess_now: "अभी आकलन करें",
+                
+                // Quiz Options
+                quizzes_title: "मूल्यांकन केंद्र",
+                quizzes_desc: "विभिन्न विषयों और योग्यता क्षेत्रों में अपने ज्ञान और कौशल का आकलन करने के लिए हमारे व्यापक क्विज़ का अन्वेषण करें।",
+                explore_quizzes: "सभी क्विज़ एक्सप्लोर करें",
+                explore_quizzes_desc: "अपने ज्ञान और कौशल का आकलन करने के लिए विषय और योग्यता क्विज़ का हमारा व्यापक संग्रह देखें।",
+                start_quizzes: "क्विज़ शुरू करें",
+                career_exploration_title: "करियर एक्सप्लोरेशन",
+                career_exploration_desc: "अपनी करियर रुचियों की खोज करें और विभिन्न करियर मार्गों का अन्वेषण करें। हमारा मूल्यांकन आपको यह समझने में मदद करेगा कि कौन से करियर आपकी रुचियों और कौशल के अनुरूप हैं।",
+                explore_careers: "करियर मार्ग एक्सप्लोर करें",
+                confident_skip: "मैं आश्वस्त हूं",
+                confident_skip_desc: "मैं पहले से ही विषयों और योग्यता में अपनी ताकत जानता हूं। मुझे सीधे स्ट्रीम सिफारिश पर ले जाएं।",
+                skip_to_stream: "स्ट्रीम सिफारिश पर जाएं",
+            },
+            ur: {
+                // Navigation
+                page_title: "تجویزات کا مرکز",
+                main_menu: "مین مینو",
+                dashboard: "ڈیش بورڈ",
+                recommendations: "تجاویز",
+                career_recommendations: "کیریئر کی تجاویز",
+                top_colleges: "بہترین کالج",
+                recommended_courses: "تجویز کردہ کورسز",
+                resources: "وسائل",
+                college_directory: "کالج ڈائرکٹری",
+                school_directory: "اسکول ڈائرکٹری",
+                ebooks_library: "ای بکس لائبریری",
+                tools: "اوزار",
+                timeline_tracker: "ٹائم لائن ٹریکر",
+                student: "طالب علم",
+                
+                // Class selection
+                welcome: "آپ کے کیریئر کے سفر میں خوش آمدید!",
+                select_academic_level: "ذاتی نوعیت کی سفارشات کے ساتھ شروع کرنے کے لیے براہ کرم اپنا موجودہ تعلیمی درجہ منتخب کریں۔",
+                class_10: "دسویں جماعت کا طالب علم",
+                class_10_desc: "میں اس وقت دسویں جماعت یا اس کے مساوی میں ہوں",
+                class_12: "بارہویں جماعت کا طالب علم",
+                class_12_desc: "میں اس وقت بارہویں جماعت یا اس کے مساوی میں ہوں",
+                select_class_10: "دسویں جماعت منتخب کریں",
+                select_class_12: "بارہویں جماعت منتخب کریں",
+                
+                // Buttons and actions
+                not_sure: "یقین نہیں کر پا رہے کہ کون سا اختیار منتخب کریں؟",
+                need_help: "فیصلہ کرنے میں مدد چاہیے؟",
+                back: "پیچھے جائیں",
+                next: "اگلا",
+                help: "مدد",
+                
+                // Stream Recommendation
+                stream_rec_title: "دسویں جماعت کے طلباء کے لیے سٹریم کی سفارش",
+                stream_rec_desc: "آپ کی موجودہ جماعت (10) کی بنیاد پر، ہم آپ کو آپ کے ہائر سیکنڈری تعلیم کے لیے ایک باخبر فیصلہ کرنے میں مدد کے لیے مختلف سٹریمز کا جائزہ لینے کی سفارش دیتے ہیں۔",
+                stream_assessment: "سٹریم کا جائزہ شروع کریں",
+                stream_recommendation: "سٹریم کی سفارش",
+                stream_assessment_desc: "ہمارے جائزے میں حصہ لیں اور جانئیں کہ کون سی سٹریم (سائنس، کامرس یا آرٹس) آپ کی صلاحیتوں اور دلچسپیوں کے مطابق ہے۔",
+                
+                // Course Recommendation
+                course_rec_title: "بارہویں جماعت کے طلباء کے لیے کورس کی سفارش",
+                course_rec_desc: "بارہویں جماعت کے طالب علم کے طور پر، آپ اپنے تعلیمی سفر کے ایک اہم موڑ پر ہیں۔ ہمارا کورس سفارش کا آلہ آپ کو مختلف انڈرگریجویٹ پروگرامز اور کیریئر کے راستوں کو دریافت کرنے میں مدد کرے گا۔",
+                explore_courses: "تجویز کردہ کورسز دریافت کریں",
+                course_recommendation: "کورس کی سفارش",
+                course_assessment_desc: "اپنی سٹریم، دلچسپیوں اور تعلیمی کارکردگی کی بنیاد پر بہترین کورسز اور کیریئر کے راستوں کو دریافت کریں۔",
+                
+                // Quiz Options
+                quizzes_title: "تشخیصی مرکز",
+                quizzes_desc: "مختلف مضامین اور صلاحیت کے شعبوں میں اپنے علم اور مہارت کا جائزہ لینے کے لیے ہمارے جامع کوئز کا جائزہ لیں۔",
+                explore_quizzes: "تمام کوئزز دریافت کریں",
+                explore_quizzes_desc: "اپنے علم اور مہارت کا جائزہ لینے کے لیے مضامین اور اہلیت کے کوئزز کی ہماری جامع لائبریری تک رسائی حاصل کریں۔",
+                start_quizzes: "کوئزز شروع کریں",
+                career_exploration_title: "کیریئر ایکسپلوریشن",
+                career_exploration_desc: "اپنی کیریئر کی دلچسپیوں کو دریافت کریں اور مختلف کیریئر کے راستوں کو تلاش کریں۔ ہماری تشخیص آپ کو یہ سمجھنے میں مدد کرے گی کہ کون سے کیریئر آپ کی دلچسپیوں اور مہارتوں سے میل کھاتے ہیں۔",
+                explore_careers: "کیریئر کے راستے دریافت کریں",
+                confident_skip: "مجھے یقین ہے",
+                confident_skip_desc: "میں پہلے سے ہی مضامین اور اہلیت میں اپنی طاقتوں کو جانتا ہوں۔ مجھے براہ راست سٹریم کی سفارش پر لے جائیں۔",
+                skip_to_stream: "سٹریم کی سفارش پر جائیں",
+            },
+            ks: {
+                // Navigation
+                page_title: "مشورٕ چھاڈ",
+                main_menu: "مینو منز",
+                dashboard: "ڈیش بورڈ",
+                recommendations: "مشورٕ",
+                career_recommendations: "کیریر مشورٕ",
+                top_colleges: "بہترین کالجز",
+                recommended_courses: "تجویز کردہ کورس",
+                resources: "وسائل",
+                college_directory: "کالج ہدایت نامہ",
+                school_directory: "اسکول ہدایت نامہ",
+                ebooks_library: "ای بکس لائبریری",
+                tools: "اوزار",
+                timeline_tracker: "وقت لائن ٹریکر",
+                student: "طالب علم",
+                
+                // Class selection
+                welcome: "تہند کیریر رستس منز خوش آمدید",
+                select_academic_level: "ذاتی مشورٕ حاصل کرن خاطرہٕ براہ مہربانی اپن موجودہ تعلیمی سطح چنو۔",
+                class_10: "دہم جماعت طالب علم",
+                class_10_desc: "میون اس وقت دہم جماعت یا اس دے برابر وِچ آں",
+                class_12: "بارس جماعت طالب علم",
+                class_12_desc: "میون اس وقت بارس جماعت یا اس دے برابر وِچ آں",
+                select_class_10: "دہم جماعت چنو",
+                select_class_12: "بارس جماعت چنو",
+                
+                // Buttons and actions
+                not_sure: "یقین نیہہ کرن پے تھاوان چہ اختیار چنو؟",
+                need_help: "فیصلہ کرن وِچ مدد چاہیدہ اے؟",
+                back: "پچھے ونجو",
+                next: "اگلے",
+                help: "مدد",
+                
+                // Stream Recommendation
+                stream_rec_title: "دہم جماعت طلباء خاطرہ شعبہٕ مشورٕ",
+                stream_rec_desc: "تہند موجودہ جماعت (10) دے مطابق، اسيں تہاکوں ہائر سیکنڈری تعلیم لئی باخبر فیصلہ کرن وِچ مدد کرن خاطرہ مختلف شعبہ جات دا جائزہ لین دی صلاحَہ دیندو۔",
+                stream_assessment: "شعبہٕ جائزہ شروع کرو",
+                stream_recommendation: "شعبہٕ مشورٕ",
+                stream_assessment_desc: "ہندس جائزہ وِچ حصہ لیوو تے جانو چہ کون سا شعبہٕ (سائنس، کامرس یا آرٹس) تہندے ہنر تے دلچسپیاں دے نال بہترین مطابقت رکھدے۔",
+                
+                // Course Recommendation
+                course_rec_title: "بارس جماعت طلباء خاطرہ کورس مشورٕ",
+                course_rec_desc: "بارس جماعت دے طالب علم دے طور تے، تہاڈی تعلیمی زندگی دے اک اہم موڑ تے ہو۔ اسيں تہاکوں مختلف انڈرگریجویٹ پروگرامز تے کیریر دے راستے تلاش کرن وِچ مدد کرن گے۔",
+                explore_courses: "تجویز کردہ کورس دریافت کرو",
+                course_recommendation: "کورس مشورٕ",
+                course_assessment_desc: "اپنے شعبہٕ، دلچسپیاں تے تعلیمی کارکردگی دی بنیاد تے بہترین کورسز تے کیریر دے راستے دریافت کرو۔",
+                
+                // Quiz Options
+                quizzes_title: "اپن تشخیص رستہ چھانو",
+                quizzes_desc: "اپنی طاقت تے دلچسپیاں بہتر طور تے سمجھن خاطرہ ہمارے کوئز لیوو، یا اگر تہاڈی پسند بارے وِچ پراعتماد ہیو تو براہ راست سٹریم سفارش تے ونجو۔",
+                subject_quizzes: "موضوع کوئز",
+                subject_quizzes_desc: "تفصیلی وضاحتیں تے جامع کوریج نال مخصوص تعلیمی مضامین وِچ اپنے علم دی جانچ کرو۔",
+                aptitude_quizzes: "صلاحیت کوئز",
+                aptitude_quizzes_desc: "جامع مہارت تشخیص خاطرہ اپنی علمی صلاحیتاں، مسئلہ حل کرن دی مہارتاں تے مختلف صلاحیت شعبہ جات دا جائزہ لیوو۔",
+                start_subject_quizzes: "موضوع کوئز شروع کرو",
+                start_aptitude_quizzes: "صلاحیت کوئز شروع کرو",
+                confident_skip: "میون پراعتماد آں",
+                confident_skip_desc: "میون پہلے ہی مضامین تے صلاحیت وِچ اپنی طاقتاں کو جانن آں۔ مجھے براہ راست سٹریم سفارش تے لیوو۔",
+                skip_to_stream: "سٹریم سفارش تے ونجو",
+            }
+        };
+
+        // Set language function
+        function setLang(lang) {
+            if (!t[lang]) return;
+            
+            // Update HTML lang attribute
+            document.documentElement.lang = lang;
+            
+            // Update direction for RTL languages
+            document.body.style.direction = (lang === 'ur' || lang === 'ks') ? 'rtl' : 'ltr';
+            
+            // Update all elements with data-t attribute
+            document.querySelectorAll('[data-t]').forEach(el => {
+                const key = el.getAttribute('data-t');
+                if (el.placeholder) {
+                    el.placeholder = t[lang][key] || t['en'][key] || key;
+                } else {
+                    el.textContent = t[lang][key] || t['en'][key] || key;
+                }
+            });
+            
+            // Update language switcher
+            const langSwitcher = document.getElementById('langSwitcher');
+            if (langSwitcher) langSwitcher.value = lang;
+            
+            // Save preference
+            localStorage.setItem('preferredLanguage', lang);
+        }
+
+        // Initialize with saved language or browser language
+        const savedLang = localStorage.getItem('preferredLanguage');
+        const browserLang = navigator.language.split('-')[0];
+        const defaultLang = t[browserLang] ? browserLang : 'en';
+        
+        // Set the language on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const lang = savedLang || defaultLang;
+            setLang(lang);
+            
+            // Update the language switcher
+            const langSwitcher = document.getElementById('langSwitcher');
+            if (langSwitcher) {
+                langSwitcher.value = lang;
+                langSwitcher.addEventListener('change', function() {
+                    setLang(this.value);
+                });
+            }
+        });
+        
+        // Set language after DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            setLang(savedLang || defaultLang);
+        });
+    </script>
+</body>
+</html>

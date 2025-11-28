@@ -1,0 +1,112 @@
+/* Animations for Dropout Risk Factor */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+    from { transform: translateX(-20px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+}
+
+/* Card Animations */
+.risk-card {
+    animation: fadeIn 0.5s ease-out forwards;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.risk-card:nth-child(1) { animation-delay: 0.1s; }
+.risk-card:nth-child(2) { animation-delay: 0.2s; }
+.risk-card:nth-child(3) { animation-delay: 0.3s; }
+.risk-card:nth-child(4) { animation-delay: 0.4s; }
+
+/* Section Animations */
+.section {
+    animation: slideIn 0.5s ease-out forwards;
+    opacity: 0;
+    transform: translateX(-20px);
+}
+
+.section:nth-child(1) { animation-delay: 0.1s; }
+.section:nth-child(2) { animation-delay: 0.2s; }
+.section:nth-child(3) { animation-delay: 0.3s; }
+.section:nth-child(4) { animation-delay: 0.4s; }
+.section:nth-child(5) { animation-delay: 0.5s; }
+
+/* Button Hover Effects */
+.btn-hover {
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.btn-hover:active {
+    transform: translateY(0);
+}
+
+/* Progress Bar Animation */
+@keyframes progressBar {
+    from { width: 0; }
+}
+
+.progress-bar-animate {
+    animation: progressBar 1.5s ease-out forwards;
+}
+
+/* Risk Level Animations */
+.risk-level-low {
+    animation: pulse 2s infinite;
+}
+
+.risk-level-medium {
+    animation: pulse 1.5s infinite;
+}
+
+.risk-level-high {
+    animation: pulse 1s infinite;
+}
+
+/* Chart Animations */
+.chart-container {
+    opacity: 0;
+    animation: fadeIn 0.8s ease-out 0.3s forwards;
+}
+
+/* Form Field Focus Effects */
+.form-field:focus {
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    border-color: #3b82f6;
+    transition: all 0.3s ease;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .section {
+        animation: fadeIn 0.5s ease-out forwards;
+    }
+    
+    .section:nth-child(n) {
+        animation-delay: 0.1s;
+    }
+}
+
+/* Loading Animation */
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.loading-spinner {
+    animation: spin 1s linear infinite;
+}
