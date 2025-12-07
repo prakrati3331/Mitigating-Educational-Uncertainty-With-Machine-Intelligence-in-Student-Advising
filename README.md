@@ -39,6 +39,10 @@ Ensures accuracy and reliability with counselor oversight.
 
 Provides curated PDFs, guidance material, and state-level educational information.
 
+🔹 AI Tutor Agent & Quiz Generator Agent
+
+🔹 Mistral Agent
+
 # Innovation & Uniqueness
 
 First hybrid model combining AI intelligence + human mentorship
