@@ -3,13 +3,13 @@
 
 An AI-powered student advising platform designed to help learners make informed academic and career decisions. This system blends machine intelligence, predictive analytics, and a hybrid AI–human mentorship model to support students—especially those in rural and semi-urban areas with limited access to professional counseling.
 
-🚀 Overview
+#🚀 Overview
 
 Students across India often struggle with choosing the right stream, course, or career due to lack of awareness, scattered information, and limited guidance. This project addresses these gaps by providing a real-time, personalized, multilingual, and offline-capable advising solution built using modern AI/ML methodologies.
 
 Our platform supports: Smart career recommendations Early detection of dropout risks Scholarship & admission notifications Career pathway visualization Real-time job market insights Offline-first architecture for low bandwidth users
 
-🎯 Key Features
+#🎯 Key Features
 
 🔹 AI-Driven Career Guidance
 
@@ -39,7 +39,7 @@ Ensures accuracy and reliability with counselor oversight.
 
 Provides curated PDFs, guidance material, and state-level educational information.
 
-🧠 Innovation & Uniqueness
+#🧠 Innovation & Uniqueness
 
 First hybrid model combining AI intelligence + human mentorship
 
@@ -53,7 +53,7 @@ Integrates job market trends for future career readiness
 
 Inclusive design supporting digital literacy gaps
 
-🛠️ Technology Stack
+#🛠️ Technology Stack
 
 Frontend: HTML5, CSS3, JavaScript React.js, TailwindCSS Streamlit for ML interface modules
 
@@ -65,7 +65,7 @@ Visualization: Matplotlib D3.js
 
 Security: JWT Authentication Encrypted user data
 
-🧪 Testing & Validation
+#🧪 Testing & Validation
 
 Unit Testing: Validated all major modules including ML predictions and system logic
 
@@ -75,7 +75,7 @@ User Validation: Tested with real-world scenarios to ensure accuracy and usabili
 
 Performance Testing: Ensured smooth operation even in low-bandwidth environments
 
-📈 Impact
+#📈 Impact
 
 👨‍🎓 Students Personalized academic guidance Improved decision-making Better job readiness Access for underserved communities
 
@@ -83,7 +83,7 @@ Performance Testing: Ensured smooth operation even in low-bandwidth environments
 
 🏫 Institutions Insightful analytics for skill-gap mapping Support for policy-making and student success
 
-🔮 Future Enhancements
+#🔮 Future Enhancements
 
 Mobile application with gamified mentoring
 
