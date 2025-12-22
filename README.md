@@ -100,3 +100,5 @@ Integration with national-level educational portals
 Predictive analytics for emerging skill-demand trends
 
 [Download Presentation] https://github.com/prakrati3331/Mitigating-Educational-Uncertainty-With-Machine-Intelligence-in-Student-Advising/blob/main/MProjectPhase2.pptx
+
+[Download Project Report]  
