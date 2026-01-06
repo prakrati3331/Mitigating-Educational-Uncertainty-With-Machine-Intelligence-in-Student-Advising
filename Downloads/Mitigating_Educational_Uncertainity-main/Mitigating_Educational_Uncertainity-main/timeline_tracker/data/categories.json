@@ -1,0 +1,42 @@
+[
+  {
+    "id": "exam",
+    "name": "Entrance Exams",
+    "icon": "fas fa-graduation-cap",
+    "description": "Engineering, medical, law, and other entrance examinations",
+    "color": "#4361ee",
+    "count": 0
+  },
+  {
+    "id": "scholarship",
+    "name": "Scholarships",
+    "icon": "fas fa-hand-holding-usd",
+    "description": "Financial aid and scholarship opportunities",
+    "color": "#28a745",
+    "count": 0
+  },
+  {
+    "id": "admission",
+    "name": "Admissions",
+    "icon": "fas fa-university",
+    "description": "College and university admission dates",
+    "color": "#ffc107",
+    "count": 0
+  },
+  {
+    "id": "result",
+    "name": "Results",
+    "icon": "fas fa-chart-line",
+    "description": "Exam result announcements",
+    "color": "#dc3545",
+    "count": 0
+  },
+  {
+    "id": "workshop",
+    "name": "Workshops",
+    "icon": "fas fa-chalkboard-teacher",
+    "description": "Educational workshops and seminars",
+    "color": "#17a2b8",
+    "count": 0
+  }
+]

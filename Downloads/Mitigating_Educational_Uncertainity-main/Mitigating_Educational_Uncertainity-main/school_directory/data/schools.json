@@ -1,0 +1,302 @@
+[
+  {
+    "id": "dps_delhi",
+    "name": "Delhi Public School",
+    "type": "Private",
+    "board": "CBSE",
+    "location": "New Delhi, Delhi",
+    "address": "R.K. Puram, New Delhi, Delhi 110022",
+    "established": 1949,
+    "rating": 4.8,
+    "reviews_count": 1250,
+    "fees_range": "₹1.5-2.5 Lakhs/year",
+    "student_teacher_ratio": "25:1",
+    "total_students": 3500,
+    "facilities": [
+      "Library",
+      "Science Labs",
+      "Computer Lab",
+      "Sports",
+      "Swimming Pool",
+      "Auditorium",
+      "Hostel"
+    ],
+    "contact": {
+      "phone": "+91-11-2617-2591",
+      "email": "info@dpsrkp.net",
+      "website": "https://www.dpsrkp.net"
+    },
+    "image_url": "https://images.unsplash.com/photo-1523050853548-ae449b384fe5?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80",
+    "specializations": [
+      "Science",
+      "Commerce",
+      "Arts",
+      "Sports"
+    ],
+    "admission_process": [
+      "Entrance Test",
+      "Interview",
+      "Document Verification"
+    ],
+    "tags": [
+      "premier",
+      "cbse",
+      "delhi",
+      "sports"
+    ],
+    "added_date": "2024-01-15",
+    "last_updated": "2024-03-20"
+  },
+  {
+    "id": "doon_school",
+    "name": "The Doon School",
+    "type": "Boarding",
+    "board": "ICSE",
+    "location": "Dehradun, Uttarakhand",
+    "address": "Mall Road, Dehradun, Uttarakhand 248001",
+    "established": 1935,
+    "rating": 4.9,
+    "reviews_count": 890,
+    "fees_range": "₹8-10 Lakhs/year",
+    "student_teacher_ratio": "10:1",
+    "total_students": 500,
+    "facilities": [
+      "Library",
+      "Science Labs",
+      "Computer Lab",
+      "Sports",
+      "Swimming Pool",
+      "Auditorium",
+      "Hostel",
+      "Music Room",
+      "Art Studio"
+    ],
+    "contact": {
+      "phone": "+91-135-252-6000",
+      "email": "admission@doonschool.com",
+      "website": "https://www.doonschool.com"
+    },
+    "image_url": "https://images.unsplash.com/photo-1577896851231-70ef18881754?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80",
+    "specializations": [
+      "Leadership",
+      "Sports",
+      "Arts",
+      "Academics"
+    ],
+    "admission_process": [
+      "Entrance Test",
+      "Interview",
+      "Medical Checkup",
+      "Document Verification"
+    ],
+    "tags": [
+      "boarding",
+      "icse",
+      "premier",
+      "boys",
+      "dehradun"
+    ],
+    "added_date": "2024-01-20",
+    "last_updated": "2024-03-25"
+  },
+  {
+    "id": "oberoi_international",
+    "name": "Oberoi International School",
+    "type": "International",
+    "board": "IB",
+    "location": "Mumbai, Maharashtra",
+    "address": "Goregaon, Mumbai, Maharashtra 400063",
+    "established": 2008,
+    "rating": 4.7,
+    "reviews_count": 780,
+    "fees_range": "₹3-4 Lakhs/year",
+    "student_teacher_ratio": "15:1",
+    "total_students": 1200,
+    "facilities": [
+      "Library",
+      "Science Labs",
+      "Computer Lab",
+      "Sports",
+      "Swimming Pool",
+      "Auditorium",
+      "Cafeteria",
+      "Art Studio"
+    ],
+    "contact": {
+      "phone": "+91-22-2675-0000",
+      "email": "admissions@oberoi-is.org",
+      "website": "https://www.oberoi-is.org"
+    },
+    "image_url": "https://images.unsplash.com/photo-1546410531-bb4caa6b424d?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80",
+    "specializations": [
+      "International Baccalaureate",
+      "Global Learning",
+      "Technology",
+      "Arts"
+    ],
+    "admission_process": [
+      "Application Form",
+      "Assessment Test",
+      "Interview",
+      "Document Verification"
+    ],
+    "tags": [
+      "international",
+      "ib",
+      "mumbai",
+      "co-educational",
+      "technology"
+    ],
+    "added_date": "2024-01-25",
+    "last_updated": "2024-04-01"
+  },
+  {
+    "id": "kendriya_vidyalaya",
+    "name": "Kendriya Vidyalaya",
+    "type": "Public",
+    "board": "State Board",
+    "location": "Bangalore, Karnataka",
+    "address": "Malleswaram, Bangalore, Karnataka 560003",
+    "established": 1965,
+    "rating": 4.2,
+    "reviews_count": 650,
+    "fees_range": "₹20,000-30,000/year",
+    "student_teacher_ratio": "30:1",
+    "total_students": 2500,
+    "facilities": [
+      "Library",
+      "Science Labs",
+      "Computer Lab",
+      "Sports",
+      "Playground",
+      "Auditorium"
+    ],
+    "contact": {
+      "phone": "+91-80-2334-4567",
+      "email": "kvbangalore@kvsangathan.nic.in",
+      "website": "https://www.kvbangalore.kvs.in"
+    },
+    "image_url": "https://images.unsplash.com/photo-1523240795612-9a054b0db644?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80",
+    "specializations": [
+      "Science",
+      "Mathematics",
+      "Social Studies",
+      "Languages"
+    ],
+    "admission_process": [
+      "Merit-based",
+      "Document Verification",
+      "Medical Checkup"
+    ],
+    "tags": [
+      "public",
+      "government",
+      "state-board",
+      "bangalore",
+      "affordable"
+    ],
+    "added_date": "2024-02-01",
+    "last_updated": "2024-04-05"
+  },
+  {
+    "id": "dav_chennai",
+    "name": "D.A.V. Public School",
+    "type": "Private",
+    "board": "CBSE",
+    "location": "Chennai, Tamil Nadu",
+    "address": "Velachery, Chennai, Tamil Nadu 600042",
+    "established": 1988,
+    "rating": 4.5,
+    "reviews_count": 920,
+    "fees_range": "₹80,000-1.2 Lakhs/year",
+    "student_teacher_ratio": "22:1",
+    "total_students": 2800,
+    "facilities": [
+      "Library",
+      "Science Labs",
+      "Computer Lab",
+      "Sports",
+      "Playground",
+      "Auditorium",
+      "Music Room"
+    ],
+    "contact": {
+      "phone": "+91-44-2245-6789",
+      "email": "davchennai@davgroup.in",
+      "website": "https://www.davchennai.in"
+    },
+    "image_url": "https://images.unsplash.com/photo-1523050853548-ae449b384fe5?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80",
+    "specializations": [
+      "Science",
+      "Commerce",
+      "Arts",
+      "Cultural Activities"
+    ],
+    "admission_process": [
+      "Application Form",
+      "Entrance Test",
+      "Interview",
+      "Document Verification"
+    ],
+    "tags": [
+      "private",
+      "cbse",
+      "chennai",
+      "cultural",
+      "affordable"
+    ],
+    "added_date": "2024-02-05",
+    "last_updated": "2024-04-08"
+  },
+  {
+    "id": "international_school_hyderabad",
+    "name": "The International School",
+    "type": "International",
+    "board": "IGCSE",
+    "location": "Hyderabad, Telangana",
+    "address": "Jubilee Hills, Hyderabad, Telangana 500033",
+    "established": 2001,
+    "rating": 4.6,
+    "reviews_count": 720,
+    "fees_range": "₹2.5-3.5 Lakhs/year",
+    "student_teacher_ratio": "18:1",
+    "total_students": 1500,
+    "facilities": [
+      "Library",
+      "Science Labs",
+      "Computer Lab",
+      "Sports",
+      "Swimming Pool",
+      "Auditorium",
+      "Art Studio",
+      "Language Lab"
+    ],
+    "contact": {
+      "phone": "+91-40-2335-6789",
+      "email": "info@internationalschoolhyd.in",
+      "website": "https://www.internationalschoolhyd.in"
+    },
+    "image_url": "https://images.unsplash.com/photo-1509062522246-3755977927d7?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80",
+    "specializations": [
+      "Cambridge Curriculum",
+      "Global Education",
+      "STEM",
+      "Languages"
+    ],
+    "admission_process": [
+      "Application Form",
+      "Assessment Test",
+      "Parent Interview",
+      "Document Verification"
+    ],
+    "tags": [
+      "international",
+      "igcse",
+      "hyderabad",
+      "cambridge",
+      "stem"
+    ],
+    "added_date": "2024-02-10",
+    "last_updated": "2024-04-10"
+  }
+]

@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📅 Timeline Tracker - Career Guidance</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: var(--dark);
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .back-button:hover {
+            transform: translateX(-3px);
+            background: var(--light);
+        }
+        
+        .timeline-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 20px;
+            box-shadow: 0 15px 50px rgba(67, 97, 238, 0.1);
+        }
+        
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .page-header h1 {
+            color: var(--primary);
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+        
+        .timeline:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 2px;
+            background: #e9ecef;
+            transform: translateX(-50%);
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 40px;
+            width: 100%;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .timeline-item.animate {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .timeline-item:nth-child(odd) .timeline-content {
+            margin-left: auto;
+            margin-right: 50%;
+            padding-right: 30px;
+            text-align: right;
+        }
+        
+        .timeline-item:nth-child(even) .timeline-content {
+            margin-left: 50%;
+            padding-left: 30px;
+        }
+        
+        .timeline-content {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            position: relative;
+            max-width: 400px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: scale(0.98);
+        }
+        
+        .timeline-content:hover {
+            transform: scale(1.02) translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+        
+        .timeline-content:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .timeline-date {
+            font-size: 0.9rem;
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .timeline-date i {
+            margin-right: 8px;
+        }
+        
+        .timeline-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+        
+        .timeline-desc {
+            color: #6c757d;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+        }
+        
+        .timeline-badge {
+            position: absolute;
+            top: 20px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary);
+            border: 3px solid white;
+            box-shadow: 0 0 0 2px var(--primary);
+            z-index: 1;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: scale(0);
+        }
+        
+        .timeline-item.animate .timeline-badge {
+            transform: scale(1);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(67, 97, 238, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(67, 97, 238, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(67, 97, 238, 0); }
+        }
+        
+        .timeline-item:nth-child(odd) .timeline-badge {
+            right: -10px;
+        }
+        
+        .timeline-item:nth-child(even) .timeline-badge {
+            left: -10px;
+        }
+        
+        .timeline-tag { 
+            display: inline-block; 
+            padding: 4px 12px; 
+            border-radius: 20px; 
+            font-size: 0.75rem; 
+            font-weight: 500; 
+            margin-right: 8px; 
+            margin-bottom: 8px; 
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.4s ease;
+            transition-delay: calc(0.1s * var(--i));
+        }
+        
+        .timeline-item.animate .timeline-tag {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .tag-admission { background-color: #e3f2fd; color: #1976d2; }
+        .tag-scholarship { background-color: #e8f5e9; color: #2e7d32; }
+        .tag-exam { background-color: #fff3e0; color: #ef6c00; }
+        .tag-counseling { background-color: #f3e5f5; color: #7b1fa2; }
+        
+        .timeline-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .btn-remind {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .btn-remind:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+        }
+        
+        .btn-details {
+            background: white;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-details:hover {
+            background: var(--light);
+            transform: translateY(-2px);
+        }
+        
+        .filters {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            opacity: 0;
+            transform: translateY(-20px);
+            animation: slideDown 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        
+        @keyframes slideDown {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .filter-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+        
+        .filter-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-label {
+            font-weight: 500;
+            color: #495057;
+            margin-bottom: 8px;
+            display: block;
+            font-size: 0.9rem;
+        }
+        
+        .form-select, .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+        
+        .btn-apply {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .btn-apply:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+        }
+        
+        .no-events {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6c757d;
+        }
+        
+        @media (max-width: 992px) {
+            body {
+                padding: 70px 15px 20px;
+            }
+            
+            .timeline:before {
+                left: 20px;
+            }
+            
+            .timeline-item:nth-child(odd) .timeline-content,
+            .timeline-item:nth-child(even) .timeline-content {
+                margin-left: 40px;
+                margin-right: 0;
+                padding-right: 20px;
+                padding-left: 30px;
+                text-align: left;
+                max-width: 100%;
+            }
+            
+            .timeline-item:nth-child(odd) .timeline-badge,
+            .timeline-item:nth-child(even) .timeline-badge {
+                left: 10px;
+                right: auto;
+            }
+            
+            .timeline-container {
+                padding: 20px;
+            }
+            
+            .back-button {
+                top: 15px;
+                left: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="/recommendation_hub.html" class="back-button">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+    
+    <div class="timeline-container">
+        <div class="page-header">
+            <h1>📅 Timeline Tracker</h1>
+            <p class="text-muted">Never miss important academic dates and deadlines</p>
+        </div>
+        
+        <div class="filters">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="filter-group">
+                        <label class="form-label">Category</label>
+                        <select class="form-select" id="categoryFilter">
+                            <option value="">All Categories</option>
+                            <option value="admission">Admissions</option>
+                            <option value="scholarship">Scholarships</option>
+                            <option value="exam">Entrance Exams</option>
+                            <option value="counseling">Counseling</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="filter-group">
+                        <label class="form-label">Timeframe</label>
+                        <select class="form-select" id="timeframeFilter">
+                            <option value="upcoming">Upcoming</option>
+                            <option value="this-month">This Month</option>
+                            <option value="next-3-months">Next 3 Months</option>
+                            <option value="past">Past Events</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="filter-group">
+                        <label class="form-label">Search</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Search events...">
+                            <button class="btn btn-apply" style="border-radius: 0 6px 6px 0;">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="timeline" id="timeline">
+            <!-- Timeline events will be dynamically loaded here -->
+        </div>
+        
+        <!-- Loading indicator -->
+        <div id="loading-indicator" class="text-center py-5" style="display: none;">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading timeline events...</span>
+            </div>
+            <p class="mt-2">Loading timeline events...</p>
+        </div>
+        
+        <!-- No events message -->
+        <div id="no-events" class="text-center py-5" style="display: none;">
+            <i class="fas fa-calendar-times fa-3x text-muted mb-3"></i>
+            <h4 class="text-muted">No events found</h4>
+            <p class="text-muted">Try adjusting your search or filters</p>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Global variables
+        let timelineEvents = [];
+        let categories = [];
+
+        // Intersection Observer for scroll animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate');
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+
+        // Load timeline events from API
+        async function loadTimelineEvents() {
+            try {
+                showLoading(true);
+                const response = await fetch('/api/timeline/events');
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    timelineEvents = data.events;
+                    categories = data.categories;
+                    renderTimelineEvents(timelineEvents);
+                    updateCategoryFilter();
+                } else {
+                    console.error('Error loading timeline events:', data.message);
+                    showError('Failed to load timeline events');
+                }
+            } catch (error) {
+                console.error('Error loading timeline events:', error);
+                showError('Network error while loading timeline events');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Search timeline events
+        async function searchTimelineEvents(query) {
+            try {
+                showLoading(true);
+                const response = await fetch(`/api/timeline/events/search/${encodeURIComponent(query)}`);
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    renderTimelineEvents(data.events);
+                }
+            } catch (error) {
+                console.error('Error searching timeline events:', error);
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Filter by category
+        async function filterByCategory(category) {
+            try {
+                showLoading(true);
+                if (category === 'all') {
+                    renderTimelineEvents(timelineEvents);
+                } else {
+                    const response = await fetch(`/api/timeline/events/category/${encodeURIComponent(category)}`);
+                    const data = await response.json();
+                    
+                    if (data.status === 'success') {
+                        renderTimelineEvents(data.events);
+                    }
+                }
+            } catch (error) {
+                console.error('Error filtering by category:', error);
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Filter by stream
+        async function filterByStream(stream) {
+            try {
+                showLoading(true);
+                if (stream === 'all') {
+                    renderTimelineEvents(timelineEvents);
+                } else {
+                    const response = await fetch(`/api/timeline/events/stream/${encodeURIComponent(stream)}`);
+                    const data = await response.json();
+                    
+                    if (data.status === 'success') {
+                        renderTimelineEvents(data.events);
+                    }
+                }
+            } catch (error) {
+                console.error('Error filtering by stream:', error);
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Get upcoming events
+        async function getUpcomingEvents(days = 30) {
+            try {
+                showLoading(true);
+                const response = await fetch(`/api/timeline/events/upcoming?days=${days}`);
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    renderTimelineEvents(data.events);
+                }
+            } catch (error) {
+                console.error('Error getting upcoming events:', error);
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Render timeline events function
+        function renderTimelineEvents(eventsToRender) {
+            const timeline = document.getElementById('timeline');
+            const noEvents = document.getElementById('no-events');
+            
+            timeline.innerHTML = '';
+            
+            if (eventsToRender.length === 0) {
+                noEvents.style.display = 'block';
+                return;
+            }
+            
+            noEvents.style.display = 'none';
+            
+            eventsToRender.forEach((event, index) => {
+                const eventElement = document.createElement('div');
+                eventElement.className = 'timeline-item';
+                eventElement.style.animationDelay = `${index * 0.1}s`;
+                
+                // Create tags HTML
+                const tagsHtml = event.tags.map(tag => {
+                    const tagClass = getTagClass(tag);
+                    return `<span class="timeline-tag ${tagClass}">${tag}</span>`;
+                }).join('');
+                
+                // Create actions HTML
+                const actionsHtml = event.actions && event.actions.reminder ? 
+                    `<div class="timeline-actions">
+                        <button class="btn-remind" onclick="setReminder('${event.id}')"><i class="far fa-bell"></i> Set Reminder</button>
+                        <button class="btn-details" onclick="viewEventDetails('${event.id}')">View Details</button>
+                    </div>` : '';
+                
+                eventElement.innerHTML = `
+                    <div class="timeline-badge"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date"><i class="far fa-calendar-alt"></i> ${event.display_date}</div>
+                        <h3 class="timeline-title">${event.title}</h3>
+                        <div>
+                            ${tagsHtml}
+                        </div>
+                        <p class="timeline-desc">${event.description}</p>
+                        ${actionsHtml}
+                    </div>
+                `;
+                
+                timeline.appendChild(eventElement);
+                
+                // Observe the new element for animations
+                observer.observe(eventElement);
+            });
+        }
+
+        // Get tag class based on tag text
+        function getTagClass(tag) {
+            const tagLower = tag.toLowerCase();
+            if (tagLower.includes('exam') || tagLower.includes('entrance')) return 'tag-exam';
+            if (tagLower.includes('scholarship')) return 'tag-scholarship';
+            if (tagLower.includes('admission')) return 'tag-admission';
+            return '';
+        }
+
+        // Update category filter options
+        function updateCategoryFilter() {
+            const categoryFilter = document.getElementById('categoryFilter');
+            if (!categoryFilter) return;
+            
+            // Clear existing options except "All"
+            while (categoryFilter.options.length > 1) {
+                categoryFilter.remove(1);
+            }
+            
+            // Add category options
+            categories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category.id;
+                option.textContent = `${category.name} (${category.count})`;
+                categoryFilter.appendChild(option);
+            });
+        }
+
+        // Set reminder for event
+        function setReminder(eventId) {
+            const event = timelineEvents.find(e => e.id === eventId);
+            if (event) {
+                trackTimelineActivity('Set reminder for event', event);
+                console.log('Setting reminder for:', event.title);
+                alert(`Reminder set for: ${event.title}`);
+                
+                // Update button state
+                const button = document.querySelector(`button[onclick="setReminder('${eventId}')"]`);
+                if (button) {
+                    button.innerHTML = '<i class="fas fa-bell"></i> Reminder Set';
+                    button.disabled = true;
+                }
+            }
+        }
+
+        // View event details
+        function viewEventDetails(eventId) {
+            console.log('View details for:', eventId);
+            // TODO: Implement modal or redirect to details page
+            
+            // For now, just show an alert with basic info
+            const event = timelineEvents.find(e => e.id === eventId);
+            if (event) {
+                alert(`Event: ${event.title}\n\n${event.description}\n\nDate: ${event.display_date}\nCategory: ${event.category}\nStream: ${event.stream}`);
+            }
+        }
+
+        // Show/hide loading indicator
+        function showLoading(show) {
+            const loadingIndicator = document.getElementById('loading-indicator');
+            const timeline = document.getElementById('timeline');
+            
+            if (show) {
+                loadingIndicator.style.display = 'block';
+                timeline.style.display = 'none';
+            } else {
+                loadingIndicator.style.display = 'none';
+                timeline.style.display = 'block';
+            }
+        }
+
+        // Show error message
+        function showError(message) {
+            const timeline = document.getElementById('timeline');
+            timeline.innerHTML = `
+                <div class="text-center py-5">
+                    <i class="fas fa-exclamation-triangle fa-3x text-warning mb-3"></i>
+                    <h4 class="text-warning">Error</h4>
+                    <p class="text-muted">${message}</p>
+                </div>
+            `;
+        }
+
+        // User tracking functions
+        function getCurrentUserId() {
+            let userId = localStorage.getItem('user_id');
+            if (!userId) {
+                userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('user_id', userId);
+                trackUserActivity('user_registered', 'New user session started');
+            }
+            return userId;
+        }
+
+        function trackUserActivity(type, description, data = {}) {
+            fetch('/api/dashboard/activity', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    user_id: getCurrentUserId(),
+                    type: type,
+                    title: description,
+                    description: description,
+                    icon: 'fas fa-calendar',
+                    data: data,
+                    page: 'timeline_tracker',
+                    action: 'interaction'
+                })
+            });
+        }
+
+        function trackTimelineActivity(action, eventData) {
+            trackUserActivity('timeline_tracker', action, eventData);
+        }
+
+        // Initialize the application when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.querySelector('.search-box input');
+            const categoryFilter = document.getElementById('categoryFilter');
+            const timeframeFilter = document.getElementById('timeframeFilter');
+            
+            // Load events on page load
+            loadTimelineEvents();
+            
+            // Animate filters on load
+            const filters = document.querySelector('.filters');
+            if (filters) {
+                setTimeout(() => {
+                    filters.style.animation = 'slideDown 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards';
+                }, 300);
+            }
+            
+            // Search functionality
+            let searchTimeout;
+            searchInput.addEventListener('input', function() {
+                clearTimeout(searchTimeout);
+                const searchTerm = this.value.trim();
+                
+                if (searchTerm.length === 0) {
+                    renderTimelineEvents(timelineEvents);
+                    return;
+                }
+                
+                // Track search activity
+                if (searchTerm) {
+                    trackUserActivity('search', `Searched timeline: ${searchTerm}`, { query: searchTerm });
+                }
+                
+                // Debounce search
+                searchTimeout = setTimeout(() => {
+                    searchTimelineEvents(searchTerm);
+                }, 500);
+            });
+            
+            // Category filter
+            if (categoryFilter) {
+                categoryFilter.addEventListener('change', function() {
+                    const selectedCategory = this.value;
+                    trackUserActivity('filter', `Filtered by category: ${selectedCategory}`, { category: selectedCategory });
+                    filterByCategory(selectedCategory);
+                });
+            }
+            
+            // Timeframe filter
+            if (timeframeFilter) {
+                timeframeFilter.addEventListener('change', function() {
+                    const selectedTimeframe = this.value;
+                    trackUserActivity('filter', `Filtered by timeframe: ${selectedTimeframe}`, { timeframe: selectedTimeframe });
+                    
+                    switch(selectedTimeframe) {
+                        case 'upcoming':
+                            getUpcomingEvents(30);
+                            break;
+                        case 'upcoming-60':
+                            getUpcomingEvents(60);
+                            break;
+                        case 'upcoming-90':
+                            getUpcomingEvents(90);
+                            break;
+                        default:
+                            renderTimelineEvents(timelineEvents);
+                    }
+                });
+            }
+            
+            // Search on Enter key
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    const searchTerm = this.value.trim();
+                    if (searchTerm) {
+                        searchTimelineEvents(searchTerm);
+                    }
+                }
+            });
+        });
+    </script>
+
+    <script>
+        // Activity tracking function
+        function trackActivity(type, title, data = {}) {
+            const userId = localStorage.getItem('dashboard_user_id') || 'anonymous_' + Date.now();
+            fetch('/api/dashboard/activity', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    user_id: userId,
+                    type: type,
+                    title: title,
+                    description: title,
+                    icon: 'fas fa-clock',
+                    data: data,
+                    page: 'timeline_tracker',
+                    action: 'visit'
+                })
+            });
+        }
+
+        // Track page visit
+        document.addEventListener('DOMContentLoaded', function() {
+            trackActivity('page_visit', 'Visited Timeline Tracker', {
+                page: 'timeline_tracker',
+                timestamp: new Date().toISOString()
+            });
+        });
+
+        // Track timeline event creation
+        function trackTimelineEventCreation(eventTitle, eventType, eventDate) {
+            trackActivity('timeline_event_created', `Created Timeline Event: ${eventTitle}`, {
+                event_title: eventTitle,
+                event_type: eventType,
+                event_date: eventDate,
+                page: 'timeline_tracker',
+                timestamp: new Date().toISOString()
+            });
+        }
+
+        // Track timeline event completion
+        function trackTimelineEventCompletion(eventTitle, eventType) {
+            trackActivity('timeline_event_completed', `Completed Timeline Event: ${eventTitle}`, {
+                event_title: eventTitle,
+                event_type: eventType,
+                page: 'timeline_tracker',
+                timestamp: new Date().toISOString()
+            });
+        }
+
+        // Track timeline event deletion
+        function trackTimelineEventDeletion(eventTitle, eventType) {
+            trackActivity('timeline_event_deleted', `Deleted Timeline Event: ${eventTitle}`, {
+                event_title: eventTitle,
+                event_type: eventType,
+                page: 'timeline_tracker',
+                timestamp: new Date().toISOString()
+            });
+        }
+
+        // Track timeline searches
+        function trackTimelineSearch(searchTerm) {
+            trackActivity('timeline_search', `Searched Timeline: ${searchTerm}`, {
+                search_term: searchTerm,
+                page: 'timeline_tracker',
+                timestamp: new Date().toISOString()
+            });
+        }
+
+        // Track timeline filter usage
+        function trackTimelineFilter(filterType, filterValue) {
+            trackActivity('timeline_filter', `Filtered Timeline: ${filterType} - ${filterValue}`, {
+                filter_type: filterType,
+                filter_value: filterValue,
+                page: 'timeline_tracker',
+                timestamp: new Date().toISOString()
+            });
+        }
+
+        // Track milestone achievements
+        function trackMilestoneAchievement(milestoneTitle) {
+            trackActivity('milestone_achieved', `Achieved Milestone: ${milestoneTitle}`, {
+                milestone_title: milestoneTitle,
+                page: 'timeline_tracker',
+                timestamp: new Date().toISOString()
+            });
+        }
+
+        // Track goal setting
+        function trackGoalSetting(goalTitle, goalDeadline) {
+            trackActivity('goal_set', `Set Goal: ${goalTitle}`, {
+                goal_title: goalTitle,
+                goal_deadline: goalDeadline,
+                page: 'timeline_tracker',
+                timestamp: new Date().toISOString()
+            });
+        }
+
+        // Add tracking to existing functions by wrapping them
+        document.addEventListener('DOMContentLoaded', function() {
+            // Track when users create events
+            const originalCreateEvent = window.createTimelineEvent || function() {};
+            window.createTimelineEvent = function(eventData) {
+                if (eventData.title && eventData.type) {
+                    trackTimelineEventCreation(eventData.title, eventData.type, eventData.date);
+                }
+                return originalCreateEvent(eventData);
+            };
+
+            // Track when users complete events
+            const originalCompleteEvent = window.completeTimelineEvent || function() {};
+            window.completeTimelineEvent = function(eventId) {
+                const event = window.timelineEvents?.find(e => e.id === eventId);
+                if (event) {
+                    trackTimelineEventCompletion(event.title, event.type);
+                }
+                return originalCompleteEvent(eventId);
+            };
+
+            // Track when users delete events
+            const originalDeleteEvent = window.deleteTimelineEvent || function() {};
+            window.deleteTimelineEvent = function(eventId) {
+                const event = window.timelineEvents?.find(e => e.id === eventId);
+                if (event) {
+                    trackTimelineEventDeletion(event.title, event.type);
+                }
+                return originalDeleteEvent(eventId);
+            };
+
+            // Track search usage
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', function() {
+                    const searchTerm = this.value.trim();
+                    if (searchTerm.length > 2) {
+                        trackTimelineSearch(searchTerm);
+                    }
+                });
+            }
+
+            // Track filter usage
+            const filterSelect = document.getElementById('filterSelect');
+            if (filterSelect) {
+                filterSelect.addEventListener('change', function() {
+                    const filterValue = this.value;
+                    trackTimelineFilter('event_type', filterValue);
+                });
+            }
+
+            // Track milestone completions
+            document.querySelectorAll('.milestone-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const milestoneTitle = this.querySelector('.milestone-title')?.textContent || 'Unknown Milestone';
+                    trackMilestoneAchievement(milestoneTitle);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

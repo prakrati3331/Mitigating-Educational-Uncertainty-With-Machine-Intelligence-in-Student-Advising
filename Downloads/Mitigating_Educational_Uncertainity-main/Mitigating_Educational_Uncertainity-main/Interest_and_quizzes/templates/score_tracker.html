@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Score Tracker - AI in Education</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --success: #28a745;
+            --warning: #ff9800;
+            --danger: #f44336;
+            --info: #00bcd4;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --purple: #9c27b0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--dark);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(67, 97, 238, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .header-icon {
+            font-size: 4rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            color: var(--primary);
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #6c757d;
+            font-size: 1.1rem;
+        }
+
+        .stats-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            text-align: center;
+            border-top: 4px solid var(--primary);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card.aptitude { border-top-color: var(--warning); }
+        .stat-card.subject { border-top-color: var(--success); }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .stat-card.aptitude .stat-icon { color: var(--warning); }
+        .stat-card.subject .stat-icon { color: var(--success); }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        .quiz-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .category-section {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .category-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .category-icon {
+            font-size: 1.5rem;
+            margin-right: 15px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            color: white;
+        }
+
+        .category-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .aptitude .category-icon { background: linear-gradient(135deg, var(--warning), #e68a00); }
+        .subject .category-icon { background: linear-gradient(135deg, var(--success), #218838); }
+
+        .quiz-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-item:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .quiz-item.taken {
+            border-left-color: var(--success);
+            background: rgba(40, 167, 69, 0.05);
+        }
+
+        .quiz-item.not-taken {
+            border-left-color: var(--warning);
+            background: rgba(255, 152, 0, 0.05);
+        }
+
+        .quiz-name {
+            font-weight: 500;
+            flex-grow: 1;
+        }
+
+        .quiz-score {
+            font-weight: bold;
+            font-size: 1.1rem;
+            padding: 5px 15px;
+            border-radius: 20px;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .quiz-score.completed {
+            background: var(--success);
+            color: white;
+        }
+
+        .quiz-score.pending {
+            background: var(--warning);
+            color: white;
+        }
+
+        .score-details {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .progress-bar {
+            width: 100px;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--success), #28a745);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+            font-style: italic;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(67, 97, 238, 0.1);
+            border-left: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .action-buttons {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #e9ecef;
+        }
+
+        .legend-mobile {
+            grid-template-columns: 1fr !important;
+        }
+
+        @media (max-width: 768px) {
+            .legend-mobile .legend-item {
+                justify-content: center;
+            }
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0 10px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success), #28a745);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+        }
+
+        .refresh-btn {
+            background: var(--info);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .refresh-btn:hover {
+            background: #00a1c9;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+
+            .stats-overview {
+                grid-template-columns: 1fr;
+            }
+
+            .quiz-categories {
+                grid-template-columns: 1fr;
+            }
+
+            .quiz-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .score-details {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-icon">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <h1>Quiz Score Tracker</h1>
+            <p>Track your performance across all aptitude and subject assessments</p>
+            <button class="refresh-btn" onclick="loadScores()">
+                <i class="fas fa-sync-alt"></i> Refresh Scores
+            </button>
+        </div>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Loading your quiz scores...</p>
+        </div>
+
+        <div id="content" style="display: none;">
+            <!-- Stats Overview -->
+            <div class="stats-overview">
+                <div class="stat-card aptitude">
+                    <div class="stat-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <div class="stat-number" id="aptitude-count">0</div>
+                    <div class="stat-label">Aptitude Quizzes Completed</div>
+                </div>
+                <div class="stat-card subject">
+                    <div class="stat-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <div class="stat-number" id="subject-count">0</div>
+                    <div class="stat-label">Subject Quizzes Completed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <div class="stat-number" id="avg-score">0%</div>
+                    <div class="stat-label">Average Score</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-medal"></i>
+                    </div>
+                    <div class="stat-number" id="best-score">0%</div>
+                    <div class="stat-label">Best Performance</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-clipboard-check"></i>
+                    </div>
+                    <div class="stat-number" id="total-quizzes">0</div>
+                    <div class="stat-label">Total Quizzes</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="stat-number" id="progress-sessions">0</div>
+                    <div class="stat-label">Progress Sessions</div>
+                </div>
+            </div>
+
+            <!-- Quiz Categories -->
+            <div class="quiz-categories">
+                <!-- Legend -->
+                <div style="background: white; border-radius: 12px; padding: 20px; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.08);">
+                    <h3 style="margin-bottom: 15px; color: var(--primary);"><i class="fas fa-info-circle"></i> Quiz Status</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                        <div style="display: flex; align-items: center;">
+                            <div style="width: 20px; height: 20px; border-radius: 50%; background: var(--success); margin-right: 10px;"></div>
+                            <span>Taken (Completed)</span>
+                        </div>
+                        <div style="display: flex; align-items: center;">
+                            <div style="width: 20px; height: 20px; border-radius: 50%; background: var(--warning); margin-right: 10px;"></div>
+                            <span>Not Taken (In Progress or Not Started)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Aptitude Quizzes -->
+                <div class="category-section aptitude">
+                    <div class="category-header">
+                        <div class="category-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h2 class="category-title">Aptitude Quizzes</h2>
+                    </div>
+                    <div id="aptitude-quizzes">
+                        <div class="no-results">No aptitude quiz results yet</div>
+                    </div>
+                </div>
+
+                <!-- Subject Quizzes -->
+                <div class="category-section subject">
+                    <div class="category-header">
+                        <div class="category-icon">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <h2 class="category-title">Subject Quizzes</h2>
+                    </div>
+                    <div id="subject-quizzes">
+                        <div class="no-results">No subject quiz results yet</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <a href="/" class="btn btn-primary">
+                    <i class="fas fa-home"></i> Back to Quiz Home
+                </a>
+                <a href="/subject_quizzes.html" class="btn btn-success">
+                    <i class="fas fa-play"></i> Take Subject Quiz
+                </a>
+                <a href="/aptitude_quizzes.html" class="btn btn-primary">
+                    <i class="fas fa-brain"></i> Take Aptitude Quiz
+                </a>
+                <button onclick="clearLocalProgress()" class="btn" style="background: var(--danger); color: white;">
+                    <i class="fas fa-trash"></i> Clear Local Progress
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Quiz type configurations
+        const aptitudeQuizzes = [
+            { type: 'creativity', name: 'Creativity', icon: 'fas fa-lightbulb' },
+            { type: 'logical', name: 'Logical Reasoning', icon: 'fas fa-cogs' },
+            { type: 'analytical', name: 'Analytical Skills', icon: 'fas fa-chart-bar' },
+            { type: 'communication', name: 'Communication Skills', icon: 'fas fa-comments' },
+            { type: 'numerical', name: 'Numerical Ability', icon: 'fas fa-calculator' },
+            { type: 'artistic', name: 'Artistic Skills', icon: 'fas fa-palette' },
+            { type: 'practical', name: 'Practical Skills', icon: 'fas fa-tools' }
+        ];
+
+        const subjectQuizzes = [
+            { type: 'mathematics', name: 'Mathematics', icon: 'fas fa-square-root-alt' },
+            { type: 'science', name: 'Science', icon: 'fas fa-atom' },
+            { type: 'biology', name: 'Biology', icon: 'fas fa-dna' },
+            { type: 'english', name: 'English', icon: 'fas fa-language' },
+            { type: 'social_studies', name: 'Social Studies', icon: 'fas fa-globe-americas' },
+            { type: 'language', name: 'Language', icon: 'fas fa-comments' }
+        ];
+
+        // Load scores and progress when page loads
+        window.onload = function() {
+            loadScores();
+        };
+
+        async function loadScores() {
+            showLoading();
+            console.log('Loading quiz scores...');
+
+            try {
+                // Show loading state
+                document.getElementById('content').style.display = 'none';
+                document.getElementById('loading-message').style.display = 'block';
+                
+                // Get server data with error handling for each request
+                let resultsData = { results: {} };
+                let analyticsData = {};
+                
+                try {
+                    console.log('Fetching quiz results...');
+                    const resultsResponse = await fetch('/api/quiz/results');
+                    if (resultsResponse.ok) {
+                        resultsData = await resultsResponse.json();
+                        console.log('Quiz results loaded:', resultsData);
+                    } else {
+                        console.error('Failed to load quiz results:', resultsResponse.status, resultsResponse.statusText);
+                    }
+                } catch (error) {
+                    console.error('Error fetching quiz results:', error);
+                }
+                
+                try {
+                    console.log('Fetching quiz analytics...');
+                    const analyticsResponse = await fetch('/api/quiz/score-analytics');
+                    if (analyticsResponse.ok) {
+                        analyticsData = await analyticsResponse.json();
+                        console.log('Quiz analytics loaded:', analyticsData);
+                    } else {
+                        console.error('Failed to load analytics:', analyticsResponse.status, analyticsResponse.statusText);
+                    }
+                } catch (error) {
+                    console.error('Error fetching analytics:', error);
+                }
+
+                // Get localStorage progress data
+                const localProgressData = loadLocalStorageProgress();
+                console.log('Local progress data:', localProgressData);
+
+                // Convert the results object to an array
+                const resultsArray = [];
+                if (resultsData && resultsData.results) {
+                    for (const [id, result] of Object.entries(resultsData.results)) {
+                        if (result && typeof result === 'object') {
+                            resultsArray.push({
+                                id: id,
+                                ...result
+                            });
+                        }
+                    }
+                    console.log('Processed results array:', resultsArray);
+                }
+
+                if (resultsArray.length > 0 || Object.keys(localProgressData).length > 0) {
+                    displayScores(resultsArray, analyticsData, localProgressData);
+                } else {
+                    showError('No quiz data found. Please complete some quizzes first.');
+                    // Show empty state
+                    document.getElementById('content').style.display = 'block';
+                    document.getElementById('loading-message').style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Error loading scores:', error);
+                // Fallback to localStorage only if server fails
+                const localProgressData = loadLocalStorageProgress();
+                if (Object.keys(localProgressData).length > 0) {
+                    displayScores([], null, localProgressData);
+                } else {
+                    showError('Failed to load quiz data. Please try again later.');
+                    document.getElementById('content').style.display = 'block';
+                    document.getElementById('loading-message').style.display = 'none';
+                }
+            }
+        }
+
+        function loadLocalStorageProgress() {
+            const progressData = {};
+            const localProgressSessions = 0;
+
+            // Check for saved progress in localStorage
+            Object.keys(localStorage).forEach(key => {
+                if (key.startsWith('quiz_progress_')) {
+                    try {
+                        const progress = JSON.parse(localStorage.getItem(key));
+                        const quizType = key.replace('quiz_progress_', '');
+
+                        if (progress && progress.quiz_type) {
+                            progressData[progress.quiz_type] = progress;
+                        }
+                    } catch (error) {
+                        console.error('Error parsing localStorage progress:', error);
+                    }
+                }
+            });
+
+            return {
+                progressData: progressData,
+                localProgressSessions: Object.keys(progressData).length
+            };
+        }
+
+        function displayScores(results, analytics, localProgressData) {
+            console.log('Displaying scores with data:', { results, analytics, localProgressData });
+            
+            const aptitudeContainer = document.getElementById('aptitude-quizzes');
+            const subjectContainer = document.getElementById('subject-quizzes');
+
+            // Clear containers
+            aptitudeContainer.innerHTML = '';
+            subjectContainer.innerHTML = '';
+
+            // Group results by type
+            const aptitudeResults = {};
+            const subjectResults = {};
+
+            // Process server results
+            if (results && Array.isArray(results)) {
+                const resultsByType = {};
+                
+                results.forEach(result => {
+                    if (!result || !result.quiz_type) {
+                        console.warn('Skipping invalid result:', result);
+                        return;
+                    }
+                    
+                    // Keep the highest score if there are multiple attempts
+                    if (!resultsByType[result.quiz_type] || 
+                        (result.score > (resultsByType[result.quiz_type].score || 0))) {
+                        resultsByType[result.quiz_type] = result;
+                    }
+                });
+
+                // Categorize results
+                Object.entries(resultsByType).forEach(([quizType, result]) => {
+                    if (aptitudeQuizzes.some(q => q.type === quizType)) {
+                        aptitudeResults[quizType] = result;
+                    } else if (subjectQuizzes.some(q => q.type === quizType)) {
+                        subjectResults[quizType] = result;
+                    }
+                });
+            }
+
+            // Process local progress data if no server results
+            if (localProgressData && localProgressData.progressData) {
+                Object.entries(localProgressData.progressData).forEach(([quizType, progress]) => {
+                    if (!progress) return;
+                    
+                    // Only add if we don't already have server results for this quiz type
+                    if (!aptitudeResults[quizType] && !subjectResults[quizType]) {
+                        const quiz = [...aptitudeQuizzes, ...subjectQuizzes].find(q => q.type === quizType);
+                        if (quiz) {
+                            const result = {
+                                quiz_type: quizType,
+                                score: progress.score || 0,
+                                total_questions: progress.totalQuestions || 10,
+                                percentage: progress.percentage || 0,
+                                timestamp: progress.timestamp || new Date().toISOString(),
+                                completed_locally: true
+                            };
+                            
+                            if (aptitudeQuizzes.some(q => q.type === quizType)) {
+                                aptitudeResults[quizType] = result;
+                            } else if (subjectQuizzes.some(q => q.type === quizType)) {
+                                subjectResults[quizType] = result;
+                            }
+                        }
+                    }
+                });
+            }
+
+            console.log('Processed results:', { aptitudeResults, subjectResults });
+
+            // Display quizzes with progress info
+            displayQuizCategoryWithProgress(aptitudeQuizzes, aptitudeResults, aptitudeContainer, 'aptitude', analytics, localProgressData);
+            displayQuizCategoryWithProgress(subjectQuizzes, subjectResults, subjectContainer, 'subject', analytics, localProgressData);
+
+            // Update stats
+            updateStats(results || [], analytics || {}, localProgressData || {});
+
+            // Show the content after loading is complete
+            document.getElementById('content').style.display = 'block';
+            document.getElementById('loading-message').style.display = 'none';
+            hideLoading();
+        }
+
+        function displayQuizCategoryWithProgress(quizzes, results, container, categoryType, analytics, localProgressData) {
+            quizzes.forEach(quiz => {
+                const result = results[quiz.type];
+                const localProgress = localProgressData.progressData[quiz.type];
+                const quizItem = document.createElement('div');
+
+                // Simple logic: taken if completed, not-taken if not completed (regardless of progress state)
+                const isTaken = !!result;
+                quizItem.className = `quiz-item ${isTaken ? 'taken' : 'not-taken'}`;
+
+                const scoreText = isTaken ? `${result.percentage}%` : 'Not taken';
+                const scoreClass = isTaken ? 'completed' : 'pending';
+
+                // Get progress data for this quiz type
+                const progress = analytics.quiz_type_breakdown[quiz.type];
+                const hasProgress = progress && progress.count > 0;
+                const hasLocalProgress = localProgress && localProgress.answers && localProgress.answers.length > 0;
+
+                quizItem.innerHTML = `
+                    <div style="display: flex; align-items: center;">
+                        <i class="${quiz.icon}" style="margin-right: 15px; color: var(--primary);"></i>
+                        <span class="quiz-name">${quiz.name}</span>
+                        ${!isTaken && (hasProgress || hasLocalProgress) ? '<small style="color: #007bff; margin-left: 10px;">(In Progress)</small>' : ''}
+                    </div>
+                    <div class="score-details">
+                        <div class="quiz-score ${scoreClass}">${scoreText}</div>
+                        ${isTaken ? `
+                            <div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: ${result.percentage}%"></div>
+                                </div>
+                                <small style="color: #6c757d;">${result.score}/${result.total_questions}</small>
+                                ${hasProgress ? `<br><small style="color: #007bff;">Attempts: ${progress.count}</small>` : ''}
+                            </div>
+                        ` : (hasLocalProgress || hasProgress) ? `
+                            <div>
+                                ${hasLocalProgress ? `
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: ${localProgress.progress_percentage || 0}%"></div>
+                                    </div>
+                                    <small style="color: #6c757d;">${localProgress.questions_answered || 0}/${localProgress.total_questions || 0}</small>
+                                    <br><small style="color: #007bff;">Local Progress</small>
+                                ` : hasProgress ? `
+                                    <small style="color: #007bff;">Started (${progress.count} attempts)</small>
+                                ` : ''}
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+
+                if (isTaken) {
+                    quizItem.title = `Completed: ${new Date(result.timestamp).toLocaleDateString()}`;
+                } else if (hasLocalProgress) {
+                    quizItem.title = `In progress (local): ${localProgress.questions_answered}/${localProgress.total_questions} questions answered`;
+                } else if (hasProgress) {
+                    quizItem.title = `In progress (server): ${progress.count} attempts`;
+                } else {
+                    quizItem.title = 'Not yet started';
+                }
+
+                container.appendChild(quizItem);
+            });
+        }
+
+        function updateStats(results, analytics, localProgressData) {
+            const aptitudeCount = results.filter(r => aptitudeQuizzes.some(q => q.type === r.quiz_type)).length;
+            const subjectCount = results.filter(r => subjectQuizzes.some(q => q.type === r.quiz_type)).length;
+
+            document.getElementById('aptitude-count').textContent = aptitudeCount;
+            document.getElementById('subject-count').textContent = subjectCount;
+
+            if (results.length > 0) {
+                const avgScore = results.reduce((sum, r) => sum + r.percentage, 0) / results.length;
+                const bestScore = Math.max(...results.map(r => r.percentage));
+
+                document.getElementById('avg-score').textContent = Math.round(avgScore) + '%';
+                document.getElementById('best-score').textContent = Math.round(bestScore) + '%';
+            }
+
+            // Update with analytics data
+            if (analytics) {
+                document.getElementById('total-quizzes').textContent = analytics.total_quizzes_completed;
+                document.getElementById('progress-sessions').textContent = analytics.total_progress_sessions;
+            }
+
+            // Include local progress sessions in the count
+            if (localProgressData && localProgressData.localProgressSessions > 0) {
+                const totalProgressSessions = (analytics ? analytics.total_progress_sessions : 0) + localProgressData.localProgressSessions;
+                document.getElementById('progress-sessions').textContent = totalProgressSessions;
+            }
+        }
+
+        function showLoading() {
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('content').style.display = 'none';
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('content').style.display = 'block';
+        }
+
+        function showError(message) {
+            hideLoading();
+            const container = document.querySelector('.container');
+            container.innerHTML = `
+                <div style="text-align: center; padding: 50px; color: #666;">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: var(--danger); margin-bottom: 20px;"></i>
+                    <h3 style="margin-bottom: 20px; color: #333;">Error Loading Scores</h3>
+                    <p style="margin-bottom: 30px;">${message}</p>
+                    <button onclick="loadScores()" class="btn btn-primary">Try Again</button>
+                </div>
+            `;
+        }
+
+        function clearLocalProgress() {
+            if (confirm('Are you sure you want to clear all local progress data? This cannot be undone.')) {
+                // Clear all quiz progress from localStorage
+                Object.keys(localStorage).forEach(key => {
+                    if (key.startsWith('quiz_progress_')) {
+                        localStorage.removeItem(key);
+                    }
+                });
+
+                // Show success message
+                showNotification('Local progress cleared successfully!', 'success');
+
+                // Reload the scores to update the display
+                setTimeout(() => {
+                    loadScores();
+                }, 1000);
+            }
+        }
+    </script>
+
+    <script>
+        // Activity tracking function
+        function trackActivity(type, title, data = {}) {
+            const userId = localStorage.getItem('dashboard_user_id') || 'anonymous_' + Date.now();
+            fetch('/api/dashboard/activity', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    user_id: userId,
+                    type: type,
+                    title: title,
+                    description: title,
+                    icon: 'fas fa-chart-line',
+                    data: data,
+                    page: 'interest-quizzes/scores',
+                    action: 'visit'
+                })
+            });
+        }
+
+        // Track page visit
+        document.addEventListener('DOMContentLoaded', function() {
+            trackActivity('page_visit', 'Viewed Quiz Scores', {
+                page: 'interest-quizzes/scores',
+                timestamp: new Date().toISOString()
+            });
+        });
+
+        // Track score clearing - modify existing function
+        const originalClearProgress = clearProgress;
+        clearProgress = function() {
+            // Track the score clearing activity
+            trackActivity('score_management', 'Cleared Quiz Progress', {
+                action: 'clear_progress',
+                page: 'interest-quizzes/scores',
+                timestamp: new Date().toISOString()
+            });
+            
+            // Call original functionality
+            originalClearProgress();
+        };
+    </script>
+</body>
+</html>

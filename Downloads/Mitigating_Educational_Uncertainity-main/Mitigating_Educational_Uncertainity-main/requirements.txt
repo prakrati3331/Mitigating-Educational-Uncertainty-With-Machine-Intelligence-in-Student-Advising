@@ -1,0 +1,56 @@
+# Web Framework
+fastapi==0.118.2
+uvicorn==0.24.0
+pydantic==2.10.3
+
+# Flask (used by dashboard micro-apps and some modules)
+flask==3.0.0
+flask-cors==4.0.0
+
+# AI & LangChain
+mistralai==1.9.11
+langchain==0.0.335
+
+# LangChain OpenAI-compatible client (used by LLM/llm.py)
+langchain-openai==0.0.8
+langchain-text-splitters==0.0.1
+
+# HTTP + HTML parsing (LLM dashboard scraping)
+requests==2.31.0
+beautifulsoup4==4.12.2
+
+# Data Processing
+numpy==1.26.0
+pandas==2.1.1
+scikit-learn==1.4.0
+python-multipart==0.0.6
+
+# Streamlit prototypes / visualizations
+streamlit==1.28.0
+plotly==5.18.0
+matplotlib==3.8.0
+
+# Database
+pymongo==4.6.0
+motor==3.3.2
+
+# Web & API
+jinja2==3.1.2
+aiofiles==23.2.1
+python-jose[cryptography]==3.3.0
+aiohttp==3.8.6        # pinned to fix yarl conflicts
+yarl==1.9.2           # pinned to satisfy aiohttp
+
+# Environment variables
+python-dotenv==1.0.0
+
+# Zephyra chatbot (separate service)
+nltk==3.8.1
+tensorflow==2.15.0
+
+# Development
+pytest==7.4.2
+pytest-cov==4.1.0
+black==23.9.1
+flake8==6.1.0
+mypy==1.5.1

@@ -1,0 +1,146 @@
+[
+  {
+    "id": "jee_main_2024",
+    "title": "JEE Main 2024 Registration",
+    "date": "2023-09-15",
+    "end_date": "2023-09-30",
+    "display_date": "September 15-30, 2023",
+    "category": "exam",
+    "stream": "Engineering",
+    "description": "Joint Entrance Examination (Main) registration for 2024 session. Apply for admission to NITs, IIITs, and other engineering colleges.",
+    "tags": [
+      "Entrance Exam",
+      "Engineering"
+    ],
+    "importance": "high",
+    "status": "upcoming",
+    "actions": {
+      "reminder": true,
+      "apply_url": "https://jeemain.nta.nic.in/",
+      "details_url": "https://jeemain.nta.nic.in/"
+    },
+    "target_audience": [
+      "12th passed",
+      "12th appearing"
+    ],
+    "application_fee": "₹650-₹1300",
+    "exam_date": "2024-01-24",
+    "created_date": "2023-08-01",
+    "last_updated": "2023-09-01"
+  },
+  {
+    "id": "scholarship_portal_2023",
+    "title": "National Scholarship Portal Opens",
+    "date": "2023-10-01",
+    "end_date": "2023-10-15",
+    "display_date": "October 1-15, 2023",
+    "category": "scholarship",
+    "stream": "All Streams",
+    "description": "Central Sector Scholarship for college and university students. Various scholarships available for different categories.",
+    "tags": [
+      "Scholarship",
+      "All Streams"
+    ],
+    "importance": "medium",
+    "status": "upcoming",
+    "actions": {
+      "reminder": true,
+      "apply_url": "https://scholarships.gov.in/",
+      "details_url": "https://scholarships.gov.in/"
+    },
+    "target_audience": [
+      "College students",
+      "Graduate students"
+    ],
+    "application_fee": "Free",
+    "amount": "₹10,000-₹20,000 per year",
+    "created_date": "2023-09-01",
+    "last_updated": "2023-09-15"
+  },
+  {
+    "id": "neet_ug_2024",
+    "title": "NEET UG 2024 Registration",
+    "date": "2023-11-05",
+    "end_date": "2023-11-20",
+    "display_date": "November 5-20, 2023",
+    "category": "exam",
+    "stream": "Medical",
+    "description": "National Eligibility cum Entrance Test for undergraduate medical courses (MBBS/BDS) registration.",
+    "tags": [
+      "Medical Entrance",
+      "MBBS/BDS"
+    ],
+    "importance": "high",
+    "status": "upcoming",
+    "actions": {
+      "reminder": true,
+      "apply_url": "https://neet.nta.nic.in/",
+      "details_url": "https://neet.nta.nic.in/"
+    },
+    "target_audience": [
+      "12th passed",
+      "12th appearing"
+    ],
+    "application_fee": "₹1600-₹1700",
+    "exam_date": "2024-05-05",
+    "created_date": "2023-10-01",
+    "last_updated": "2023-10-15"
+  },
+  {
+    "id": "clat_2024",
+    "title": "CLAT 2024 Application Deadline",
+    "date": "2023-12-01",
+    "end_date": "2023-12-15",
+    "display_date": "December 1-15, 2023",
+    "category": "exam",
+    "stream": "Law",
+    "description": "Common Law Admission Test for admission to National Law Universities and other law colleges.",
+    "tags": [
+      "Law Entrance",
+      "Law"
+    ],
+    "importance": "high",
+    "status": "upcoming",
+    "actions": {
+      "reminder": true,
+      "apply_url": "https://consortiumofnlus.ac.in/clat-2024/",
+      "details_url": "https://consortiumofnlus.ac.in/clat-2024/"
+    },
+    "target_audience": [
+      "12th passed",
+      "12th appearing"
+    ],
+    "application_fee": "₹4000",
+    "exam_date": "2023-12-03",
+    "created_date": "2023-11-01",
+    "last_updated": "2023-11-15"
+  },
+  {
+    "id": "jee_advanced_2024",
+    "title": "IIT JEE Advanced Registration",
+    "date": "2024-01-10",
+    "end_date": "2024-01-25",
+    "display_date": "January 10-25, 2024",
+    "category": "exam",
+    "stream": "Engineering",
+    "description": "Joint Entrance Examination (Advanced) for admission to IITs. Only JEE Main qualified students can apply.",
+    "tags": [
+      "Engineering",
+      "IITs"
+    ],
+    "importance": "high",
+    "status": "upcoming",
+    "actions": {
+      "reminder": true,
+      "apply_url": "https://jeeadv.ac.in/",
+      "details_url": "https://jeeadv.ac.in/"
+    },
+    "target_audience": [
+      "JEE Main qualified"
+    ],
+    "application_fee": "₹2800",
+    "exam_date": "2024-06-04",
+    "created_date": "2023-12-01",
+    "last_updated": "2024-01-01"
+  }
+]

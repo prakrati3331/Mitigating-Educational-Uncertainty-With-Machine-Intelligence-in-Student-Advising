@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏫 School Directory - Career Guidance</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #28a745;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            color: var(--dark);
+            position: relative;
+        }
+        
+        .directory-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+            box-shadow: 0 15px 50px rgba(67, 97, 238, 0.1);
+        }
+        
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .page-header h1 {
+            color: var(--primary);
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        
+        .search-box {
+            max-width: 600px;
+            margin: 0 auto 30px;
+            position: relative;
+        }
+        
+        .search-box input {
+            border-radius: 50px;
+            padding: 12px 25px;
+            border: 2px solid #e1e4e8;
+            width: 100%;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .search-box input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+            outline: none;
+        }
+        
+        .search-box i {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+        }
+        
+        .school-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            margin-bottom: 25px;
+            height: 100%;
+            border: 1px solid #e9ecef;
+        }
+        
+        .school-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .school-img {
+            height: 180px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        
+        .school-type {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--primary);
+            color: white;
+            padding: 3px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .school-info {
+            padding: 20px;
+        }
+        
+        .school-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+        
+        .school-location {
+            color: #6c757d;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .school-location i {
+            margin-right: 8px;
+            color: var(--primary);
+        }
+        
+        .school-details {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .detail-item {
+            margin-bottom: 10px;
+            flex: 0 0 48%;
+        }
+        
+        .detail-label {
+            font-size: 0.8rem;
+            color: #6c757d;
+            margin-bottom: 3px;
+        }
+        
+        .detail-value {
+            font-weight: 500;
+            color: var(--dark);
+        }
+        
+        .btn-view {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        
+        .btn-view:hover {
+            background: var(--secondary);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .filters {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .filter-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+        
+        .filter-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            font-weight: 500;
+            color: #495057;
+            margin-bottom: 8px;
+            display: block;
+        }
+        
+        .form-select {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+        
+        .pagination {
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        .page-link {
+            color: var(--primary);
+            border: 1px solid #dee2e6;
+            margin: 0 5px;
+            border-radius: 6px !important;
+            min-width: 40px;
+            text-align: center;
+        }
+        
+        .page-item.active .page-link {
+            background-color: var(--primary);
+            border-color: var(--primary);
+        }
+        
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .back-button:hover {
+            transform: translateX(-3px);
+            background: var(--light);
+        }
+        
+        @media (max-width: 768px) {
+            .directory-container {
+                padding: 20px 15px;
+            }
+            
+            .page-header h1 {
+                font-size: 1.75rem;
+            }
+            
+            .detail-item {
+                flex: 0 0 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="/recommendation_hub.html" class="back-button">
+        <i class="fas fa-arrow-left"></i>
+    </a>
+    
+    <div class="directory-container">
+        <div class="page-header">
+            <h1>🏫 School Directory</h1>
+            <p class="text-muted">Find the best schools for your educational journey</p>
+        </div>
+        
+        <div class="search-box">
+            <input type="text" placeholder="Search for schools...">
+            <i class="fas fa-search"></i>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="filters">
+                    <h5 class="filter-title">Filters</h5>
+                    
+                    <div class="filter-group">
+                        <label class="form-label">Location</label>
+                        <select class="form-select">
+                            <option>All Locations</option>
+                            <option>Mumbai</option>
+                            <option>Delhi</option>
+                            <option>Bangalore</option>
+                            <option>Hyderabad</option>
+                            <option>Chennai</option>
+                            <option>Kolkata</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label class="form-label">Board</label>
+                        <select class="form-select">
+                            <option>All Boards</option>
+                            <option>CBSE</option>
+                            <option>ICSE</option>
+                            <option>State Board</option>
+                            <option>IB</option>
+                            <option>IGCSE</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label class="form-label">Type</label>
+                        <select class="form-select">
+                            <option>All Types</option>
+                            <option>Public</option>
+                            <option>Private</option>
+                            <option>International</option>
+                        </select>
+                    </div>
+                    
+                    <button class="btn btn-primary w-100">Apply Filters</button>
+                </div>
+            </div>
+            
+            <div class="col-lg-9">
+                <div class="row" id="schools-container">
+                    <!-- Schools will be dynamically loaded here -->
+                </div>
+                
+                <!-- Loading indicator -->
+                <div id="loading-indicator" class="text-center py-5" style="display: none;">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading schools...</span>
+                    </div>
+                    <p class="mt-2">Loading schools...</p>
+                </div>
+                
+                <!-- No results message -->
+                <div id="no-results" class="text-center py-5" style="display: none;">
+                    <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                    <h4 class="text-muted">No schools found</h4>
+                    <p class="text-muted">Try adjusting your search or filters</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Global variables
+        let schools = [];
+        let categories = [];
+
+        // Load schools from API
+        async function loadSchools() {
+            try {
+                showLoading(true);
+                const response = await fetch('/api/schools');
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    schools = data.schools;
+                    categories = data.categories;
+                    renderSchools(schools);
+                    updateBoardFilter();
+                } else {
+                    console.error('Error loading schools:', data.message);
+                    showError('Failed to load schools');
+                }
+            } catch (error) {
+                console.error('Error loading schools:', error);
+                showError('Network error while loading schools');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Search schools
+        async function searchSchools(query) {
+            try {
+                showLoading(true);
+                const response = await fetch(`/api/schools/search/${encodeURIComponent(query)}`);
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    renderSchools(data.schools);
+                }
+            } catch (error) {
+                console.error('Error searching schools:', error);
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Filter by board
+        async function filterByBoard(board) {
+            try {
+                showLoading(true);
+                if (board === 'all') {
+                    renderSchools(schools);
+                } else {
+                    const response = await fetch(`/api/schools/board/${encodeURIComponent(board)}`);
+                    const data = await response.json();
+                    
+                    if (data.status === 'success') {
+                        renderSchools(data.schools);
+                    }
+                }
+            } catch (error) {
+                console.error('Error filtering by board:', error);
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Render schools function
+        function renderSchools(schoolsToRender) {
+            const container = document.getElementById('schools-container');
+            const noResults = document.getElementById('no-results');
+            
+            container.innerHTML = '';
+            
+            if (schoolsToRender.length === 0) {
+                noResults.style.display = 'block';
+                return;
+            }
+            
+            noResults.style.display = 'none';
+            
+            schoolsToRender.forEach((school, index) => {
+                const card = document.createElement('div');
+                card.className = 'col-md-6 col-lg-4';
+                card.style.animationDelay = `${index * 0.1}s`;
+                
+                card.innerHTML = `
+                    <div class="school-card">
+                        <div class="school-img" style="background-image: url('${school.image_url}');">
+                            <span class="school-type">${school.board}</span>
+                        </div>
+                        <div class="school-info">
+                            <h3 class="school-name">${school.name}</h3>
+                            <div class="school-location">
+                                <i class="fas fa-map-marker-alt"></i> ${school.location}
+                            </div>
+                            <div class="school-details">
+                                <div class="detail-item">
+                                    <div class="detail-label">Type</div>
+                                    <div class="detail-value">${school.type}</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Rating</div>
+                                    <div class="detail-value">
+                                        <i class="fas fa-star text-warning"></i> ${school.rating}/5
+                                    </div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Students</div>
+                                    <div class="detail-value">${school.total_students}</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Est.</div>
+                                    <div class="detail-value">${school.established}</div>
+                                </div>
+                            </div>
+                            <a href="#" class="btn-view" onclick="viewSchoolDetails('${school.id}')">View Details</a>
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(card);
+            });
+        }
+
+        // Update board filter options
+        function updateBoardFilter() {
+            const boardFilter = document.getElementById('boardFilter');
+            if (!boardFilter) return;
+            
+            // Clear existing options except "All"
+            while (boardFilter.options.length > 1) {
+                boardFilter.remove(1);
+            }
+            
+            // Add board options
+            const boards = [...new Set(schools.map(school => school.board))];
+            boards.forEach(board => {
+                const option = document.createElement('option');
+                option.value = board.toLowerCase();
+                option.textContent = board;
+                boardFilter.appendChild(option);
+            });
+        }
+
+        // View school details
+        function viewSchoolDetails(schoolId) {
+            const school = schools.find(s => s.id === schoolId);
+            if (school) {
+                trackSchoolActivity('Viewed school details', school);
+                alert(`School: ${school.name}\nBoard: ${school.board}\nLocation: ${school.location}\nRating: ${school.rating}/5\n\nDescription: ${school.description}`);
+            }
+        }
+
+        // Show/hide loading indicator
+        function showLoading(show) {
+            const loadingIndicator = document.getElementById('loading-indicator');
+            const container = document.getElementById('schools-container');
+            
+            if (show) {
+                loadingIndicator.style.display = 'block';
+                container.style.display = 'none';
+            } else {
+                loadingIndicator.style.display = 'none';
+                container.style.display = 'flex';
+            }
+        }
+
+        // Show error message
+        function showError(message) {
+            const container = document.getElementById('schools-container');
+            container.innerHTML = `
+                <div class="col-12 text-center py-5">
+                    <i class="fas fa-exclamation-triangle fa-3x text-warning mb-3"></i>
+                    <h4 class="text-warning">Error</h4>
+                    <p class="text-muted">${message}</p>
+                </div>
+            `;
+        }
+
+        // User tracking functions
+        function getCurrentUserId() {
+            let userId = localStorage.getItem('user_id');
+            if (!userId) {
+                userId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('user_id', userId);
+                trackUserActivity('user_registered', 'New user session started');
+            }
+            return userId;
+        }
+
+        function trackUserActivity(type, description, data = {}) {
+            fetch('/api/dashboard/activity', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    user_id: getCurrentUserId(),
+                    type: type,
+                    title: description,
+                    description: description,
+                    icon: 'fas fa-school',
+                    data: data,
+                    page: 'school_directory',
+                    action: 'interaction'
+                })
+            });
+        }
+
+        function trackSchoolActivity(action, schoolData) {
+            trackUserActivity('school_directory', action, schoolData);
+        }
+
+        // Initialize the application when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            getCurrentUserId();
+            trackUserActivity('page_visit', 'Visited School Directory');
+            const searchInput = document.querySelector('.search-box input');
+            const boardFilter = document.getElementById('boardFilter');
+            
+            // Load schools on page load
+            loadSchools();
+            
+            // Search functionality
+            let searchTimeout;
+            searchInput.addEventListener('input', function() {
+                clearTimeout(searchTimeout);
+                const searchTerm = this.value.trim();
+                
+                if (searchTerm) {
+                    trackUserActivity('search', `Searched for: ${searchTerm}`, { query: searchTerm });
+                }
+                
+                searchTimeout = setTimeout(() => {
+                    searchSchools(searchTerm);
+                }, 500);
+            });
+            
+            // Board filter
+            if (boardFilter) {
+                boardFilter.addEventListener('change', function() {
+                    const selectedBoard = this.value;
+                    trackUserActivity('filter', `Filtered by board: ${selectedBoard}`, { board: selectedBoard });
+                    filterByBoard(selectedBoard);
+                });
+            }
+            
+            // Search on Enter key
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    const searchTerm = this.value.trim();
+                    if (searchTerm) {
+                        searchSchools(searchTerm);
+                    }
+                }
+            });
+        });
+    </script>
+
+    <script>
+        // Activity tracking function
+        function trackActivity(type, title, data = {}) {
+            const userId = localStorage.getItem('dashboard_user_id') || 'anonymous_' + Date.now();
+            fetch('/api/dashboard/activity', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    user_id: userId,
+                    type: type,
+                    title: title,
+                    description: title,
+                    icon: 'fas fa-school',
+                    data: data,
+                    page: 'school_directory',
+                    action: 'visit'
+                })
+            });
+        }
+
+        // Track page visit
+        document.addEventListener('DOMContentLoaded', function() {
+            trackActivity('page_visit', 'Visited School Directory', {
+                page: 'school_directory',
+                timestamp: new Date().toISOString()
+            });
+        });
+
+        // Track school searches
+        function trackSchoolSearch(searchTerm) {
+            trackActivity('school_search', `Searched Schools: ${searchTerm}`, {
+                search_term: searchTerm,
+                page: 'school_directory',
+                timestamp: new Date().toISOString()
+            });
+        }
+
+        // Track school views
+        function trackSchoolView(schoolName, schoolBoard, schoolLocation) {
+            trackActivity('school_view', `Viewed School: ${schoolName}`, {
+                school_name: schoolName,
+                school_board: schoolBoard,
+                school_location: schoolLocation,
+                page: 'school_directory',
+                timestamp: new Date().toISOString()
+            });
+        }
+
+        // Track filter usage
+        function trackFilterUsage(filterType, filterValue) {
+            trackActivity('filter_usage', `Filtered Schools: ${filterType} - ${filterValue}`, {
+                filter_type: filterType,
+                filter_value: filterValue,
+                page: 'school_directory',
+                timestamp: new Date().toISOString()
+            });
+        }
+
+        // Replace existing trackUserActivity calls
+        function trackUserActivity(action, description, data = {}) {
+            trackActivity(action, description, data);
+        }
+
+        // Add click handlers to school cards
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.school-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const name = this.querySelector('.school-name')?.textContent || 'Unknown School';
+                    const board = this.querySelector('.school-board')?.textContent || 'Unknown Board';
+                    const location = this.querySelector('.school-location')?.textContent || 'Unknown Location';
+                    trackSchoolView(name, board, location);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-t="page_title">🎓 Select Your Stream</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #28a745;
+            --warning: #ff9800;
+            --danger: #f44336;
+            --info: #00bcd4;
+            --purple: #9c27b0;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .recommendation-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(67, 97, 238, 0.1);
+            max-width: 900px;
+            width: 100%;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            animation-delay: 0.2s;
+        }
+        
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .recommendation-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+        
+        .recommendation-title {
+            color: var(--primary);
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        
+        .recommendation-text {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            color: #495057;
+        }
+        
+        .btn {
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin: 10px;
+            min-width: 200px;
+            border: none;
+            color: white;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+        }
+        
+        .btn-outline-primary {
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            background: transparent;
+        }
+        
+        .btn-outline-primary:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .stream-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+            perspective: 1000px;
+        }
+        
+        .stream-card {
+            background: white;
+            border-radius: 10px;
+            padding: 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+            border-top: 4px solid var(--primary);
+            cursor: pointer;
+            text-align: center;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            opacity: 0;
+            transform: translateY(30px) rotateX(10deg);
+            animation: cardAppear 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            transform-style: preserve-3d;
+        }
+        
+        .stream-card:nth-child(1) { animation-delay: 0.3s; }
+        .stream-card:nth-child(2) { animation-delay: 0.4s; }
+        .stream-card:nth-child(3) { animation-delay: 0.5s; }
+        .stream-card:nth-child(4) { animation-delay: 0.6s; }
+        .stream-card:nth-child(5) { animation-delay: 0.7s; }
+        
+        @keyframes cardAppear {
+            to {
+                opacity: 1;
+                transform: translateY(0) rotateX(0);
+            }
+        }
+        
+        .stream-card-img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            transition: transform 0.5s ease;
+        }
+        
+        .stream-card:hover .stream-card-img {
+            transform: scale(1.05);
+        }
+        
+        .stream-card-content {
+            padding: 20px 15px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .stream-card:hover {
+            transform: translateY(-8px) scale(1.02) !important;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+        
+        .stream-card:active {
+            transform: translateY(-2px) scale(0.99) !important;
+            transition: transform 0.1s ease;
+        }
+        
+        .stream-card i {
+            font-size: 2.5rem;
+            margin: 20px 0 15px;
+            color: var(--primary);
+            display: block;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: scale(1);
+        }
+        
+        .stream-card:hover i {
+            transform: scale(1.1);
+            animation: bounce 1s ease infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0) scale(1.1); }
+            50% { transform: translateY(-5px) scale(1.1); }
+        }
+        
+        .stream-card h4 {
+            margin: 10px 0;
+            color: var(--dark);
+            font-size: 1.1rem;
+        }
+        
+        .stream-card p {
+            color: #6c757d;
+            font-size: 0.85rem;
+            margin-bottom: 15px;
+            flex-grow: 1;
+        }
+        
+        .stream-card .btn {
+            min-width: auto;
+            padding: 10px 20px;
+            font-size: 0.9rem;
+            margin: 15px auto 10px;
+            border-radius: 50px;
+            transform: translateY(10px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-origin: center;
+        }
+        
+        .stream-card:hover .btn {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        /* Stream-specific colors */
+        .pcm { border-color: var(--primary); }
+        .pcm i { color: var(--primary); }
+        .pcm .btn { background-color: var(--primary); }
+        .pcm .btn:hover { background-color: var(--secondary); }
+        
+        .pcb { border-color: var(--success); }
+        .pcb i { color: var(--success); }
+        .pcb .btn { background-color: var(--success); }
+        .pcb .btn:hover { background-color: #218838; }
+        
+        .commerce { border-color: var(--warning); }
+        .commerce i { color: var(--warning); }
+        .commerce .btn { background-color: var(--warning); }
+        .commerce .btn:hover { background-color: #e68a00; }
+        
+        .arts { border-color: var(--purple); }
+        .arts i { color: var(--purple); }
+        .arts .btn { background-color: var(--purple); }
+        .arts .btn:hover { background-color: #7b1fa2; }
+        
+        .vocational { border-color: var(--danger); }
+        .vocational i { color: var(--danger); }
+        .vocational .btn { background-color: var(--danger); }
+        .vocational .btn:hover { background-color: #d32f2f; }
+        
+        @media (max-width: 768px) {
+            .recommendation-container {
+                padding: 30px 20px;
+                animation: none;
+                opacity: 1;
+                transform: none;
+            }
+            
+            .stream-options {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .stream-card {
+                animation: none;
+                opacity: 1;
+                transform: none;
+                margin: 10px 0;
+            }
+        }
+        
+        /* Language Switcher Styling */
+        .language-switcher {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            width: 120px;
+        }
+        
+        .language-switcher select {
+            background-color: white;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 5px 10px;
+            font-size: 14px;
+        }
+        
+        [dir="rtl"] .language-switcher {
+            right: auto;
+            left: 20px;
+        }
+    </style>
+</head>
+    <!-- Language Switcher -->
+    <div class="language-switcher">
+        <select id="langSwitcher" class="form-select form-select-sm" onchange="setLang(this.value)">
+            <option value="en">English</option>
+            <option value="hi">हिंदी</option>
+            <option value="ur">اردو</option>
+            <option value="ks">کٲشُر</option>
+        </select>
+    </div>
+<body>
+    <div class="recommendation-container">
+        <div class="recommendation-icon">
+            <i class="fas fa-graduation-cap"></i>
+        </div>
+        <h1 class="recommendation-title" data-t="page_title">Select Your Stream</h1>
+        <p class="recommendation-text" data-t="select_stream">Please select your stream to get personalized career and course recommendations tailored specifically for your academic path.</p>
+        
+        <div class="stream-options">
+            <div class="stream-card pcm" onclick="selectStream('pcm')">
+                <img src="https://images.unsplash.com/photo-1503676382389-4809596d5290?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="PCM Stream" class="stream-card-img">
+                <div class="stream-card-content">
+                    <i class="fas fa-atom"></i>
+                    <h4 data-t="pcm">Science (PCM)</h4>
+                    <p data-t="pcm_subjects">Physics, Chemistry, Mathematics</p>
+                    <p>For students interested in engineering, architecture, or pure sciences.</p>
+                    <button class="btn btn-primary">Explore PCM</button>
+                </div>
+            </div>
+            <div class="stream-card pcb" onclick="selectStream('pcb')">
+                <img src="https://images.unsplash.com/photo-1532094349884-543bc11b234d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="PCB Stream" class="stream-card-img">
+                <div class="stream-card-content">
+                    <i class="fas fa-dna"></i>
+                    <h4 data-t="pcb">Science (PCB)</h4>
+                    <p data-t="pcb_subjects">Physics, Chemistry, Biology</p>
+                    <p>For students aiming for medical, biotechnology, or life sciences careers.</p>
+                    <button class="btn btn-primary">Explore PCB</button>
+                </div>
+            </div>
+            <div class="stream-card" onclick="selectStream('commerce')">
+                <img src="https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="Commerce Stream" class="stream-card-img">
+                <div class="stream-card-content">
+                    <i class="fas fa-chart-line"></i>
+                    <h4 data-t="commerce">Commerce</h4>
+                    <p data-t="commerce_subjects">Accountancy, Business Studies, Economics</p>
+                    <p>For students interested in business, finance, accounting, or economics.</p>
+                    <button class="btn btn-primary">Explore Commerce</button>
+                </div>
+            </div>
+            <div class="stream-card arts" onclick="selectStream('arts')">
+                <img src="https://images.unsplash.com/photo-1499781350541-7783f6c6a0c8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="Arts Stream" class="stream-card-img">
+                <div class="stream-card-content">
+                    <i class="fas fa-palette"></i>
+                    <h4 data-t="arts">Arts/Humanities</h4>
+                    <p data-t="arts_subjects">History, Political Science, Psychology</p>
+                    <p>For students passionate about literature, history, psychology, or fine arts.</p>
+                    <button class="btn btn-primary">Explore Arts</button>
+                </div>
+            </div>
+            <div class="stream-card vocational" onclick="selectStream('vocational')">
+                <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="Vocational Stream" class="stream-card-img">
+                <div class="stream-card-content">
+                    <i class="fas fa-tools"></i>
+                    <h4 data-t="vocational">Vocational</h4>
+                    <p data-t="vocational_desc">Skill-based professional courses</p>
+                    <p>For students seeking skill-based education and career-oriented training.</p>
+                    <button class="btn btn-primary">Explore Vocational</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-4">
+            <button class="btn btn-outline-primary" onclick="goBack()">
+                <i class="fas fa-arrow-left"></i> Go Back
+            </button>
+        </div>
+    </div>
+
+    <!-- Font Awesome for icons -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    
+    <!-- Multilingual Support -->
+    <script>
+        // Translation dictionary
+        const t = {
+            en: {
+                page_title: "Select Your Stream",
+                choose_stream: "Choose Your Stream",
+                select_stream: "Select the stream that best matches your interests and career goals",
+                pcm: "Science (PCM)",
+                pcm_subjects: "Physics, Chemistry, Mathematics",
+                pcb: "Science (PCB)",
+                pcb_subjects: "Physics, Chemistry, Biology",
+                commerce: "Commerce",
+                commerce_subjects: "Accountancy, Business Studies, Economics",
+                arts: "Arts/Humanities",
+                arts_subjects: "History, Political Science, Psychology",
+                vocational: "Vocational",
+                vocational_desc: "Skill-based professional courses"
+            },
+            hi: {
+                page_title: "अपनी स्ट्रीम चुनें",
+                choose_stream: "अपनी स्ट्रीम चुनें",
+                select_stream: "वह स्ट्रीम चुनें जो आपकी रुचियों और करियर लक्ष्यों से सबसे अच्छी तरह मेल खाती हो",
+                pcm: "विज्ञान (PCM)",
+                pcm_subjects: "भौतिकी, रसायन विज्ञान, गणित",
+                pcb: "विज्ञान (PCB)",
+                pcb_subjects: "भौतिकी, रसायन विज्ञान, जीव विज्ञान",
+                commerce: "वाणिज्य",
+                commerce_subjects: "लेखांकन, व्यवसाय अध्ययन, अर्थशास्त्र",
+                arts: "कला/मानविकी",
+                arts_subjects: "इतिहास, राजनीति विज्ञान, मनोविज्ञान",
+                vocational: "व्यावसायिक",
+                vocational_desc: "कौशल-आधारित व्यावसायिक पाठ्यक्रम"
+            },
+            ur: {
+                page_title: "اپنا شعبہ منتخب کریں",
+                choose_stream: "اپنا شعبہ منتخب کریں",
+                select_stream: "وہ شعبہ منتخب کریں جو آپ کی دلچسپیوں اور کیریئر کے اہداف سے بہترین مطابقت رکھتا ہو",
+                pcm: "سائنس (PCM)",
+                pcm_subjects: "طبیعیات، کیمسٹری، ریاضی",
+                pcb: "سائنس (PCB)",
+                pcb_subjects: "طبیعیات، کیمسٹری، حیاتیات",
+                commerce: "کامرس",
+                commerce_subjects: "اکاؤنٹنسی، بزنس اسٹڈیز، معاشیات",
+                arts: "آرٹس/ہیومینٹیز",
+                arts_subjects: "تاریخ، سیاسیات، نفسیات",
+                vocational: "پیشہ ورانہ",
+                vocational_desc: "مہارت پر مبنی پیشہ ورانہ کورسز"
+            },
+            ks: {
+                page_title: "تہند سٹریم چنو",
+                choose_stream: "تہند سٹریم چنو",
+                select_stream: "اوس سٹریم چنو یتھ چھو تہند دلچسپی تہ کیریر مقاصدن ہندس نال بہترین میل کھانہٕ چھے",
+                pcm: "سائنسیات (PCM)",
+                pcm_subjects: "طبیعیات، کیمسٹری، ریاضی",
+                pcb: "سائنسیات (PCB)",
+                pcb_subjects: "طبیعیات، کیمسٹری، حیاتیات",
+                commerce: "تجارت",
+                commerce_subjects: "حساب داری، کاروباری مطالعہ، معاشیات",
+                arts: "فنون/انسانیات",
+                arts_subjects: "تاریخ، سیاسیات، نفسیات",
+                vocational: "پیشہ ورانہ",
+                vocational_desc: "مہارت پر مبنی پیشہ ورانہ کورسز"
+            }
+        };
+
+        // Set language function
+        function setLang(lang) {
+            if (!t[lang]) return;
+            
+            // Update HTML lang attribute
+            document.documentElement.lang = lang;
+            
+            // Update direction for RTL languages
+            document.body.style.direction = (lang === 'ur' || lang === 'ks') ? 'rtl' : 'ltr';
+            
+            // Update all elements with data-t attribute
+            document.querySelectorAll('[data-t]').forEach(el => {
+                const key = el.getAttribute('data-t');
+                el.textContent = t[lang][key] || t['en'][key] || key;
+            });
+            
+            // Update language switcher
+            const langSwitcher = document.getElementById('langSwitcher');
+            if (langSwitcher) langSwitcher.value = lang;
+            
+            // Save preference
+            localStorage.setItem('preferredLanguage', lang);
+        }
+
+        // Initialize with saved language or browser language
+        const savedLang = localStorage.getItem('preferredLanguage');
+        const browserLang = navigator.language.split('-')[0];
+        const defaultLang = t[browserLang] ? browserLang : 'en';
+        
+        // Set language after DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            setLang(savedLang || defaultLang);
+        });
+    </script>
+    
+    <script>
+        // Activity tracking function
+        function trackActivity(type, title, data = {}) {
+            const userId = localStorage.getItem('dashboard_user_id') || 'anonymous_' + Date.now();
+            fetch('/api/dashboard/activity', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    user_id: userId,
+                    type: type,
+                    title: title,
+                    description: title,
+                    icon: 'fas fa-graduation-cap',
+                    data: data,
+                    page: 'stream-selection',
+                    action: 'visit'
+                })
+            });
+        }
+
+        // Add ripple effect to stream cards
+        document.addEventListener('DOMContentLoaded', function() {
+            // Track page visit
+            trackActivity('page_visit', 'Visited Stream Selection Page', {
+                page: 'stream-selection',
+                timestamp: new Date().toISOString()
+            });
+            
+            const cards = document.querySelectorAll('.stream-card');
+            
+            cards.forEach(card => {
+                // Create ripple element
+                const ripple = document.createElement('span');
+                ripple.classList.add('ripple');
+                card.appendChild(ripple);
+                
+                // Add click animation
+                card.addEventListener('click', function(e) {
+                    // Remove any existing ripples
+                    const existingRipples = this.getElementsByClassName('ripple');
+                    while (existingRipples[0]) {
+                        existingRipples[0].parentNode.removeChild(existingRipples[0]);
+                    }
+                    
+                    // Get mouse position relative to card
+                    const rect = this.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    
+                    // Create and position ripple
+                    const ripple = document.createElement('span');
+                    ripple.classList.add('ripple');
+                    ripple.style.left = x + 'px';
+                    ripple.style.top = y + 'px';
+                    this.appendChild(ripple);
+                    
+                    // Remove ripple after animation
+                    setTimeout(() => {
+                        ripple.remove();
+                    }, 600);
+                });
+            });
+            
+            // Animate in cards with a slight delay for better performance
+            const animateCards = () => {
+                const cards = document.querySelectorAll('.stream-card');
+                cards.forEach((card, index) => {
+                    setTimeout(() => {
+                        card.style.animation = `cardAppear 0.6s cubic-bezier(0.22, 1, 0.36, 1) ${index * 0.1}s forwards`;
+                    }, 50);
+                });
+            };
+            
+            // Start animation after a short delay to ensure DOM is ready
+            setTimeout(animateCards, 300);
+        });
+        
+        // Function to handle stream selection
+        function selectStream(stream) {
+            // Save the selected stream to localStorage
+            localStorage.setItem('selectedStream', stream);
+            
+            // Get the user's class from URL or localStorage
+            const urlParams = new URLSearchParams(window.location.search);
+            const userClass = urlParams.get('class') || localStorage.getItem('userClass');
+            
+            // Redirect to the appropriate recommendation page based on the selected stream
+            const streamPages = {
+                'pcm': '/pcm',
+                'pcb': '/pcb',
+                'commerce': '/commerce_recommendation.html',
+                'arts': '/arts',
+                'vocational': '/vocational'
+            };
+
+            const targetPage = streamPages[stream];
+            if (targetPage) {
+                window.location.href = targetPage;
+            } else {
+                // Fallback for unknown streams
+                console.warn(`No specific page found for stream: ${stream}`);
+                window.location.href = `recommendation_results.html?stream=${stream}&class=${userClass}`;
+            }
+        }
+        
+        // Function to handle going back with fallback
+        function goBack() {
+            // Try to use browser history first
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                // Fallback to recommendation hub if history is not available
+                window.location.href = '/';
+            }
+        }
+        
+        // Add click handlers for keyboard navigation
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter' && document.activeElement.classList.contains('stream-card')) {
+                document.activeElement.click();
+            }
+        });
+    </script>
+</body>
+</html>

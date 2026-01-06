@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Path Visualizer</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --success: #4caf50;
+            --info: #00b4d8;
+            --warning: #f9c74f;
+            --danger: #ef476f;
+            --light: #f8f9fa;
+            --dark: #212529;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            opacity: 0;
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes nodePulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .controls {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            transform: translateY(20px);
+            opacity: 0;
+            animation: fadeIn 0.8s ease-out 0.3s forwards;
+        }
+        
+        .visualization-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            min-height: 600px;
+        }
+        
+        .node circle {
+            stroke: #fff;
+            stroke-width: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            animation: nodePulse 2s infinite ease-in-out;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .node circle.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        .node:hover {
+            filter: brightness(1.1);
+            transform: translateY(-2px);
+        }
+        
+        .node text {
+            font-size: 12px;
+            font-weight: 500;
+            text-anchor: middle;
+            dominant-baseline: middle;
+            pointer-events: none;
+            fill: white;
+        }
+        
+        .link {
+            stroke: #666;
+            stroke-opacity: 0.7;
+            stroke-width: 2px;
+            fill: none;
+            transition: all 0.3s ease;
+        }
+        
+        .link:hover {
+            stroke: #333;
+            stroke-width: 3px;
+        }
+        
+        .tooltip {
+            position: absolute;
+            padding: 12px 15px;
+            background: rgba(0, 0, 0, 0.85);
+            color: white;
+            border-radius: 6px;
+            pointer-events: none;
+            font-size: 14px;
+            max-width: 220px;
+            z-index: 10;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            border-left: 4px solid #4e79a7;
+        }
+        
+        .tooltip.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .degree { fill: #4361ee; }
+        .career { fill: #4caf50; }
+        .study { fill: #9c27b0; }
+        .exam { fill: #ff9800; }
+        .job { fill: #2196f3; }
+        
+        .legend {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-right: 15px;
+            font-size: 14px;
+        }
+        
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+            margin-right: 5px;
+        }
+        
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <a href="training/templates/index.html" class="btn btn-outline-primary back-button">
+        <i class="fas fa-arrow-left me-2"></i>Back
+    </a>
+    
+    <div class="container py-4" style="opacity: 0; animation: fadeIn 0.8s ease-out 0.2s forwards;">
+        <div class="header text-center">
+            <h1><i class="fas fa-project-diagram me-2"></i>Career Path Visualizer</h1>
+            <p class="lead">Explore how your academic choices connect to future opportunities</p>
+        </div>
+        
+        <div class="controls">
+            <div class="row">
+                <div class="col-md-4">
+                    <label for="streamSelect" class="form-label">Select Stream</label>
+                    <select class="form-select" id="streamSelect">
+                        <option value="all">All Streams</option>
+                        <option value="PCB (Physics, Chemistry, Biology)">PCB (Medical)</option>
+                        <option value="PCM (Physics, Chemistry, Mathematics)">PCM (Engineering)</option>
+                        <option value="Commerce">Commerce</option>
+                        <option value="Arts/Humanities">Arts/Humanities</option>
+                        <option value="Vocational/Professional">Vocational/Professional</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="pathType" class="form-label">Path Type</label>
+                    <select class="form-select" id="pathType">
+                        <option value="all">All Paths</option>
+                        <option value="career">Career Focused</option>
+                        <option value="higher_studies">Higher Studies</option>
+                        <option value="govt_exams">Government Exams</option>
+                    </select>
+                </div>
+                <div class="col-md-4 d-flex align-items-end">
+                    <button id="resetBtn" class="btn btn-outline-secondary w-100">
+                        <i class="fas fa-sync-alt me-2"></i>Reset View
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="visualization-container" id="visualization">
+            <div id="graph" style="width: 100%; height: 100%; min-height: 500px;"></div>
+        </div>
+        
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #4361ee;"></div>
+                <span>Degree Programs</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #4caf50;"></div>
+                <span>Career Paths</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #9c27b0;"></div>
+                <span>Higher Studies</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #ff9800;"></div>
+                <span>Government Exams</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background-color: #2196f3;"></div>
+                <span>Job Opportunities</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="tooltip"></div>
+    
+    <script>
+        // Career Path Data
+        const careerData = {
+            "PCB (Physics, Chemistry, Biology)": {
+                "MBBS (Bachelor of Medicine, Bachelor of Surgery)": {
+                    "careers": ["Medical Doctor", "Surgeon", "Physician"],
+                    "higher_studies": ["MD/MS", "DM/MCh", "Ph.D. in Medical Sciences"],
+                    "exams": ["NEET PG", "AIIMS PG", "JIPMER PG", "FMGE"],
+                    "jobs": ["Hospital Practitioner", "Medical Researcher", "Healthcare Administrator"]
+                },
+                "BDS (Bachelor of Dental Surgery)": {
+                    "careers": ["Dentist", "Oral Surgeon", "Dental Researcher"],
+                    "higher_studies": ["MDS", "Ph.D. in Dental Sciences", "Fellowship Programs"],
+                    "exams": ["NEET MDS", "AIIMS MDS", "PGIMER MDS"],
+                    "jobs": ["Dental Surgeon", "Dental College Professor", "Public Health Dentist"]
+                },
+                "B.Sc. Nursing": {
+                    "careers": ["Registered Nurse", "Nurse Educator", "Clinical Nurse Specialist"],
+                    "higher_studies": ["M.Sc. Nursing", "Ph.D. in Nursing", "Nurse Practitioner Programs"],
+                    "exams": ["AIIMS Nursing", "PGIMER Nursing", "INC Exam"],
+                    "jobs": ["Nursing Officer", "Nursing Superintendent", "Public Health Nurse"]
+                },
+                "B.Pharm (Bachelor of Pharmacy)": {
+                    "careers": ["Pharmacist", "Drug Inspector", "Pharmaceutical Researcher"],
+                    "higher_studies": ["M.Pharm", "Ph.D. in Pharmacy", "MBA in Pharmaceutical Management"],
+                    "exams": ["GPAT", "NIPER JEE", "Drug Inspector Exam"],
+                    "jobs": ["Clinical Pharmacist", "Pharmaceutical Analyst", "Regulatory Affairs Officer"]
+                },
+                "B.Sc. Microbiology": {
+                    "careers": ["Microbiologist", "Clinical Research Associate", "Quality Control Analyst"],
+                    "higher_studies": ["M.Sc. Microbiology", "Ph.D. in Microbiology", "PG Diploma in Clinical Research"],
+                    "exams": ["CSIR NET", "ICMR JRF", "DBT JRF"],
+                    "jobs": ["Research Scientist", "Lab Manager", "Food Safety Officer"]
+                }
+            },
+            "PCM (Physics, Chemistry, Mathematics)": {
+                "B.Tech/B.E. (Various Specializations)": {
+                    "careers": ["Software Engineer", "Mechanical Engineer", "Civil Engineer", "Electronics Engineer"],
+                    "higher_studies": ["M.Tech", "MS Abroad", "MBA"],
+                    "exams": ["GATE", "JEE Advanced", "BITSAT", "VITEEE"],
+                    "jobs": ["Design Engineer", "Project Manager", "R&D Engineer"]
+                },
+                "B.Arch (Bachelor of Architecture)": {
+                    "careers": ["Architect", "Urban Planner", "Interior Designer"],
+                    "higher_studies": ["M.Arch", "M.Plan", "Ph.D. in Architecture"],
+                    "exams": ["NATA", "JEE Main Paper 2", "CEED"],
+                    "jobs": ["Project Architect", "Urban Designer", "Heritage Conservator"]
+                },
+                "B.Sc. Physics/Chemistry/Mathematics": {
+                    "careers": ["Research Scientist", "Data Analyst", "Actuary"],
+                    "higher_studies": ["M.Sc. in Physics/Chemistry/Mathematics", "Ph.D.", "Integrated Ph.D. Programs"],
+                    "exams": ["IIT JAM", "CSIR NET", "JEST", "NBHM"],
+                    "jobs": ["Research Associate", "Subject Matter Expert", "Quantitative Analyst"]
+                },
+                "B.Tech in Artificial Intelligence": {
+                    "careers": ["AI Engineer", "Machine Learning Engineer", "Data Scientist"],
+                    "higher_studies": ["M.Tech in AI/ML", "MS in Data Science", "Ph.D. in AI"],
+                    "exams": ["GATE (CS)", "GRE", "TOEFL/IELTS"],
+                    "jobs": ["AI Research Scientist", "Computer Vision Engineer", "NLP Engineer"]
+                },
+                "B.Sc. Aviation": {
+                    "careers": ["Commercial Pilot", "Aircraft Maintenance Engineer", "Air Traffic Controller"],
+                    "higher_studies": ["M.Sc. Aviation", "MBA in Aviation Management", "Ph.D. in Aeronautics"],
+                    "exams": ["DGCA Exams", "AICET", "AMECET"],
+                    "jobs": ["Airlines Pilot", "Flight Dispatcher", "Aviation Safety Officer"]
+                }
+            },
+            "Commerce": {
+                "B.Com (Bachelor of Commerce)": {
+                    "careers": ["Accountant", "Tax Consultant", "Financial Analyst"],
+                    "higher_studies": ["M.Com", "MBA", "CA/CS/CMA"],
+                    "exams": ["CA Foundation", "CS Foundation", "CMA Foundation"],
+                    "jobs": ["Chartered Accountant", "Financial Advisor", "Investment Banker"]
+                },
+                "BBA (Bachelor of Business Administration)": {
+                    "careers": ["Business Analyst", "Marketing Executive", "HR Executive"],
+                    "higher_studies": ["MBA", "PGDM", "Masters in Finance"],
+                    "exams": ["CAT", "XAT", "MAT", "CMAT"],
+                    "jobs": ["Business Development Manager", "Marketing Manager", "HR Manager"]
+                },
+                "BBA in Banking & Insurance": {
+                    "careers": ["Banking Professional", "Insurance Advisor", "Risk Analyst"],
+                    "higher_studies": ["MBA in Finance", "PG Diploma in Banking", "M.Com in Banking"],
+                    "exams": ["IBPS PO", "SBI PO", "RBI Grade B"],
+                    "jobs": ["Bank Manager", "Investment Banker", "Insurance Underwriter"]
+                },
+                "B.Com (Hons.)": {
+                    "careers": ["Financial Analyst", "Investment Banker", "Chartered Accountant"],
+                    "higher_studies": ["M.Com (Hons.)", "MBA in Finance", "CFA"],
+                    "exams": ["CA Intermediate", "CFA Level 1", "NSE Certification"],
+                    "jobs": ["Equity Research Analyst", "Portfolio Manager", "Financial Planner"]
+                },
+                "BBA in International Business": {
+                    "careers": ["International Trade Manager", "Export-Import Manager", "Global Marketing Manager"],
+                    "higher_studies": ["MBA in International Business", "PGDM in Global Business", "Masters in International Trade"],
+                    "exams": ["IIFT", "GMAT", "TOEFL/IELTS"],
+                    "jobs": ["International Business Consultant", "Global Sourcing Manager", "Foreign Trade Analyst"]
+                }
+            },
+            "Arts/Humanities": {
+                "BA (Bachelor of Arts)": {
+                    "careers": ["Content Writer", "Journalist", "Public Relations Officer"],
+                    "higher_studies": ["MA in English/Political Science/History", "Masters in Social Work", "Masters in Mass Communication"],
+                    "exams": ["UPSC Civil Services", "State PSC", "UGC NET"],
+                    "jobs": ["Civil Servant", "Content Manager", "Social Worker"]
+                },
+                "BA Psychology": {
+                    "careers": ["Counselor", "HR Specialist", "Clinical Psychologist"],
+                    "higher_studies": ["MA Psychology", "M.Phil in Clinical Psychology", "Masters in Counseling Psychology"],
+                    "exams": ["RCI Entrance Exam", "TISS NET", "DUET"],
+                    "jobs": ["Rehabilitation Psychologist", "Career Counselor", "Industrial Psychologist"]
+                },
+                "BA Economics": {
+                    "careers": ["Economist", "Policy Analyst", "Financial Consultant"],
+                    "higher_studies": ["MA Economics", "M.Phil in Economics", "Ph.D. in Economics"],
+                    "exams": ["JNUEE", "DSE Entrance", "ISI Admission Test"],
+                    "jobs": ["Economic Researcher", "Policy Advisor", "Financial Analyst"]
+                },
+                "BA Journalism & Mass Communication": {
+                    "careers": ["Journalist", "Content Creator", "Public Relations Manager"],
+                    "higher_studies": ["MA in Journalism & Mass Communication", "PG Diploma in Media Studies", "Masters in Public Relations"],
+                    "exams": ["IIMC Entrance", "XIC OET", "ACJ Entrance"],
+                    "jobs": ["News Anchor", "Media Planner", "Corporate Communications Manager"]
+                },
+                "BA Sociology": {
+                    "careers": ["Social Worker", "Community Development Officer", "Researcher"],
+                    "higher_studies": ["MA Sociology", "Masters in Social Work", "M.Phil/Ph.D. in Sociology"],
+                    "exams": ["TISS NET", "JNUEE", "DUET"],
+                    "jobs": ["Social Researcher", "NGO Program Manager", "Policy Analyst"]
+                }
+            },
+            "Vocational/Professional": {
+                "B.Voc (Bachelor of Vocation)": {
+                    "careers": ["Industry Specialist", "Technical Expert", "Vocational Trainer"],
+                    "higher_studies": ["M.Voc", "PG Diploma in Specialized Fields", "MBA in Vocational Education"],
+                    "exams": ["Institutional Entrance Tests", "Industry Certification Exams"],
+                    "jobs": ["Vocational Education Instructor", "Industry Trainer", "Skill Development Expert"]
+                },
+                "BBA in Retail Management": {
+                    "careers": ["Retail Manager", "Store Manager", "Merchandiser"],
+                    "higher_studies": ["MBA in Retail Management", "PG Diploma in Retail", "Masters in Marketing"],
+                    "exams": ["Retail Management Entrance Tests", "CAT/MAT"],
+                    "jobs": ["Retail Operations Manager", "Visual Merchandiser", "E-commerce Manager"]
+                },
+                "B.Sc. in Hospitality & Hotel Administration": {
+                    "careers": ["Hotel Manager", "Event Manager", "Restaurant Manager"],
+                    "higher_studies": ["M.Sc. in Hospitality", "MBA in Hotel Management", "PG Diploma in Culinary Arts"],
+                    "exams": ["NCHMCT JEE", "IHM Entrance Exams"],
+                    "jobs": ["Hotel General Manager", "Food & Beverage Manager", "Resort Manager"]
+                },
+                "B.Des (Bachelor of Design)": {
+                    "careers": ["Fashion Designer", "Graphic Designer", "Interior Designer"],
+                    "higher_studies": ["M.Des", "Master of Design", "MBA in Design Management"],
+                    "exams": ["NID DAT", "NIFT Entrance", "CEED", "UCEED"],
+                    "jobs": ["UI/UX Designer", "Product Designer", "Design Consultant"]
+                },
+                "BBA in Digital Marketing": {
+                    "careers": ["Digital Marketing Manager", "SEO Specialist", "Social Media Manager"],
+                    "higher_studies": ["MBA in Digital Marketing", "PG Diploma in Digital Marketing", "Masters in Marketing"],
+                    "exams": ["Institutional Entrance Tests", "Industry Certification Exams (Google, HubSpot)"],
+                    "jobs": ["Digital Marketing Strategist", "Content Marketing Manager", "PPC Specialist"]
+                }
+            }
+        };
+
+        // Initialize the visualization
+        document.addEventListener('DOMContentLoaded', function() {
+            const width = document.getElementById('graph').offsetWidth - 40;
+            const height = 600;
+            
+            // Create SVG
+            const svg = d3.select('#graph')
+                .append('svg')
+                .attr('width', '100%')
+                .attr('height', height)
+                .call(d3.zoom().on('zoom', (event) => {
+                    svg.attr('transform', event.transform);
+                }))
+                .append('g');
+
+            // Tooltip
+            const tooltip = d3.select('.tooltip');
+            
+            // Simulation
+            const simulation = d3.forceSimulation()
+                .force('link', d3.forceLink().id(d => d.id).distance(120))
+                .force('charge', d3.forceManyBody().strength(-500))
+                .force('center', d3.forceCenter(width / 2, height / 2))
+                .force('collision', d3.forceCollide().radius(60));
+
+            // Color scale
+            const color = d3.scaleOrdinal()
+                .domain(['degree', 'career', 'higher_studies', 'exam', 'job'])
+                .range(['#4361ee', '#4caf50', '#9c27b0', '#ff9800', '#2196f3']);
+
+            // Update function
+            function update(stream = 'all', pathType = 'all') {
+                // Clear previous graph
+                svg.selectAll('*').remove();
+                
+                // Filter data based on selections
+                let nodes = [];
+                let links = [];
+                let nodeId = 0;
+                
+                // Add center node
+                nodes.push({ 
+                    id: 'center', 
+                    name: 'Class 12', 
+                    type: 'center',
+                    x: width / 2, 
+                    y: 50,
+                    fx: width / 2,
+                    fy: 50
+                });
+                
+                // Process data based on stream
+                const streams = stream === 'all' ? Object.keys(careerData) : [stream];
+                
+                streams.forEach(streamKey => {
+                    const degrees = careerData[streamKey];
+                    
+                    Object.entries(degrees).forEach(([degree, paths]) => {
+                        // Add degree node
+                        const degreeId = `degree-${degree}`;
+                        nodes.push({ 
+                            id: degreeId, 
+                            name: degree, 
+                            type: 'degree',
+                            stream: streamKey
+                        });
+                        
+                        // Connect to center
+                        links.push({ source: 'center', target: degreeId });
+                        
+                        // Process paths
+                        const pathTypes = pathType === 'all' ? Object.keys(paths) : [pathType];
+                        
+                        pathTypes.forEach(pathKey => {
+                            if (!paths[pathKey]) return;
+                            
+                            paths[pathKey].forEach(item => {
+                                const itemId = `item-${nodeId++}`;
+                                const type = pathKey.includes('career') ? 'career' : 
+                                            pathKey.includes('study') ? 'higher_studies' :
+                                            pathKey.includes('exam') ? 'exam' : 'job';
+                                
+                                nodes.push({ 
+                                    id: itemId, 
+                                    name: item, 
+                                    type: type,
+                                    parent: degreeId,
+                                    stream: streamKey
+                                });
+                                
+                                links.push({ 
+                                    source: degreeId, 
+                                    target: itemId,
+                                    type: type
+                                });
+                            });
+                        });
+                    });
+                });
+                
+                // Create links
+                const link = svg.append('g')
+                    .selectAll('line')
+                    .data(links)
+                    .enter().append('line')
+                    .attr('class', 'link')
+                    .style('stroke', d => color(d.type || 'degree'));
+                
+                // Create nodes
+                const node = svg.append('g')
+                    .selectAll('g')
+                    .data(nodes)
+                    .enter().append('g')
+                    .call(d3.drag()
+                        .on('start', dragstarted)
+                        .on('drag', dragged)
+                        .on('end', dragended));
+                
+                // Add circles
+                node.append('circle')
+                    .attr('r', d => d.id === 'center' ? 40 : 30)
+                    .attr('fill', d => d.id === 'center' ? '#333' : color(d.type))
+                    .on('mouseover', showTooltip)
+                    .on('mouseout', hideTooltip);
+                
+                // Add text
+                node.append('text')
+                    .text(d => d.name)
+                    .attr('dy', 4)
+                    .attr('text-anchor', 'middle')
+                    .style('font-size', d => d.id === 'center' ? '14px' : '10px')
+                    .style('fill', 'white')
+                    .style('pointer-events', 'none')
+                    .call(wrap, 80);
+                
+                // Update simulation
+                simulation
+                    .nodes(nodes)
+                    .on('tick', ticked);
+                
+                simulation.force('link')
+                    .links(links);
+                
+                // Update node positions
+                function ticked() {
+                    link
+                        .transition()
+                        .duration(100)
+                        .ease(d3.easeCubicInOut)
+                        .attr('x1', d => d.source.x)
+                        .attr('y1', d => d.source.y)
+                        .attr('x2', d => d.target.x)
+                        .attr('y2', d => d.target.y);
+                    
+                    node
+                        .transition()
+                        .duration(100)
+                        .ease(d3.easeCubicInOut)
+                        .attr('transform', d => `translate(${d.x},${d.y})`);
+                }
+                
+                // Drag functions
+                function dragstarted(event, d) {
+                    if (!event.active) simulation.alphaTarget(0.3).restart();
+                    d.fx = d.x;
+                    d.fy = d.y;
+                }
+                
+                function dragged(event, d) {
+                    d.fx = event.x;
+                    d.fy = event.y;
+                }
+                
+                function dragended(event, d) {
+                    if (!event.active) simulation.alphaTarget(0);
+                    d.fx = d.x;
+                    d.fy = d.y;
+                }
+                
+                // Tooltip functions
+                function showTooltip(event, d) {
+                    const typeMap = {
+                        'degree': 'Degree Program',
+                        'career': 'Career Path',
+                        'higher_studies': 'Higher Studies',
+                        'exam': 'Government Exam',
+                        'job': 'Job Opportunity',
+                        'center': 'Starting Point'
+                    };
+                    
+                    tooltip
+                        .style('opacity', 1)
+                        .html(`
+                            <strong>${d.name}</strong><br>
+                            <small>${typeMap[d.type] || 'Node'}</small>
+                        `)
+                        .style('left', (event.pageX + 10) + 'px')
+                        .style('top', (event.pageY - 10) + 'px');
+                }
+                
+                function hideTooltip() {
+                    tooltip.style('opacity', 0);
+                }
+                
+                // Text wrapping function
+                function wrap(selection, width) {
+                    selection.each(function() {
+                        const text = d3.select(this);
+                        const words = text.text().split(/\s+/).reverse();
+                        let word;
+                        let line = [];
+                        let lineNumber = 0;
+                        const lineHeight = 1.1;
+                        const y = text.attr('y');
+                        const dy = parseFloat(text.attr('dy') || 0);
+                        let tspan = text.text(null).append('tspan').attr('x', 0).attr('y', y).attr('dy', dy + 'px');
+                        
+                        while (word = words.pop()) {
+                            line.push(word);
+                            tspan.text(line.join(' '));
+                            if (tspan.node().getComputedTextLength() > width) {
+                                line.pop();
+                                tspan.text(line.join(' '));
+                                line = [word];
+                                tspan = text.append('tspan')
+                                    .attr('x', 0)
+                                    .attr('y', y)
+                                    .attr('dy', ++lineNumber * lineHeight + 'em')
+                                    .text(word);
+                            }
+                        }
+                        
+                        // Adjust vertical position for multi-line text
+                        const textHeight = (lineNumber + 1) * 12 * lineHeight;
+                        text.attr('y', -textHeight / 2);
+                    });
+                }
+            }
+            
+            // Initial render
+            update();
+            
+            // Event listeners
+            document.getElementById('streamSelect').addEventListener('change', (e) => {
+                update(e.target.value, document.getElementById('pathType').value);
+            });
+            
+            document.getElementById('pathType').addEventListener('change', (e) => {
+                update(document.getElementById('streamSelect').value, e.target.value);
+            });
+            
+            document.getElementById('resetBtn').addEventListener('click', () => {
+                document.getElementById('streamSelect').value = 'all';
+                document.getElementById('pathType').value = 'all';
+                update();
+            });
+            
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                const newWidth = document.getElementById('graph').offsetWidth - 40;
+                svg.attr('width', '100%');
+                simulation.force('center', d3.forceCenter(newWidth / 2, height / 2));
+                simulation.alpha(0.3).restart();
+            });
+        });
+    </script>
+</body>
+</html>

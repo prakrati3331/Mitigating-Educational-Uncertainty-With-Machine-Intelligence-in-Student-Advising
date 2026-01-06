@@ -1,0 +1,58 @@
+[
+  {
+    "id": "engineering",
+    "name": "Engineering",
+    "icon": "fas fa-cogs",
+    "description": "Engineering and technology institutes",
+    "color": "#4361ee",
+    "count": 0
+  },
+  {
+    "id": "medical",
+    "name": "Medical",
+    "icon": "fas fa-stethoscope",
+    "description": "Medical and healthcare institutions",
+    "color": "#00bcd4",
+    "count": 0
+  },
+  {
+    "id": "management",
+    "name": "Management",
+    "icon": "fas fa-briefcase",
+    "description": "Business and management schools",
+    "color": "#4caf50",
+    "count": 0
+  },
+  {
+    "id": "arts",
+    "name": "Arts & Science",
+    "icon": "fas fa-palette",
+    "description": "Arts, science, and humanities colleges",
+    "color": "#ff9800",
+    "count": 0
+  },
+  {
+    "id": "commerce",
+    "name": "Commerce",
+    "icon": "fas fa-chart-line",
+    "description": "Commerce and business colleges",
+    "color": "#9c27b0",
+    "count": 0
+  },
+  {
+    "id": "vocational",
+    "name": "Vocational",
+    "icon": "fas fa-tools",
+    "description": "Vocational and skill development institutes",
+    "color": "#f44336",
+    "count": 0
+  },
+  {
+    "id": "polytechnic",
+    "name": "Polytechnic",
+    "icon": "fas fa-wrench",
+    "description": "Diploma and polytechnic colleges",
+    "color": "#607d8b",
+    "count": 0
+  }
+]

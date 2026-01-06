@@ -1,0 +1,66 @@
+[
+  {
+    "id": "mathematics",
+    "name": "Mathematics",
+    "icon": "fas fa-calculator",
+    "description": "Mathematical concepts and problem-solving",
+    "color": "#4361ee",
+    "count": 0
+  },
+  {
+    "id": "physics",
+    "name": "Physics",
+    "icon": "fas fa-atom",
+    "description": "Physical sciences and natural laws",
+    "color": "#00bcd4",
+    "count": 0
+  },
+  {
+    "id": "chemistry",
+    "name": "Chemistry",
+    "icon": "fas fa-flask",
+    "description": "Chemical sciences and reactions",
+    "color": "#4caf50",
+    "count": 0
+  },
+  {
+    "id": "biology",
+    "name": "Biology",
+    "icon": "fas fa-dna",
+    "description": "Life sciences and organisms",
+    "color": "#ff9800",
+    "count": 0
+  },
+  {
+    "id": "commerce",
+    "name": "Commerce",
+    "icon": "fas fa-chart-line",
+    "description": "Business and economics",
+    "color": "#9c27b0",
+    "count": 0
+  },
+  {
+    "id": "history",
+    "name": "History",
+    "icon": "fas fa-landmark",
+    "description": "Historical events and civilizations",
+    "color": "#f44336",
+    "count": 0
+  },
+  {
+    "id": "computer_science",
+    "name": "Computer Science",
+    "icon": "fas fa-laptop-code",
+    "description": "Programming and technology",
+    "color": "#607d8b",
+    "count": 0
+  },
+  {
+    "id": "vocational",
+    "name": "Vocational",
+    "icon": "fas fa-tools",
+    "description": "Skills and trades",
+    "color": "#795548",
+    "count": 0
+  }
+]
