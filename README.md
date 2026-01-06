@@ -382,7 +382,3 @@ python Zephyra-Chabot-main/app.py
 
 
 
-[Download Presentation] https://github.com/prakrati3331/Mitigating-Educational-Uncertainty-With-Machine-Intelligence-in-Student-Advising/blob/main/MProjectPhase2.pptx
-
-[Download Project Report] 
-https://github.com/prakrati3331/Mitigating-Educational-Uncertainty-With-Machine-Intelligence-in-Student-Advising/blob/main/Main%20Minor%20Project%20Report%20(Phase%201).pdf
