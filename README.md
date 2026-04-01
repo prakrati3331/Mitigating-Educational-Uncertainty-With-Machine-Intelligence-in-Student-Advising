@@ -390,6 +390,11 @@ python Zephyra-Chabot-main/app.py
 - `dashboard/templates/dashboard.html` (dashboard UI + what LLM uses as structure)
 - `LLM/llm.py` (how questions are answered using dashboard data)
 
+## 👨‍💻 Author
+
+**Prakrati Mishra**
+- GitHub:[https://github.com/prakrati3331]
+- LinkedIn:[https://www.linkedin.com/in/prakrati-mishra-19122b291/]
 
 
 
