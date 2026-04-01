@@ -12,6 +12,7 @@ An AI-powered student advising platform designed to help learners make informed 
   </a>
 </p>
 
+---
 
 # AI in Education (ML–Dashboard–LLM Architecture)
 
