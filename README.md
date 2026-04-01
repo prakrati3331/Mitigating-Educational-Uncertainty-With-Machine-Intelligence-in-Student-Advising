@@ -3,6 +3,16 @@
 
 An AI-powered student advising platform designed to help learners make informed academic and career decisions. This system blends machine intelligence, predictive analytics, and a hybrid AI–human mentorship model to support students—especially those in rural and semi-urban areas with limited access to professional counseling.
 
+## Deployed Project
+### 🌐 Live Project
+
+<p align="center">
+  <a href="https://mitigating-educational-uncertainity-xwrr.onrender.com" target="_blank">
+    <img src="https://img.shields.io/badge/View%20Live%20Project-111?style=for-the-badge&logo=render&logoColor=white"/>
+  </a>
+</p>
+
+
 # AI in Education (ML–Dashboard–LLM Architecture)
 
 This repository is an end-to-end **AI Education** system built around a **Dashboard-centric ML + LLM architecture**:
